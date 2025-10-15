@@ -79,9 +79,9 @@
     <!-- Main Content -->
     <div class="flex-1 flex items-center justify-center p-4">
         <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-            <div class="text-center mb-8">
-                <h1 class="font-playfair text-3xl text-gray-800 mb-2">Welcome Back</h1>
-                <p class="text-gray-600">Please login to access your account</p>
+            <div class="text-center mb-6 sm:mb-8">
+                <h1 class="font-playfair text-2xl sm:text-3xl text-gray-800 mb-2">Welcome Back</h1>
+                <p class="text-sm sm:text-base text-gray-600">Please login to access your account</p>
             </div>
 
             @if ($errors->any())
@@ -94,8 +94,8 @@
                 @csrf
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                <div class="mb-6">
-                    <label for="email" class="block text-gray-700 font-medium mb-2 text-left">Email Address</label>
+                <div class="mb-4 sm:mb-6">
+                    <label for="email" class="block text-gray-700 font-medium mb-2 text-left text-sm sm:text-base">Email Address</label>
                     <input
                         id="email"
                         type="email"
@@ -105,17 +105,17 @@
                         required
                         autocomplete="email"
                         autofocus
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200"
+                        class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200 text-sm sm:text-base"
                     />
                     @error('email')
                         <p class="text-red-500 text-xs italic mt-2 text-left">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="mb-6">
+                <div class="mb-4 sm:mb-6">
                     <div class="flex justify-between items-center mb-2">
-                        <label for="password" class="block text-gray-700 font-medium">Password</label>
-                        <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:underline">Forgot Password?</a>
+                        <label for="password" class="block text-gray-700 font-medium text-sm sm:text-base">Password</label>
+                        <a href="{{ route('password.request') }}" class="text-xs sm:text-sm text-blue-600 hover:underline">Forgot Password?</a>
                     </div>
                     <div class="relative">
                         <input
@@ -123,7 +123,7 @@
                             name="password"
                             type="password"
                             placeholder="Enter your password"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200 pr-12"
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200 pr-12 text-sm sm:text-base"
                             required
                             autocomplete="current-password"
                         />
@@ -139,18 +139,18 @@
                 </div>
 
                 <!-- Role Selection (styled like registration) -->
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-medium mb-2 text-left">Login As:</label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                <div class="mb-4 sm:mb-6">
+                    <label class="block text-gray-700 font-medium mb-2 text-left text-sm sm:text-base">Login As:</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                        <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                             <input type="radio" name="role" value="customer" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" {{ old('role') === 'customer' ? 'checked' : '' }}>
                             <span class="ml-2 text-sm text-gray-700">Customer</span>
                         </label>
-                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                        <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                             <input type="radio" name="role" value="business_owner" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" {{ old('role') === 'business_owner' ? 'checked' : '' }}>
                             <span class="ml-2 text-sm text-gray-700">Business Owner</span>
                         </label>
-                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50 sm:col-span-2">
+                        <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50 sm:col-span-2">
                             <input type="radio" name="role" value="admin" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" {{ old('role') === 'admin' ? 'checked' : '' }}>
                             <span class="ml-2 text-sm text-gray-700">Admin</span>
                         </label>
@@ -161,8 +161,8 @@
                 </div>
 
                 <!-- Business Type (only when Business Owner is selected) -->
-                <div id="business-type-section" class="mb-6 hidden">
-                    <label class="block text-gray-700 font-medium mb-2 text-left">Business Type:</label>
+                <div id="business-type-section" class="mb-4 sm:mb-6 hidden">
+                    <label class="block text-gray-700 font-medium mb-2 text-left text-sm sm:text-base">Business Type:</label>
                     @php
                         $businessTypes = [
                             'local_products' => 'Local Products Shop',
@@ -173,7 +173,7 @@
                     @endphp
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                         @foreach ($businessTypes as $value => $label)
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                                 <input type="radio" name="business_type" value="{{ $value }}" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" {{ $oldBusinessType === $value ? 'checked' : '' }}>
                                 <span class="ml-2 text-sm text-gray-700">{{ $label }}</span>
                             </label>
@@ -184,7 +184,7 @@
                     @enderror
                 </div>
 
-                <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center justify-between mb-4 sm:mb-6">
                     <div class="flex items-center">
                         <input
                             id="remember"
@@ -201,7 +201,7 @@
 
                 <button
                     type="submit"
-                    class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300"
+                    class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 sm:py-3 px-4 rounded-md transition-colors duration-300 text-sm sm:text-base"
                 >
                     Login
                 </button>

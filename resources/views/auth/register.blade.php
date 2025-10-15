@@ -51,11 +51,11 @@
     </header>
 
     <!-- Main Content -->
-    <div class="flex items-center justify-center min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
+    <div class="flex items-center justify-center min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-6 bg-white p-6 sm:p-8 rounded-lg shadow-lg">
             <div class="text-center">
                 
-                <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Create Your Account</h2>
+                <h2 class="mt-4 sm:mt-6 text-2xl sm:text-3xl font-extrabold text-gray-900">Create Your Account</h2>
                 <p class="mt-2 text-sm text-gray-600">Or <a href="{{ route('login') }}" class="font-medium text-blue-600 hover:text-blue-500">sign in to your account</a></p>
             </div>
 
@@ -94,7 +94,7 @@
                     <div class="py-2">
                         <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
                         <input id="name" name="name" type="text" required autofocus 
-                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                               class="appearance-none relative block w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900 text-sm sm:text-base"
                                placeholder="Juan D. Cruz"
                                value="{{ old('name') }}">
                     </div>
@@ -102,7 +102,7 @@
                     <div class="py-2">
                         <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
                         <input id="email" name="email" type="email" required 
-                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                               class="appearance-none relative block w-full px-3 py-2 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900 text-sm sm:text-base"
                                placeholder="Enter a valid email address"
                                value="{{ old('email') }}">
                     </div>
@@ -111,7 +111,7 @@
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                         <div class="relative">
                             <input id="password" name="password" type="password" required 
-                                   class="appearance-none relative block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                                   class="appearance-none relative block w-full px-3 py-2 sm:py-3 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900 text-sm sm:text-base"
                                    placeholder="Create a strong password">
                             <button type="button" 
                                     onclick="togglePasswordVisibility('password')" 
@@ -125,7 +125,7 @@
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm Password</label>
                         <div class="relative">
                             <input id="password_confirmation" name="password_confirmation" type="password" required 
-                                   class="appearance-none relative block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                                   class="appearance-none relative block w-full px-3 py-2 sm:py-3 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900 text-sm sm:text-base"
                                    placeholder="Confirm your password">
                             <button type="button" 
                                     onclick="togglePasswordVisibility('password_confirmation')" 
@@ -138,13 +138,13 @@
                     <!-- Account Type -->
                     <div class="py-2">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Account Type</label>
-                        <div class="grid grid-cols-2 gap-4">
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                            <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                                 <input type="radio" name="role" value="customer" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" 
                                     {{ old('role') === 'customer' ? 'checked' : '' }}>
                                 <span class="ml-2 block text-sm text-gray-700">Customer</span>
                             </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                                 <input type="radio" name="role" value="business_owner" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" 
                                     {{ old('role') === 'business_owner' ? 'checked' : '' }}>
                                 <span class="ml-2 block text-sm text-gray-700">Business Owner</span>
@@ -156,17 +156,17 @@
                     <div id="businessTypeSection" class="py-2 hidden">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Business Type</label>
                         <div class="grid grid-cols-1 gap-2">
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                                 <input type="radio" name="business_type" value="local_products" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" 
                                     {{ old('business_type') === 'local_products' ? 'checked' : '' }} required>
                                 <span class="ml-2 block text-sm text-gray-700">Local Products Shop</span>
                             </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                                 <input type="radio" name="business_type" value="hotel" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                                     {{ old('business_type') === 'hotel' ? 'checked' : '' }} required>
                                 <span class="ml-2 block text-sm text-gray-700">Hotel</span>
                             </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                            <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
                                 <input type="radio" name="business_type" value="resort" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                                     {{ old('business_type') === 'resort' ? 'checked' : '' }} required>
                                 <span class="ml-2 block text-sm text-gray-700">Resort</span>
@@ -181,7 +181,7 @@
                 </div>
 
                 <div>
-                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                    <button type="submit" class="group relative w-full flex justify-center py-2 sm:py-3 px-4 border border-transparent text-sm sm:text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
                         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                             <svg class="h-5 w-5 text-blue-500 group-hover:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />

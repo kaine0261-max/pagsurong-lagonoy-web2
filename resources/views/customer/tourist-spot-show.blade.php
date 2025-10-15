@@ -22,11 +22,11 @@
                     @else
                         <i class="fas fa-mountain text-4xl text-green-500"></i>
                     @endif
-                    <div class="absolute bottom-0 right-0 bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
+                    <div class="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
                         <i class="fas fa-check text-sm"></i>
                     </div>
                 </div>
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                     <i class="fas fa-map-marker-alt mr-1"></i>
                     Tourist Spot
                 </span>

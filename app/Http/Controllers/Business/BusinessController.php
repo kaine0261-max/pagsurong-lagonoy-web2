@@ -161,30 +161,30 @@ class BusinessController extends Controller
     public function myHotel()
     {
         $user = auth()->user();
-        $business = $user->businessProfile;
+        $businessProfile = $user->businessProfile;
+        $business = $user->business;
         
-        if (!$business) {
+        if (!$businessProfile) {
             return redirect()->route('business.setup');
         }
         
-        // Get rooms for the hotel
-        $rooms = $business->rooms()->latest()->get();
+        // Get hotel rooms for the hotel
+        $rooms = $business ? $business->hotelRooms()->latest()->get() : collect();
         
         // Get galleries for the hotel
-        $galleries = $business->galleries()->latest()->get();
+        $galleries = $businessProfile->galleries()->latest()->get();
         
         // Calculate stats
-        $totalRooms = $business->rooms()->count();
-        $availableRooms = $business->rooms()->where('is_available', true)->count();
+        $totalRooms = $business ? $business->hotelRooms()->count() : 0;
+        $availableRooms = $business ? $business->hotelRooms()->where('is_available', true)->count() : 0;
         $galleryCount = $galleries->count();
         
         // Calculate average rating
         $averageRating = 0;
         $totalReviews = 0;
-        $business->average_rating = 0;
-        
-        // Get business profile data for the navigation bar
-        $businessProfile = $business;
+        if ($business) {
+            $business->average_rating = 0;
+        }
         
         return view('business.my-hotel', [
             'business' => $business,

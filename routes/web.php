@@ -246,6 +246,12 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/rooms/{room}/availability', [\App\Http\Controllers\Business\ResortRoomController::class, 'toggleAvailability'])->name('rooms.availability');
             Route::delete('/rooms/{room}', [\App\Http\Controllers\Business\ResortRoomController::class, 'destroy'])->name('rooms.destroy');
             
+            // Hotel Room routes
+            Route::post('/hotel-rooms', [\App\Http\Controllers\Business\HotelRoomController::class, 'store'])->name('hotel.rooms.store');
+            Route::get('/hotel-rooms/{hotelRoom}/edit', [\App\Http\Controllers\Business\HotelRoomController::class, 'edit'])->name('hotel.rooms.edit');
+            Route::put('/hotel-rooms/{hotelRoom}', [\App\Http\Controllers\Business\HotelRoomController::class, 'update'])->name('hotel.rooms.update');
+            Route::delete('/hotel-rooms/{hotelRoom}', [\App\Http\Controllers\Business\HotelRoomController::class, 'destroy'])->name('hotel.rooms.destroy');
+            
             // Cottage routes
             Route::post('/cottages', [\App\Http\Controllers\Business\CottageController::class, 'store'])->name('cottages.store');
             Route::get('/cottages/{cottage}/edit', [\App\Http\Controllers\Business\CottageController::class, 'edit'])->name('cottages.edit');

@@ -123,15 +123,15 @@ use Illuminate\Support\Facades\Storage;
                                 <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">Published</span>
                                 <form action="{{ route('business.unpublish') }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                    <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-600 transition-colors">
                                         Unpublish
                                     </button>
                                 </form>
                             @else
                                 <form action="{{ route('business.publish') }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm font-medium">
-                                        Publish Resort
+                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                                        Publish Now
                                     </button>
                                 </form>
                                 <span class="text-gray-500 text-sm mt-2">Your resort will be reviewed before going live</span>
@@ -425,12 +425,6 @@ use Illuminate\Support\Facades\Storage;
                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                         </div>
                         
-                        <div>
-                            <label for="size" class="block text-sm font-medium text-gray-700">Room Size (sqm)</label>
-                            <input type="number" name="size" id="size" step="0.01" min="0"
-                                   placeholder="25.5"
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-                        </div>
                         
                         <div>
                             <label for="beds" class="block text-sm font-medium text-gray-700">Bed Configuration</label>

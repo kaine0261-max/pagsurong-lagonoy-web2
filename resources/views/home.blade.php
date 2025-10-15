@@ -52,18 +52,18 @@
     <div class="relative h-[70vh] min-h-[500px] bg-cover bg-center flex flex-col justify-center items-center text-center text-white" style="background-image: url('plaza1.jpg');">
         <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-30 backdrop-blur-sm"></div>
         <div class="relative z-10 max-w-3xl px-5">
-            <h1 class="font-playfair text-4xl md:text-5xl font-bold mb-5 text-white drop-shadow-lg leading-tight">
+            <h1 class="font-playfair text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-5 text-white drop-shadow-lg leading-tight">
                 Showcasing Lagonoy Local Products, Hotels, Resorts and Tourist Spots
             </h1>
-            <p class="text-xl md:text-2xl text-white text-opacity-90 mb-10 font-light drop-shadow-md">
+            <p class="text-sm sm:text-lg md:text-xl lg:text-2xl text-white text-opacity-90 mb-10 font-light drop-shadow-md">
                 Local Finds, Unforgettable Memories!
             </p>
             <div class="flex flex-wrap justify-center gap-4 mt-8">
                 @guest
-                    <a href="{{ route('register') }}" class="inline-block px-8 py-3 rounded-full bg-blue-500 text-white font-medium text-lg hover:bg-blue-600 transform hover:-translate-y-1 transition-all duration-300">Register</a>
-                    <a href="{{ route('login') }}" class="inline-block px-8 py-3 rounded-full border-2 border-white text-white bg-white bg-opacity-10 font-medium text-lg hover:bg-opacity-20 transform hover:-translate-y-1 transition-all duration-300">Login</a>
+                    <a href="{{ route('register') }}" class="inline-block px-4 sm:px-6 lg:px-8 py-2 sm:py-3 rounded-full bg-blue-500 text-white font-medium text-sm sm:text-base lg:text-lg hover:bg-blue-600 transform hover:-translate-y-1 transition-all duration-300">Register</a>
+                    <a href="{{ route('login') }}" class="inline-block px-4 sm:px-6 lg:px-8 py-2 sm:py-3 rounded-full border-2 border-white text-white bg-white bg-opacity-10 font-medium text-sm sm:text-base lg:text-lg hover:bg-opacity-20 transform hover:-translate-y-1 transition-all duration-300">Login</a>
                 @else
-                    <a href="{{ route('dashboard') }}" class="inline-block px-8 py-3 rounded-full bg-blue-500 text-white font-medium text-lg hover:bg-blue-600 transform hover:-translate-y-1 transition-all duration-300">Go to Dashboard</a>
+                    <a href="{{ route('dashboard') }}" class="inline-block px-4 sm:px-6 lg:px-8 py-2 sm:py-3 rounded-full bg-blue-500 text-white font-medium text-sm sm:text-base lg:text-lg hover:bg-blue-600 transform hover:-translate-y-1 transition-all duration-300">Go to Dashboard</a>
                 @endguest
             </div>
         </div>

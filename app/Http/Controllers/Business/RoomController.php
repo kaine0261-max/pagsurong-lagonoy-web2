@@ -20,6 +20,7 @@ class RoomController extends Controller
             'description' => 'required|string',
             'price_per_night' => 'required|numeric|min:0',
             'capacity' => 'required|integer|min:1',
+            'beds' => 'nullable|string',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
@@ -29,6 +30,7 @@ class RoomController extends Controller
         $room->description = $validated['description'];
         $room->price_per_night = $validated['price_per_night'];
         $room->capacity = $validated['capacity'];
+        $room->beds = $validated['beds'] ?? null;
         $room->is_available = true;
         $room->save();
 

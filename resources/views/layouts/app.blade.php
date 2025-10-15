@@ -84,7 +84,7 @@
         
         <!-- Mobile Bottom Navigation -->
     <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
-        <div class="flex justify-around items-center py-2">
+        <div class="flex justify-around items-center py-3">
             @auth
                 @php
                     $user = auth()->user();
@@ -95,72 +95,228 @@
                 @if($user->role === 'customer')
                     @if($user->hasCompletedProfile())
                         <!-- Mobile Bottom Navigation - Full customer features -->
-                        <a href="{{ route('customer.dashboard') }}" class="flex flex-col items-center px-3 py-2 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('customer.dashboard') ? 'text-blue-500' : '' }}">
-                            <i class="fas fa-home text-lg mb-1"></i>
-                            <span>Home</span>
+                        <a href="{{ route('customer.dashboard') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('customer.dashboard') ? 'text-blue-500' : '' }}">
+                            <i class="fas fa-home text-xl mb-1"></i>
+                            <span class="text-[10px] leading-tight">Home</span>
                         </a>
 
-                        <a href="{{ route('customer.orders') }}" class="flex flex-col items-center px-3 py-2 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('customer.orders') ? 'text-blue-500' : '' }}">
-                            <i class="fas fa-shopping-bag text-lg mb-1"></i>
-                            <span>Orders</span>
+                        <a href="{{ route('customer.orders') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('customer.orders') ? 'text-blue-500' : '' }}">
+                            <i class="fas fa-shopping-bag text-xl mb-1"></i>
+                            <span class="text-[10px] leading-tight">Orders</span>
                         </a>
 
-                        <a href="{{ route('customer.messages') }}" class="flex flex-col items-center px-3 py-2 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('customer.messages') ? 'text-blue-500' : '' }}">
+                        <a href="{{ route('customer.messages') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('customer.messages') ? 'text-blue-500' : '' }}">
                             <div class="relative">
-                                <i class="fas fa-envelope text-lg mb-1"></i>
+                                <i class="fas fa-envelope text-xl mb-1"></i>
                                 @if($unreadMessages)
-                                    <span class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                                    <span class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold">
                                         {{ $unreadMessages }}
                                     </span>
                                 @endif
                             </div>
-                            <span>Messages</span>
+                            <span class="text-[10px] leading-tight">Messages</span>
                         </a>
 
-                        <a href="{{ route('customer.cart') }}" class="flex flex-col items-center px-3 py-2 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('customer.cart') ? 'text-blue-500' : '' }}">
+                        <a href="{{ route('customer.cart') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('customer.cart') ? 'text-blue-500' : '' }}">
                             <div class="relative">
-                                <i class="fas fa-shopping-cart text-lg mb-1"></i>
+                                <i class="fas fa-shopping-cart text-xl mb-1"></i>
                                 @if($cartCount)
-                                    <span class="absolute -top-1 -right-2 bg-orange-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                                    <span class="absolute -top-1 -right-2 bg-orange-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold">
                                         {{ $cartCount }}
                                     </span>
                                 @endif
                             </div>
-                            <span>Cart</span>
+                            <span class="text-[10px] leading-tight">Cart</span>
                         </a>
 
-                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-3 py-2 text-xs text-gray-600 hover:text-blue-500 focus:outline-none">
+                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 focus:outline-none">
                             @if($user->profile && $user->profile->profile_picture)
                                 <img src="{{ Storage::url($user->profile->profile_picture) }}"
                                      alt="Profile"
-                                     class="w-6 h-6 rounded-full object-cover border border-blue-400 mb-1">
+                                     class="w-8 h-8 rounded-full object-cover border border-blue-400 mb-1">
                             @else
-                                <div class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs mb-1">
+                                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm mb-1">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
                             @endif
-                            <span>Profile</span>
+                            <span class="text-[10px] leading-tight">Profile</span>
                         </button>
                     @else
                         <!-- Mobile Bottom Navigation - Simple during profile setup -->
-                        <a href="{{ route('profile.setup') }}" class="flex flex-col items-center px-3 py-2 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('profile.setup') ? 'text-blue-500' : '' }}">
-                            <i class="fas fa-user-edit text-lg mb-1"></i>
-                            <span>Setup</span>
+                        <a href="{{ route('profile.setup') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('profile.setup') ? 'text-blue-500' : '' }}">
+                            <i class="fas fa-user-edit text-xl mb-1"></i>
+                            <span class="text-[10px] leading-tight">Setup</span>
                         </a>
 
-                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-3 py-2 text-xs text-gray-600 hover:text-blue-500 focus:outline-none">
+                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 focus:outline-none">
                             @if($user->profile && $user->profile->profile_picture)
                                 <img src="{{ Storage::url($user->profile->profile_picture) }}"
                                      alt="Profile"
-                                     class="w-6 h-6 rounded-full object-cover border border-blue-400 mb-1">
+                                     class="w-8 h-8 rounded-full object-cover border border-blue-400 mb-1">
                             @else
-                                <div class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs mb-1">
+                                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm mb-1">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
                             @endif
-                            <span>Profile</span>
+                            <span class="text-[10px] leading-tight">Profile</span>
                         </button>
                     @endif
+                @elseif($user->role === 'business_owner')
+                    @php
+                        $bizProfile = $user->businessProfile;
+                        $isApproved = $bizProfile && ($bizProfile->status === 'approved');
+                        $isPublished = $bizProfile && ($bizProfile->is_published ?? false);
+                        // Fix: Get pending orders count from the business relationship, not businessProfile
+                        $pendingOrdersCount = 0;
+                        if ($user->business) {
+                            $pendingOrdersCount = $user->business->orders()->where('status', 'pending')->count();
+                        }
+                    @endphp
+                    
+                    @if($isApproved || $isPublished)
+                        <!-- Business Owner Mobile Navigation - When Business is Approved/Published -->
+                        @if($bizProfile && $bizProfile->business_type === 'resort')
+                            <a href="{{ route('business.my-resort') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('business.my-resort') ? 'text-blue-500' : '' }}">
+                                <i class="fas fa-umbrella-beach text-xl mb-1"></i>
+                                <span class="text-[10px] leading-tight">My Resort</span>
+                            </a>
+                        @elseif($bizProfile && $bizProfile->business_type === 'hotel')
+                            <a href="{{ route('business.my-hotel') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('business.my-hotel') ? 'text-blue-500' : '' }}">
+                                <i class="fas fa-hotel text-xl mb-1"></i>
+                                <span class="text-[10px] leading-tight">My Hotel</span>
+                            </a>
+                        @else
+                            <a href="{{ route('business.my-shop') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('business.my-shop') ? 'text-blue-500' : '' }}">
+                                <i class="fas fa-store text-xl mb-1"></i>
+                                <span class="text-[10px] leading-tight">My Shop</span>
+                            </a>
+                        @endif
+                        
+                        <a href="{{ route('business.orders') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('business.orders') ? 'text-blue-500' : '' }}">
+                            <div class="relative">
+                                <i class="fas fa-shopping-bag text-xl mb-1"></i>
+                                @if($pendingOrdersCount > 0)
+                                    <span class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                                        {{ $pendingOrdersCount }}
+                                    </span>
+                                @endif
+                            </div>
+                            <span class="text-[10px] leading-tight">Orders</span>
+                        </a>
+                        
+                        <a href="{{ route('messages.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('messages.*') ? 'text-blue-500' : '' }}">
+                            <div class="relative">
+                                <i class="fas fa-envelope text-xl mb-1"></i>
+                                @if($unreadMessages)
+                                    <span class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                                        {{ $unreadMessages }}
+                                    </span>
+                                @endif
+                            </div>
+                            <span class="text-[10px] leading-tight">Messages</span>
+                        </a>
+                        
+                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 focus:outline-none">
+                            @if($user->profile && $user->profile->profile_picture)
+                                <img src="{{ Storage::url($user->profile->profile_picture) }}"
+                                     alt="Profile"
+                                     class="w-8 h-8 rounded-full object-cover border border-blue-400 mb-1">
+                            @else
+                                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm mb-1">
+                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                </div>
+                            @endif
+                            <span class="text-[10px] leading-tight">Profile</span>
+                        </button>
+                    @else
+                        <!-- Business Owner Mobile Navigation - When Business Needs Setup/Approval -->
+                        @php
+                            $setupLabel = 'Shop';
+                            $setupRoute = 'business.setup';
+                            $setupIcon = 'fas fa-store';
+                            if ($bizProfile && $bizProfile->business_type === 'hotel') {
+                                $setupLabel = 'Hotel';
+                                $setupRoute = 'business.my-hotel';
+                                $setupIcon = 'fas fa-hotel';
+                            } elseif ($bizProfile && $bizProfile->business_type === 'resort') {
+                                $setupLabel = 'Resort';
+                                $setupRoute = 'business.my-resort';
+                                $setupIcon = 'fas fa-umbrella-beach';
+                            } elseif (session('business_type') === 'hotel') {
+                                $setupLabel = 'Hotel';
+                                $setupRoute = 'business.my-hotel';
+                                $setupIcon = 'fas fa-hotel';
+                            } elseif (session('business_type') === 'resort') {
+                                $setupLabel = 'Resort';
+                                $setupRoute = 'business.my-resort';
+                                $setupIcon = 'fas fa-umbrella-beach';
+                            }
+                        @endphp
+                        
+                        <a href="{{ route($setupRoute) }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs($setupRoute) ? 'text-blue-500' : '' }}">
+                            <i class="{{ $setupIcon }} text-xl mb-1"></i>
+                            <span class="text-[10px] leading-tight text-center">Setup<br>{{ $setupLabel }}</span>
+                        </a>
+                        
+                        @if($bizProfile && $bizProfile->status === 'pending')
+                            <div class="flex flex-col items-center px-2 py-3 text-xs text-yellow-600">
+                                <i class="fas fa-clock text-xl mb-1"></i>
+                                <span class="text-[10px] leading-tight text-center">Pending<br>Approval</span>
+                            </div>
+                        @endif
+                        
+                        <a href="{{ route('dashboard') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('dashboard') ? 'text-blue-500' : '' }}">
+                            <i class="fas fa-home text-xl mb-1"></i>
+                            <span class="text-[10px] leading-tight">Home</span>
+                        </a>
+                        
+                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 focus:outline-none">
+                            @if($user->profile && $user->profile->profile_picture)
+                                <img src="{{ Storage::url($user->profile->profile_picture) }}"
+                                     alt="Profile"
+                                     class="w-8 h-8 rounded-full object-cover border border-blue-400 mb-1">
+                            @else
+                                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm mb-1">
+                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                </div>
+                            @endif
+                            <span class="text-[10px] leading-tight">Profile</span>
+                        </button>
+                    @endif
+                @elseif($user->role === 'admin')
+                    <!-- Admin Mobile Navigation -->
+                    <a href="{{ route('dashboard') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('dashboard') ? 'text-blue-500' : '' }}">
+                        <i class="fas fa-home text-xl mb-1"></i>
+                        <span class="text-[10px] leading-tight">Home</span>
+                    </a>
+                    
+                    <a href="{{ route('admin.dashboard') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('admin.dashboard') ? 'text-blue-500' : '' }}">
+                        <i class="fas fa-tachometer-alt text-xl mb-1"></i>
+                        <span class="text-[10px] leading-tight">Dashboard</span>
+                    </a>
+                    
+                    <a href="{{ route('admin.business-approvals.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('admin.business-approvals.*') ? 'text-blue-500' : '' }}">
+                        <i class="fas fa-clipboard-check text-xl mb-1"></i>
+                        <span class="text-[10px] leading-tight">Approvals</span>
+                    </a>
+                    
+                    <a href="{{ route('admin.users') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('admin.users') ? 'text-blue-500' : '' }}">
+                        <i class="fas fa-users text-xl mb-1"></i>
+                        <span class="text-[10px] leading-tight">Users</span>
+                    </a>
+                    
+                    <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 focus:outline-none">
+                        @if($user->profile && $user->profile->profile_picture)
+                            <img src="{{ Storage::url($user->profile->profile_picture) }}"
+                                 alt="Profile"
+                                 class="w-8 h-8 rounded-full object-cover border border-blue-400 mb-1">
+                        @else
+                            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm mb-1">
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                            </div>
+                        @endif
+                        <span class="text-[10px] leading-tight">Profile</span>
+                    </button>
                 @endif
             @endauth
         </div>
@@ -190,6 +346,11 @@
                         $bizProfile = $user->businessProfile;
                         $isApproved = $bizProfile && ($bizProfile->status === 'approved');
                         $isPublished = $bizProfile && ($bizProfile->is_published ?? false);
+                        // Fix: Get pending orders count from the business relationship, not businessProfile
+                        $pendingOrdersCount = 0;
+                        if ($user->business) {
+                            $pendingOrdersCount = $user->business->orders()->where('status', 'pending')->count();
+                        }
                     @endphp
                     @if($isApproved || $isPublished)
                         <!-- Business Owner Nav - When Business is Approved/Published -->
@@ -212,11 +373,12 @@
                                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-shop') ? 'w-full' : '' }}"></span>
                             </a>
                         @endif
+                        
                         <a href="{{ route('business.orders') }}" 
                            class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('business.orders') ? 'font-semibold' : '' }}">
                             <i class="fas fa-shopping-bag mr-1"></i> Orders
-                            @if($pendingOrdersCount ?? 0 > 0)
-                                <span class="absolute -top-2 -right-4 bg-yellow-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center">
+                            @if($pendingOrdersCount > 0)
+                                <span class="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
                                     {{ $pendingOrdersCount }}
                                 </span>
                             @endif
@@ -361,15 +523,6 @@
                         <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             <i class="fas fa-edit mr-2"></i> Edit Profile
                         </a>
-                        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            <i class="fas fa-cog mr-2"></i> Settings
-                        </a>
-                        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            <i class="fas fa-question-circle mr-2"></i> Help & Support
-                        </a>
-                        <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            <i class="fas fa-history mr-2"></i> History
-                        </a>
                         <hr class="my-1 border-gray-100">
                         <form method="POST" action="{{ route('logout') }}" id="logout-form" class="hidden">
                             @csrf
@@ -393,7 +546,7 @@
     </header>
 
     <!-- Main content wrapper with fixed navigation and three-column layout -->
-    <div class="pt-20 md:pt-16 pb-16 md:pb-0 min-h-screen">
+    <div class="pt-20 md:pt-16 pb-20 md:pb-0 min-h-screen">
         <div class="flex min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)]">
             <!-- Left Sidebar - Orders Panel (Desktop Only) -->
             @auth
@@ -766,21 +919,13 @@
                                 <i class="fas fa-shopping-bag mr-4 text-blue-600 w-5"></i>
                                 <span class="font-medium">Orders</span>
                             </a>
+
                             <a href="{{ route('messages.index') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
                                 <i class="fas fa-envelope mr-4 text-blue-600 w-5"></i>
                                 <span class="font-medium">Messages</span>
                             </a>
                         @endif
 
-                        <div class="border-t border-gray-200 my-2"></div>
-                        <a href="#" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                            <i class="fas fa-cog mr-4 text-blue-600 w-5"></i>
-                            <span class="font-medium">Settings</span>
-                        </a>
-                        <a href="#" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                            <i class="fas fa-question-circle mr-4 text-blue-600 w-5"></i>
-                            <span class="font-medium">Help & Support</span>
-                        </a>
                     </div>
                     
                     <!-- Logout Button -->

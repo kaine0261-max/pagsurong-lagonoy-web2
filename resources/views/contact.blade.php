@@ -55,15 +55,14 @@
                 <a href="#" onclick="logoutUser(event)" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-blue-200">Logout</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                     @csrf
-                </form>
             @endauth
             <!-- Removed Login and Register links -->
         </nav>
     </header>
 
-    <div class="text-center py-20 px-4 fade-in">
-        <h1 class="font-playfair text-4xl md:text-5xl font-bold mb-5 text-gray-800 leading-tight">Get In Touch</h1>
-        <p class="text-xl text-gray-600 font-light">We'd love to hear from you</p>
+    <div class="text-center py-12 sm:py-16 md:py-20 px-4 fade-in">
+        <h1 class="font-playfair text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-5 text-gray-800 leading-tight">Get In Touch</h1>
+        <p class="text-base sm:text-lg md:text-xl text-gray-600 font-light">We'd love to hear from you</p>
     </div>
 
     <div class="max-w-6xl mx-auto px-5 text-center fade-in">

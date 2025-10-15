@@ -12,6 +12,7 @@ class HotelRoom extends Model
 
     protected $fillable = [
         'business_id',
+        'hotel_id', // Keep this for backward compatibility
         'room_number',
         'room_type',
         'price_per_night',

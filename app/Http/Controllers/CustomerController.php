@@ -233,7 +233,7 @@ class CustomerController extends Controller
 
         // Check if it's a hotel/resort or regular business
         if ($business->businessProfile && in_array($business->businessProfile->business_type, ['hotel', 'resort'])) {
-            // Load business profile with galleries only (skip comments for now)
+            // Load business profile with galleries and comments
             $business->load(['businessProfile.galleries']);
             
             // Get rooms through business profile relationship
@@ -245,9 +245,17 @@ class CustomerController extends Controller
                     ->get();
             }
             
+            // Load comments for hotels and resorts
+            $comments = collect();
+            if ($business->businessProfile->business_type === 'hotel') {
+                $comments = $business->businessProfile->hotelComments()->with('user')->orderBy('created_at', 'desc')->get();
+            } elseif ($business->businessProfile->business_type === 'resort') {
+                $comments = $business->businessProfile->resortComments()->with('user')->orderBy('created_at', 'desc')->get();
+            }
+            
             // Hotels only have rooms, resorts have both rooms and cottages
             if ($business->businessProfile->business_type === 'hotel') {
-                return view('customer.hotel-show', compact('business', 'rooms'));
+                return view('customer.hotel-show', compact('business', 'rooms', 'comments'));
             } else {
                 // For resorts, also load cottages
                 $cottages = collect(); // Initialize empty collection
@@ -257,7 +265,7 @@ class CustomerController extends Controller
                         ->where('is_available', true)
                         ->get();
                 }
-                return view('customer.resort-show', compact('business', 'rooms', 'cottages'));
+                return view('customer.resort-show', compact('business', 'rooms', 'cottages', 'comments'));
             }
         } else {
             // Load products and galleries for regular businesses (skip comments for now)
@@ -628,7 +636,10 @@ class CustomerController extends Controller
             ->where('is_available', true)
             ->get();
 
-        return view('customer.resort-show', compact('business', 'rooms', 'cottages'));
+        // Load comments for this resort
+        $comments = $businessProfile->resortComments()->with('user')->orderBy('created_at', 'desc')->get();
+
+        return view('customer.resort-show', compact('business', 'rooms', 'cottages', 'comments'));
     }
 
     /**

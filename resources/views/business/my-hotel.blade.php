@@ -50,9 +50,9 @@ use Illuminate\Support\Facades\Storage;
                         <div class="relative w-32 h-32 mx-auto">
                             <div class="w-full h-full border-4 border-white rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-all duration-200 shadow-lg overflow-hidden"
                                  onclick="document.getElementById('profile-photo').click()">
-                                @if($business->profile_avatar)
-                                    <img src="{{ Storage::url($business->profile_avatar) }}?v={{ time() }}" 
-                                         alt="{{ $business->business_name }}" 
+                                @if($businessProfile && $businessProfile->profile_avatar)
+                                    <img src="{{ Storage::url($businessProfile->profile_avatar) }}?v={{ time() }}" 
+                                         alt="{{ $businessProfile->business_name }}" 
                                          class="w-full h-full object-cover profile-photo">
                                 @else
                                     <div class="w-full h-full bg-blue-600 flex items-center justify-center">
@@ -68,7 +68,7 @@ use Illuminate\Support\Facades\Storage;
 
                         <!-- Hotel Name -->
                         <h1 class="text-3xl font-bold text-gray-800 mt-4 mb-3">
-                            {{ $business->business_name }}
+                            {{ $businessProfile ? $businessProfile->business_name : 'Hotel Name' }}
                         </h1>
 
                         <!-- Availability Status -->
@@ -124,15 +124,15 @@ use Illuminate\Support\Facades\Storage;
                                 <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">Published</span>
                                 <form action="{{ route('business.unpublish') }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                    <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-600 transition-colors">
                                         Unpublish
                                     </button>
                                 </form>
                             @else
                                 <form action="{{ route('business.publish') }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm font-medium">
-                                        Publish Hotel
+                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                                        Publish Now
                                     </button>
                                 </form>
                                 <span class="text-gray-500 text-sm mt-2">Your hotel will be reviewed before going live</span>
@@ -219,7 +219,7 @@ use Illuminate\Support\Facades\Storage;
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">Rooms</h3>
                         <div class="flex items-center gap-3">
-                            <button type="button" onclick="openModal('addRoomModal')" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
+                            <button type="button" onclick="resetRoomForm(); openModal('addRoomModal')" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
                                 <i class="fas fa-plus mr-1"></i> Add Room
                             </button>
                         </div>
@@ -232,7 +232,7 @@ use Illuminate\Support\Facades\Storage;
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
@@ -242,40 +242,38 @@ use Illuminate\Support\Facades\Storage;
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-10 w-10">
-                                                    @if($room->images->first())
-                                                        <img class="h-10 w-10 rounded-md object-cover" src="{{ Storage::url($room->images->first()->image_path) }}" alt="{{ $room->name }}">
+                                                    @if($room->image)
+                                                        <img class="h-10 w-10 rounded-md object-cover" src="{{ Storage::url($room->image) }}" alt="Room {{ $room->room_number }}">
                                                     @else
                                                         <div class="h-10 w-10 rounded-md bg-gray-200 flex items-center justify-center">
-                                                            <i class="fas fa-image text-gray-400"></i>
+                                                            <i class="fas fa-bed text-gray-400"></i>
                                                         </div>
                                                     @endif
                                                 </div>
                                                 <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">{{ $room->name }}</div>
+                                                    <div class="text-sm font-medium text-gray-900">Room {{ $room->room_number }}</div>
                                                     <div class="text-sm text-gray-500">{{ $room->capacity }} guests</div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $room->roomType->name ?? 'N/A' }}
+                                            {{ ucfirst($room->room_type) }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             ₱{{ number_format($room->price_per_night, 2) }}<span class="text-gray-500 text-xs">/night</span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            @if($room->is_available)
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                    Available
-                                                </span>
-                                            @else
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                    Booked
-                                                </span>
-                                            @endif
+                                        <td class="px-6 py-4 text-sm text-gray-900">
+                                            <div class="max-w-xs truncate">
+                                                {{ $room->description ?: 'No description available' }}
+                                            </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <a href="#" onclick="editRoom({{ $room->id }})" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
-                                            <a href="#" onclick="deleteRoom({{ $room->id }})" class="text-red-600 hover:text-red-900">Delete</a>
+                                            <button onclick="editHotelRoom({{ $room->id }})" class="text-blue-600 hover:text-blue-900 mr-3 font-medium">
+                                                <i class="fas fa-edit mr-1"></i>Edit
+                                            </button>
+                                            <button onclick="deleteHotelRoom({{ $room->id }})" class="text-red-600 hover:text-red-900 font-medium">
+                                                <i class="fas fa-trash mr-1"></i>Delete
+                                            </button>
                                         </td>
                                     </tr>
                                 @empty
@@ -386,14 +384,16 @@ use Illuminate\Support\Facades\Storage;
                 </button>
             </div>
             
-            <form id="roomForm" action="{{ route('business.rooms.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="roomForm" action="{{ route('business.hotel.rooms.store') }}" method="POST" enctype="multipart/form-data" onsubmit="submitRoomForm(event)">
                 @csrf
+                <input type="hidden" id="roomId" name="roomId" value="">
+                <input type="hidden" id="_method" name="_method" value="POST">
                 <div class="space-y-6">
                     <div class="grid grid-cols-2 gap-6">
                         <div>
-                            <label for="room_name" class="block text-sm font-medium text-gray-700">Room Name</label>
-                            <input type="text" name="name" id="room_name" required
-                                   placeholder="e.g., Deluxe Ocean View"
+                            <label for="room_number" class="block text-sm font-medium text-gray-700">Room Number</label>
+                            <input type="text" name="room_number" id="room_number" required
+                                   placeholder="e.g., 101, A-1, Deluxe-1"
                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                         </div>
                         
@@ -440,11 +440,11 @@ use Illuminate\Support\Facades\Storage;
                         </div>
                         
                         <div class="col-span-2">
-                            <label for="room_images" class="block text-sm font-medium text-gray-700">Room Images</label>
-                            <input type="file" name="images[]" id="room_images" accept="image/*" multiple onchange="previewRoomImages(this)"
+                            <label for="room_image" class="block text-sm font-medium text-gray-700">Room Image</label>
+                            <input type="file" name="image" id="room_image" accept="image/*" onchange="previewRoomImages(this)"
                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                             <div id="imagePreviews" class="mt-2 grid grid-cols-4 gap-2"></div>
-                            <p class="mt-1 text-sm text-gray-500">Upload multiple images to showcase your room</p>
+                            <p class="mt-1 text-sm text-gray-500">Upload an image to showcase your room</p>
                         </div>
                         
                     </div>
@@ -505,47 +505,72 @@ use Illuminate\Support\Facades\Storage;
 @push('scripts')
 <script>
     function openModal(modalId) {
-        // Reset modal to add mode when opening for new room
-        if (modalId === 'addRoomModal') {
-            resetRoomModal();
-        }
         document.getElementById(modalId).classList.remove('hidden');
         document.body.classList.add('overflow-hidden');
     }
     
-    function resetRoomModal() {
-        // Reset form action and method
-        document.getElementById('roomForm').action = '{{ route("business.rooms.store") }}';
-        
-        // Remove method input if exists
-        const methodInput = document.getElementById('roomForm').querySelector('input[name="_method"]');
-        if (methodInput) {
-            methodInput.remove();
-        }
-        
-        // Reset modal title and button text
+    function resetRoomForm() {
         document.getElementById('roomModalTitle').textContent = 'Add New Room';
         document.getElementById('roomSubmitBtn').textContent = 'Add Room';
-        
-        // Clear form fields
-        document.getElementById('room_name').value = '';
-        document.getElementById('room_type').value = '';
-        document.getElementById('room_price').value = '';
-        document.getElementById('room_capacity').value = '';
-        document.getElementById('room_description').value = '';
-        document.getElementById('room_amenities').value = '';
-        document.getElementById('room_images').value = '';
-        
-        // Clear image previews
-        const previewContainer = document.getElementById('imagePreviews');
-        if (previewContainer) {
-            previewContainer.innerHTML = '';
-        }
+        document.getElementById('roomId').value = '';
+        document.getElementById('_method').value = 'POST';
+        document.getElementById('roomForm').action = '{{ route("business.hotel.rooms.store") }}';
+        document.getElementById('roomForm').reset();
+        document.getElementById('imagePreviews').innerHTML = '';
     }
     
     function closeModal(modalId) {
         document.getElementById(modalId).classList.add('hidden');
         document.body.classList.remove('overflow-hidden');
+        if (modalId === 'addRoomModal') {
+            resetRoomForm();
+        }
+    }
+    
+    function submitRoomForm(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        const url = form.action;
+        const method = form.querySelector('input[name="_method"]') ? form.querySelector('input[name="_method"]').value : 'POST';
+
+        // Show loading state
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving...';
+
+        fetch(url, {
+            method: method === 'PUT' ? 'POST' : 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                alert('Room saved successfully!');
+                // Close modal and refresh the page
+                closeModal('addRoomModal');
+                window.location.reload();
+            } else {
+                // Show error message
+                alert('Error: ' + (data.message || 'Failed to save room'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error saving room. Please try again.');
+        })
+        .finally(() => {
+            // Restore button state
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonText;
+        });
     }
     
     function previewRoomImages(input) {
@@ -609,6 +634,94 @@ use Illuminate\Support\Facades\Storage;
         }
         
         input.files = dt.files;
+    }
+    
+    function editHotelRoom(roomId) {
+        fetch(`/business/hotel-rooms/${roomId}/edit`, {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success === false) {
+                alert('Error: ' + data.message);
+                return;
+            }
+            
+            console.log('Edit room data received:', data); // Debug log
+            
+            // Reset form and update modal for edit mode (like resort)
+            resetRoomForm();
+            document.getElementById('roomModalTitle').textContent = 'Edit Room';
+            document.getElementById('roomSubmitBtn').textContent = 'Update Room';
+            document.getElementById('roomId').value = data.id;
+            document.getElementById('_method').value = 'PUT';
+            document.getElementById('roomForm').action = `/business/hotel-rooms/${data.id}`;
+            
+            console.log('Form action set to:', document.getElementById('roomForm').action); // Debug log
+            
+            // Populate form fields
+            document.getElementById('room_number').value = data.room_number || '';
+            document.getElementById('room_type').value = data.room_type || '';
+            document.getElementById('room_price').value = data.price_per_night || '';
+            document.getElementById('room_capacity').value = data.capacity || '';
+            document.getElementById('room_description').value = data.description || '';
+            document.getElementById('room_amenities').value = data.amenities || '';
+            
+            // Show modal
+            openModal('addRoomModal');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error loading room data. Please try again.');
+        });
+    }
+    
+    function deleteHotelRoom(roomId) {
+        // Get room number for confirmation
+        const roomRow = event.target.closest('tr');
+        const roomName = roomRow.querySelector('td:first-child .text-sm.font-medium').textContent;
+        
+        if (confirm(`Are you sure you want to delete ${roomName}? This action cannot be undone.`)) {
+            // Show loading state
+            const deleteButton = event.target;
+            const originalText = deleteButton.textContent;
+            deleteButton.textContent = 'Deleting...';
+            deleteButton.style.pointerEvents = 'none';
+            
+            fetch(`/business/hotel-rooms/${roomId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message and reload
+                    alert('Room deleted successfully!');
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to delete room'));
+                    // Restore button state
+                    deleteButton.textContent = originalText;
+                    deleteButton.style.pointerEvents = 'auto';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting room. Please try again.');
+                // Restore button state
+                deleteButton.textContent = originalText;
+                deleteButton.style.pointerEvents = 'auto';
+            });
+        }
     }
     
     function editRoom(roomId) {

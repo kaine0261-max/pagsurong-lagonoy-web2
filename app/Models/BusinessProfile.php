@@ -266,13 +266,16 @@ class BusinessProfile extends Model
     }
 
     /**
-     * Get all comments for this business profile (unified).
-     * Temporarily disabled - returns empty query builder
+     * Get unified comments based on business type.
      */
     public function comments()
     {
-        // Return empty query builder that won't execute
-        return $this->newQuery()->whereRaw('1 = 0');
+        if ($this->business_type === self::TYPE_HOTEL) {
+            return $this->hotelComments();
+        } elseif ($this->business_type === self::TYPE_RESORT) {
+            return $this->resortComments();
+        }
+        return collect(); // Empty collection for other types
     }
 
     /**

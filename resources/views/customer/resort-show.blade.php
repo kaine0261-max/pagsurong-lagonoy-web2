@@ -188,7 +188,7 @@
                 <div class="text-sm text-gray-600">{{ $business->businessProfile->total_ratings ?? 0 }} ratings</div>
             </div>
             <div class="flex-1">
-                <div class="text-sm text-gray-600 mb-2">0 comments</div>
+                <div class="text-sm text-gray-600 mb-2">{{ $comments->count() }} comments</div>
             </div>
         </div>
 
@@ -221,9 +221,46 @@
         @endauth
 
         <!-- Comments List -->
-        <div class="text-center py-8 text-gray-500" id="noCommentsMessage">
-            <i class="fas fa-comments text-4xl mb-2"></i>
-            <p>No comments yet. Be the first to share your experience!</p>
+        <div id="commentsList">
+            @if($comments && $comments->count() > 0)
+                @foreach($comments as $comment)
+                    <div class="border-b border-gray-200 pb-4 mb-4" id="comment-{{ $comment->id }}">
+                        <div class="flex items-start space-x-3">
+                            <div class="flex-shrink-0">
+                                @if($comment->user->profile && $comment->user->profile->profile_picture)
+                                    <img src="{{ Storage::url($comment->user->profile->profile_picture) }}" 
+                                         alt="{{ $comment->user->name }}" 
+                                         class="w-10 h-10 rounded-full object-cover">
+                                @else
+                                    <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                                        <span class="text-white font-medium text-sm">{{ substr($comment->user->name, 0, 1) }}</span>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="text-sm font-medium text-gray-900">{{ $comment->user->name }}</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-xs text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
+                                        @if(auth()->check() && auth()->id() === $comment->user_id)
+                                            <button onclick="deleteComment({{ $comment->id }})" 
+                                                    class="text-red-500 hover:text-red-700 text-xs">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        @endif
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-700 mt-1">{{ $comment->comment }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class="text-center py-8 text-gray-500" id="noCommentsMessage">
+                    <i class="fas fa-comments text-4xl mb-2"></i>
+                    <p>No comments yet. Be the first to share your experience!</p>
+                </div>
+            @endif
         </div>
     </div>
 </div>
