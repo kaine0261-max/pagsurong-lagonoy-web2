@@ -23,9 +23,6 @@ class LoginController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-            'role' => 'required|in:customer,business_owner,admin',
-            // business_type is required only when logging in as business_owner without an existing business profile
-            'business_type' => 'nullable|in:local_products,hotel,resort',
         ]);
 
         $credentials = $request->only('email', 'password');
@@ -33,41 +30,13 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            // Check if the selected role matches the user's registered role
-            if ($user->role !== $request->input('role')) {
-                Auth::logout();
-                return back()->withErrors([
-                    'role' => 'The selected role does not match your registered role.',
-                ])->withInput($request->only('email', 'role'));
-            }
-
             // Redirect based on user role
             if ($user->role === 'admin') {
-                // Redirect admins to the welcome page with admin panel
-                return redirect()->route('dashboard');
+                // Redirect admins directly to admin dashboard
+                return redirect()->route('admin.dashboard');
             }
 
             // For business owners, check if they have a business profile
-            if ($user->role === 'business_owner') {
-                // If no business profile exists, redirect to setup with the business type
-                if (!$user->businessProfile) {
-                    $businessType = $request->input('business_type');
-                    if (!$businessType) {
-                        return back()->withErrors([
-                            'business_type' => 'Please choose a business type to continue.',
-                        ])->withInput($request->only('email', 'role'));
-                    }
-                    // Persist selection and go to setup (BusinessController@setup reads from session('business_type'))
-                    session(['business_type' => $businessType]);
-                    return redirect()->route('business.setup')
-                        ->with('info', 'Please complete your business setup.');
-                }
-            } else if (!$user->profile) {
-                // For non-business users (customers), check if they have a profile
-                return redirect()->route('profile.setup');
-            }
-
-            // Redirect based on user type
             if ($user->role === 'business_owner') {
                 // If business profile exists, route by type
                 if ($user->businessProfile) {
@@ -80,29 +49,28 @@ class LoginController extends Controller
                         default:
                             return redirect()->route('business.my-shop');
                     }
+                } else {
+                    // No business profile yet, redirect to business setup
+                    return redirect()->route('business.setup')
+                        ->with('info', 'Please complete your business setup.');
                 }
+            }
 
-                // No business profile yet: require a business_type from the login form
-                $businessType = $request->input('business_type');
-                if (!$businessType) {
-                    return back()->withErrors([
-                        'business_type' => 'Please choose a business type to continue.',
-                    ])->withInput($request->only('email', 'role'));
+            // For customers, check if they have a profile
+            if ($user->role === 'customer') {
+                if (!$user->profile) {
+                    return redirect()->route('profile.setup');
                 }
-
-                // Persist selection and go to setup (BusinessController@setup reads from session('business_type'))
-                session(['business_type' => $businessType]);
-                return redirect()->route('business.setup')
-                    ->with('info', 'Please complete your business setup.');
+                return redirect()->route('customer.products');
             }
 
             // Default redirect for customers
-            return redirect()->route('customer.dashboard');
+            return redirect()->route('customer.products');
         }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
-        ])->withInput($request->only('email', 'role'));
+        ])->withInput($request->only('email'));
     }
 
     public function logout()

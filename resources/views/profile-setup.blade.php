@@ -37,9 +37,9 @@
             <div class="font-playfair text-2xl font-bold text-gray-800">Pagsurong Lagonoy</div>
         </div>
         <nav class="flex flex-wrap justify-center">
-            <a href="{{ route('home') }}" class="mx-3 my-1 md:my-0 text-gray-800 font-medium text-sm md:text-base hover:text-blue-500 {{ request()->routeIs('home') ? 'text-blue-500 font-semibold border-b-2 border-blue-500' : '' }}">Home</a>
-            <a href="{{ route('about') }}" class="mx-3 my-1 md:my-0 text-gray-800 font-medium text-sm md:text-base hover:text-blue-500 {{ request()->routeIs('about') ? 'text-blue-500 font-semibold border-b-2 border-blue-500' : '' }}">About Us</a>
-            <a href="{{ route('contact') }}" class="mx-3 my-1 md:my-0 text-gray-800 font-medium text-sm md:text-base hover:text-blue-500 {{ request()->routeIs('contact') ? 'text-blue-500 font-semibold border-b-2 border-blue-500' : '' }}">Contact Us</a>
+            <a href="{{ route('home') }}" class="mx-3 my-1 md:my-0 text-gray-800 font-medium text-sm md:text-base hover:text-green-500 {{ request()->routeIs('home') ? 'text-green-500 font-semibold border-b-2 border-green-500' : '' }}">Home</a>
+            <a href="{{ route('about') }}" class="mx-3 my-1 md:my-0 text-gray-800 font-medium text-sm md:text-base hover:text-green-500 {{ request()->routeIs('about') ? 'text-green-500 font-semibold border-b-2 border-green-500' : '' }}">About Us</a>
+            <a href="{{ route('contact') }}" class="mx-3 my-1 md:my-0 text-gray-800 font-medium text-sm md:text-base hover:text-green-500 {{ request()->routeIs('contact') ? 'text-green-500 font-semibold border-b-2 border-green-500' : '' }}">Contact Us</a>
             @auth
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                     @csrf
@@ -79,42 +79,42 @@
 
                 <div class="rounded-md shadow-sm -space-y-px">
                     <div class="avatar-box flex flex-col items-center mb-6">
-                        <img id="preview" class="avatar-preview w-24 h-24 rounded-full object-cover border-2 border-blue-500 mb-2" src="{{ asset('uploads/default.png') }}" alt="avatar" />
+                        <img id="preview" class="avatar-preview w-24 h-24 rounded-full object-cover border-2 border-green-500 mb-2" src="{{ asset('uploads/default.png') }}" alt="avatar" />
                         <input type="file" name="avatar" accept="image/*" onchange="previewFile(this)" class="text-sm" />
                     </div>
 
                     <div class="py-2">
                         <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name</label>
                         <input id="full_name" name="full_name" type="text" required 
-                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                placeholder="Juan Dela Cruz" value="{{ old('full_name') }}">
                     </div>
 
                     <div class="py-2">
                         <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
                         <input id="address" name="address" type="text" required 
-                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                placeholder="Brgy. San Vicente, Lagonoy" value="{{ old('address') }}">
                     </div>
 
                     <div class="py-2">
                         <label for="birthday" class="block text-sm font-medium text-gray-700">Birthday</label>
                         <input id="birthday" name="birthday" type="date" required 
-                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 text-gray-900"
                                value="{{ old('birthday') }}">
                     </div>
 
                     <div class="py-2">
                         <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
                         <input id="phone" name="phone" type="tel" required 
-                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                placeholder="09xxxxxxxxx" value="{{ old('phone') }}">
                     </div>
 
                     <div class="py-2">
                         <label for="sex" class="block text-sm font-medium text-gray-700">Sex</label>
                         <select id="sex" name="sex" required 
-                                class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500">
                             <option value="">Select</option>
                             <option value="Male" {{ old('sex') === 'Male' ? 'selected' : '' }}>Male</option>
                             <option value="Female" {{ old('sex') === 'Female' ? 'selected' : '' }}>Female</option>
@@ -125,15 +125,15 @@
                     <div class="py-2">
                         <label for="bio" class="block text-sm font-medium text-gray-700">Short Bio</label>
                         <textarea id="bio" name="bio" 
-                                  class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                                  class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                   placeholder="Tell us a bit about yourself...">{{ old('bio') }}</textarea>
                     </div>
                 </div>
 
                 <div>
-                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
                         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                            <svg class="h-5 w-5 text-blue-500 group-hover:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <svg class="h-5 w-5 text-green-500 group-hover:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                             </svg>
                         </span>

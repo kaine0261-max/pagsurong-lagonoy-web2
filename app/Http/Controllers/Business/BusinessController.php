@@ -64,7 +64,7 @@ class BusinessController extends Controller
         $validated = $request->validate([
             // Personal Information
             'full_name' => 'required|string|max:255',
-            'birthday' => 'required|date',
+            'birthday' => 'required|date|before:today|after:1900-01-01',
             'age' => 'required|integer|min:1|max:120',
             'sex' => 'required|string|in:Male,Female,Other',
             'personal_location' => 'required|string|max:255',
@@ -75,7 +75,8 @@ class BusinessController extends Controller
             'email' => 'required|email|max:255',
             'address' => 'required|string|max:255',
             'website' => 'nullable|url|max:255',
-            'business_permit' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120'
+            'business_permit' => 'required|array',
+            'business_permit.*' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120'
         ]);
 
         $user = auth()->user();
@@ -92,9 +93,13 @@ class BusinessController extends Controller
             }
         }
 
-        // Upload business permit
-        $businessPermitPath = $request->file('business_permit')
-            ->store('business_permits', 'public');
+        // Upload business permits (multiple files)
+        $businessPermitPaths = [];
+        if ($request->hasFile('business_permit')) {
+            foreach ($request->file('business_permit') as $file) {
+                $businessPermitPaths[] = $file->store('business_permits', 'public');
+            }
+        }
 
         // Get business type from user or session
         $businessType = $user->business_type ?? session('business_type', 'local_products');
@@ -108,7 +113,7 @@ class BusinessController extends Controller
             'email' => $validated['email'],
             'address' => $validated['address'],
             'website' => $validated['website'] ?? null,
-            'business_permit_path' => $businessPermitPath,
+            'business_permit_path' => $businessPermitPaths,
             'status' => 'pending',
             'business_type' => $businessType,
         ]);
@@ -141,16 +146,16 @@ class BusinessController extends Controller
             ]
         );
 
-        // Redirect based on business type
+        // Redirect based on business type to their respective dashboard
         switch ($businessProfile->business_type) {
             case 'hotel':
-                return redirect()->route('terms', ['from' => 'business_setup'])
+                return redirect()->route('business.my-hotel')
                     ->with('success', 'Your hotel profile has been created and is pending approval.');
             case 'resort':
-                return redirect()->route('terms', ['from' => 'business_setup'])
+                return redirect()->route('business.my-resort')
                     ->with('success', 'Your resort profile has been created and is pending approval.');
             default:
-                return redirect()->route('terms', ['from' => 'business_setup'])
+                return redirect()->route('business.my-shop')
                     ->with('success', 'Your shop profile has been created and is pending approval.');
         }
     }
@@ -171,8 +176,12 @@ class BusinessController extends Controller
         // Get hotel rooms for the hotel
         $rooms = $business ? $business->hotelRooms()->latest()->get() : collect();
         
-        // Get galleries for the hotel
-        $galleries = $businessProfile->galleries()->latest()->get();
+        // Get galleries for the hotel (exclude room images)
+        $galleries = $businessProfile->galleries()
+            ->whereNull('room_id')
+            ->whereNull('cottage_id')
+            ->latest()
+            ->get();
         
         // Calculate stats
         $totalRooms = $business ? $business->hotelRooms()->count() : 0;
@@ -222,7 +231,13 @@ class BusinessController extends Controller
         $availableRooms = $business->resortRooms()->where('is_available', true)->count();
         $totalCottages = $business->cottages()->count();
         $availableCottages = $business->cottages()->where('is_available', true)->count();
-        $galleryCount = $business->gallery()->count();
+        // Get galleries for the resort (exclude room and cottage images)
+        $galleries = $business->galleries()
+            ->whereNull('room_id')
+            ->whereNull('cottage_id')
+            ->latest()
+            ->get();
+        $galleryCount = $galleries->count();
         
         // Calculate average rating
         $averageRating = 0;
@@ -237,6 +252,7 @@ class BusinessController extends Controller
             'businessProfile' => $businessProfile,
             'rooms' => $rooms,
             'cottages' => $cottages,
+            'galleries' => $galleries,
             'totalRooms' => $totalRooms,
             'availableRooms' => $availableRooms,
             'totalCottages' => $totalCottages,
@@ -323,8 +339,12 @@ class BusinessController extends Controller
         $profile->average_rating = $averageRating;
         $profile->total_ratings = $totalRatings;
 
-        // Get galleries for the shop
-        $galleries = $profile->galleries()->latest()->get();
+        // Get galleries for the shop (exclude room and cottage images)
+        $galleries = $profile->galleries()
+            ->whereNull('room_id')
+            ->whereNull('cottage_id')
+            ->latest()
+            ->get();
 
         return view('business.my-shop', [
             'business' => $profile,
@@ -347,7 +367,7 @@ class BusinessController extends Controller
             return redirect()->route('business.dashboard');
         }
 
-        return view('business.profile.create');
+        return view('business.setup');
     }
 
     /**
@@ -373,16 +393,21 @@ class BusinessController extends Controller
             'postal_code' => 'nullable|string|max:20',
             'website' => 'nullable|url|max:255',
             'facebook_page' => 'nullable|url|max:255',
-            'business_permit' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'business_permit' => 'required|array',
+            'business_permit.*' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
+            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
         ]);
 
         return DB::transaction(function () use ($validated, $request) {
             $user = auth()->user();
             
-            // Upload business permit
-            $businessPermitPath = $request->file('business_permit')
-                ->store('business_permits', 'public');
+            // Upload business permits (multiple files)
+            $businessPermitPaths = [];
+            if ($request->hasFile('business_permit')) {
+                foreach ($request->file('business_permit') as $file) {
+                    $businessPermitPaths[] = $file->store('business_permits', 'public');
+                }
+            }
             
             // Handle additional licenses
             $licenses = [];
@@ -412,7 +437,7 @@ class BusinessController extends Controller
                 'postal_code' => $validated['postal_code'],
                 'website' => $validated['website'] ?? null,
                 'facebook_page' => $validated['facebook_page'] ?? null,
-                'business_permit_path' => $businessPermitPath,
+                'business_permit_path' => $businessPermitPaths,
                 'licenses' => !empty($licenses) ? $licenses : null,
                 'status' => 'pending',
             ]);
@@ -469,7 +494,7 @@ class BusinessController extends Controller
         $business = auth()->user()->businessProfile;
         
         if (!$business) {
-            return redirect()->route('business.profile.create');
+            return redirect()->route('business.setup');
         }
 
         return view('business.profile.edit', compact('business'));
@@ -483,7 +508,7 @@ class BusinessController extends Controller
         $business = auth()->user()->businessProfile;
         
         if (!$business) {
-            return redirect()->route('business.profile.create');
+            return redirect()->route('business.setup');
         }
 
         $validated = $request->validate([
@@ -496,8 +521,9 @@ class BusinessController extends Controller
             'postal_code' => 'required|string|max:20',
             'website' => 'nullable|url|max:255',
             'facebook_page' => 'nullable|url|max:255',
-            'business_permit' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'business_permit' => 'nullable|array',
+            'business_permit.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
+            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
         ]);
 
         return DB::transaction(function () use ($validated, $request, $business) {
@@ -515,14 +541,20 @@ class BusinessController extends Controller
                 'status' => 'pending', // Reset status to pending after update
             ]);
 
-            // Update business permit if provided
+            // Update business permits if provided
             if ($request->hasFile('business_permit')) {
-                // Delete old permit
-                Storage::disk('public')->delete($business->business_permit_path);
+                // Delete old permits (model automatically casts to array)
+                $oldPermits = $business->business_permit_path ?? [];
+                foreach ($oldPermits as $oldPermit) {
+                    Storage::disk('public')->delete($oldPermit);
+                }
                 
-                // Upload new permit
-                $business->business_permit_path = $request->file('business_permit')
-                    ->store('business_permits', 'public');
+                // Upload new permits
+                $businessPermitPaths = [];
+                foreach ($request->file('business_permit') as $file) {
+                    $businessPermitPaths[] = $file->store('business_permits', 'public');
+                }
+                $business->business_permit_path = $businessPermitPaths;
             }
 
             // Handle additional licenses if provided
@@ -574,7 +606,7 @@ class BusinessController extends Controller
         $business = auth()->user()->businessProfile;
 
         if (!$business) {
-            return redirect()->route('business.profile.create')
+            return redirect()->route('business.setup')
                 ->with('error', 'Please create a business profile first.');
         }
 
@@ -606,7 +638,7 @@ class BusinessController extends Controller
         $business = auth()->user()->businessProfile;
 
         if (!$business) {
-            return redirect()->route('business.profile.create')
+            return redirect()->route('business.setup')
                 ->with('error', 'Business profile not found.');
         }
 
@@ -632,21 +664,13 @@ class BusinessController extends Controller
     public function updateCover(Request $request)
     {
         $request->validate([
-            'cover_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg|max:10240',
         ]);
 
-        $business = auth()->user()->businesses()->first();
-        
-        if (!$business) {
-            return redirect()->route('business.profile.create')
-                ->with('error', 'Please create a business profile first.');
-        }
-
-        // Get the business profile
-        $businessProfile = $business->businessProfile;
+        $businessProfile = auth()->user()->businessProfile;
         
         if (!$businessProfile) {
-            return redirect()->route('business.profile.create')
+            return redirect()->route('business.setup')
                 ->with('error', 'Please create a business profile first.');
         }
 
@@ -848,6 +872,126 @@ class BusinessController extends Controller
                 'message' => 'Failed to update profile picture: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Store a new product
+     */
+    public function storeProduct(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'stock_limit' => 'required|integer|min:0',
+            'current_stock' => 'required|integer|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // 10MB max
+        ]);
+
+        $user = auth()->user();
+        $business = \App\Models\Business::where('owner_id', $user->id)->first();
+
+        if (!$business) {
+            return redirect()->back()->with('error', 'Business not found.');
+        }
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+        }
+
+        Product::create([
+            'business_id' => $business->id,
+            'name' => $request->name,
+            'price' => $request->price,
+            'description' => $request->description,
+            'stock_limit' => $request->stock_limit,
+            'current_stock' => $request->current_stock,
+            'image' => $imagePath,
+        ]);
+
+        return redirect()->route('business.my-shop')->with('success', 'Product added successfully!');
+    }
+
+    /**
+     * Show all products for the business
+     */
+    public function products()
+    {
+        $user = auth()->user();
+        $business = \App\Models\Business::where('owner_id', $user->id)->first();
+
+        if (!$business) {
+            return redirect()->route('business.my-shop')->with('error', 'Business not found.');
+        }
+
+        $products = Product::where('business_id', $business->id)
+            ->withCount('orderItems')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return view('business.products.index', compact('products'));
+    }
+
+    /**
+     * Show create product form
+     */
+    public function createProduct()
+    {
+        return view('business.products.create');
+    }
+
+    /**
+     * Update product stock
+     */
+    public function updateProductStock(Request $request, Product $product)
+    {
+        $user = auth()->user();
+        $business = \App\Models\Business::where('owner_id', $user->id)->first();
+
+        if (!$business || $product->business_id !== $business->id) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'current_stock' => 'required|integer|min:0',
+            'stock_limit' => 'required|integer|min:0',
+        ]);
+
+        $product->update([
+            'current_stock' => $request->current_stock,
+            'stock_limit' => $request->stock_limit,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Stock updated successfully!'
+        ]);
+    }
+
+    /**
+     * Delete a product
+     */
+    public function deleteProduct(Product $product)
+    {
+        $user = auth()->user();
+        $business = \App\Models\Business::where('owner_id', $user->id)->first();
+
+        if (!$business || $product->business_id !== $business->id) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        // Delete product image if exists
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+
+        $product->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product deleted successfully!'
+        ]);
     }
 
 }

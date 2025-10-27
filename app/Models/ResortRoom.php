@@ -16,6 +16,7 @@ class ResortRoom extends Model
         'room_type',
         'price_per_night',
         'capacity',
+        'bed_configuration',
         'description',
         'is_available',
         'amenities'

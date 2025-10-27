@@ -13,13 +13,13 @@
                     <p class="text-gray-600">Last updated: {{ date('F j, Y') }}</p>
                 </div>
                 @if(request()->query('from') === 'profile_setup' || request()->query('from') === 'business_setup' || request()->query('from') === 'business_profile' || request()->query('from') === 'business_profile_update')
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
-                                <i class="fas fa-info-circle text-blue-400"></i>
+                                <i class="fas fa-info-circle text-green-400"></i>
                             </div>
                             <div class="ml-3">
-                                <p class="text-sm text-blue-800">
+                                <p class="text-sm text-green-800">
                                     <strong>Profile Setup Complete!</strong> Please review and accept our Terms and Conditions to continue.
                                 </p>
                             </div>
@@ -253,14 +253,6 @@
                         By accepting these terms, you agree to be bound by our Terms and Conditions and Privacy Policy.
                     </p>
                 </div>
-            </div>
-        @else
-            <!-- Regular footer for non-setup users -->
-            <div class="text-center">
-                <a href="{{ route('home') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors">
-                    <i class="fas fa-arrow-left mr-2"></i>
-                    Back to Home
-                </a>
             </div>
         @endif
     </div>

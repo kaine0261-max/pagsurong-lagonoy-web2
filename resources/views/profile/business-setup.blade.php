@@ -51,10 +51,36 @@
     <!-- Main Content -->
     <div class="flex items-center justify-center min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 pt-24">
         <div class="max-w-2xl w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
+            <!-- Progress Indicator -->
+            <div class="mb-6">
+                <div class="flex items-center justify-center space-x-4">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white font-semibold">
+                            <i class="fas fa-check text-sm"></i>
+                        </div>
+                        <span class="ml-2 text-sm font-medium text-green-600">Account Created</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-green-600"></div>
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white font-semibold">
+                            2
+                        </div>
+                        <span class="ml-2 text-sm font-medium text-green-600">Complete Profile</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-300"></div>
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-300 text-gray-600 font-semibold">
+                            3
+                        </div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">Start Selling</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="text-center">
                 <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="mx-auto h-12 w-auto">
                 <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Complete Your Business Profile</h2>
-                <p class="mt-2 text-sm text-gray-600">Set up your business information to start showcasing your products</p>
+                <p class="mt-2 text-sm text-gray-600">Just a few more details to get your {{ session('business_type') === 'hotel' ? 'hotel' : (session('business_type') === 'resort' ? 'resort' : 'business') }} up and running!</p>
             </div>
 
             @if ($errors->any())
@@ -82,7 +108,7 @@
                     <div class="flex flex-col items-center">
                         <div class="relative">
                             <!-- Upload Zone -->
-                            <div id="upload-zone" class="relative w-32 h-32 rounded-full border-4 border-dashed border-blue-300 bg-blue-50 hover:bg-blue-100 transition-all duration-300 cursor-pointer group">
+                            <div id="upload-zone" class="relative w-32 h-32 rounded-full border-4 border-dashed border-green-300 bg-green-50 hover:bg-green-100 transition-all duration-300 cursor-pointer group">
                                 <div class="absolute inset-0 rounded-full overflow-hidden">
                                     <img id="preview" class="w-full h-full object-cover" src="{{ asset('uploads/default.png') }}" alt="Profile Picture">
                                 </div>
@@ -114,7 +140,7 @@
                         <!-- Progress Bar -->
                         <div id="progress-container" class="hidden mt-3 w-32">
                             <div class="bg-gray-200 rounded-full h-2">
-                                <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                <div id="progress-bar" class="bg-green-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
                             </div>
                             <p id="progress-text" class="text-xs text-gray-500 mt-1 text-center">Uploading...</p>
                         </div>
@@ -125,35 +151,52 @@
 
                     <!-- Personal Information Section -->
                     <div class="border-t pt-6">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Personal Information</h3>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Personal Information</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            <i class="fas fa-info-circle text-green-600 mr-1"></i>
+                            Tell us a bit about yourself. This helps us verify your business ownership and provide better service.
+                        </p>
+                        
+                        <!-- Email Reference -->
+                        <div class="mb-6">
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                            <input id="email" name="email" type="email" readonly 
+                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 cursor-not-allowed"
+                                   value="{{ auth()->user()->email }}">
+                            <p class="text-xs text-gray-500 mt-1">This is your registered email address</p>
+                        </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name <span class="text-red-500">*</span></label>
                                 <input id="full_name" name="full_name" type="text" required 
-                                       class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                                       class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                        placeholder="Juan Dela Cruz" value="{{ old('full_name', auth()->user()->name) }}">
+                                <p class="text-xs text-gray-500 mt-1">
+                                    <i class="fas fa-check-circle text-green-600"></i> Pre-filled from registration
+                                </p>
                             </div>
 
                             <div>
-                                <label for="birthday" class="block text-sm font-medium text-gray-700">Birthday <span class="text-red-500">*</span></label>
+                                <label for="birthday" class="block text-sm font-medium text-gray-700">Birthdate <span class="text-red-500">*</span></label>
                                 <input id="birthday" name="birthday" type="date" required 
-                                       class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                                       class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 text-gray-900"
+                                       min="1900-01-01" max="{{ date('Y-m-d') }}"
                                        value="{{ old('birthday') }}">
                             </div>
 
                             <div>
                                 <label for="age" class="block text-sm font-medium text-gray-700">Age <span class="text-red-500">*</span></label>
                                 <input id="age" name="age" type="number" min="1" max="120" required 
-                                       class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                                       class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                        placeholder="25" value="{{ old('age') }}">
                             </div>
 
                             <div>
-                                <label for="sex" class="block text-sm font-medium text-gray-700">Gender <span class="text-red-500">*</span></label>
+                                <label for="sex" class="block text-sm font-medium text-gray-700">Sex <span class="text-red-500">*</span></label>
                                 <select id="sex" name="sex" required 
-                                        class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="">Select Gender</option>
+                                        class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                    <option value="">Select Sex</option>
                                     <option value="Male" {{ old('sex') === 'Male' ? 'selected' : '' }}>Male</option>
                                     <option value="Female" {{ old('sex') === 'Female' ? 'selected' : '' }}>Female</option>
                                     <option value="Other" {{ old('sex') === 'Other' ? 'selected' : '' }}>Other</option>
@@ -168,13 +211,17 @@
 
                     <!-- Business Information Section -->
                     <div class="border-t pt-6">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Business Information</h3>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Business Information</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            <i class="fas fa-store text-green-600 mr-1"></i>
+                            Provide details about your {{ session('business_type') === 'hotel' ? 'hotel' : (session('business_type') === 'resort' ? 'resort' : 'business') }}. This information will be displayed to customers.
+                        </p>
                         
                         <!-- Business Name -->
                         <div>
                             <label for="business_name" class="block text-sm font-medium text-gray-700">Business Name <span class="text-red-500">*</span></label>
                             <input id="business_name" name="business_name" type="text" required 
-                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                    placeholder="Enter your business name" value="{{ old('business_name') }}">
                         </div>
                     </div>
@@ -183,7 +230,7 @@
                     <div>
                         <label for="business_info" class="block text-sm font-medium text-gray-700">Business History/Story <span class="text-red-500">*</span></label>
                         <textarea id="business_info" name="business_info" rows="4" required
-                                  class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                                  class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                   placeholder="Tell us about your business history, specialties, and what makes you unique">{{ old('business_info') }}</textarea>
                         <p class="mt-1 text-sm text-gray-500">You can edit this later in your profile section</p>
                     </div>
@@ -198,14 +245,14 @@
                         <div>
                             <label for="phone_number" class="block text-sm font-medium text-gray-700">Contact Number <span class="text-red-500">*</span></label>
                             <input id="phone_number" name="phone_number" type="tel" required 
-                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
-                                   placeholder="09xxxxxxxxx" value="{{ old('phone_number') }}">
+                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
+                                   placeholder="09xxxxxxxxx" value="{{ old('phone_number') }}" maxlength="11" pattern="[0-9]{11}">
                         </div>
 
                         <div>
                             <label for="email_address" class="block text-sm font-medium text-gray-700">Email Address (Optional)</label>
                             <input id="email_address" name="email_address" type="email" 
-                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                    placeholder="Enter your email address" value="{{ old('email_address') }}">
                         </div>
                     </div>
@@ -217,30 +264,30 @@
                         <div>
                             <label for="facebook" class="block text-sm font-medium text-gray-600">Facebook</label>
                             <input id="facebook" name="facebook" type="url" 
-                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                    placeholder="https://facebook.com/yourbusiness" value="{{ old('facebook') }}">
                         </div>
 
                         <div>
                             <label for="instagram" class="block text-sm font-medium text-gray-600">Instagram</label>
                             <input id="instagram" name="instagram" type="url" 
-                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                    placeholder="https://instagram.com/yourbusiness" value="{{ old('instagram') }}">
                         </div>
 
                         <div>
                             <label for="twitter" class="block text-sm font-medium text-gray-600">Twitter/X</label>
                             <input id="twitter" name="twitter" type="url" 
-                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                                   class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                    placeholder="https://twitter.com/yourbusiness" value="{{ old('twitter') }}">
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
                         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                            <svg class="h-5 w-5 text-blue-500 group-hover:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <svg class="h-5 w-5 text-green-500 group-hover:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                             </svg>
                         </span>

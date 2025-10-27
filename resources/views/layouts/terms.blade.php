@@ -46,8 +46,9 @@
 <body class="font-roboto text-gray-800 leading-relaxed bg-gray-50 antialiased">
 
     <!-- Header -->
-    <header style="background-color: #012844ff;" class="text-white shadow-md fixed w-full top-0 left-0 right-0 z-50">
+    <header style="background-color: #064e3b;" class="text-white shadow-md fixed w-full top-0 left-0 right-0 z-50">
         <div class="py-3 px-4 md:px-10 flex flex-col md:flex-row justify-between items-center">
+            <!-- Left Side - Main Branding -->
             <div class="flex items-center mb-4 md:mb-0">
                 <a href="{{ route('home') }}" class="flex items-center hover:opacity-80 transition-opacity">
                     <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3 drop-shadow-sm">
@@ -55,52 +56,14 @@
                 </a>
             </div>
 
-            <!-- Navigation -->
-            <nav class="flex items-center space-x-6">
-                @if(request()->query('from') === 'profile_setup' || request()->query('from') === 'business_setup' || request()->query('from') === 'business_profile' || request()->query('from') === 'business_profile_update')
-                    <!-- Registration flow navigation - only Home and Register -->
-                    <a href="{{ route('home') }}" class="text-white hover:text-blue-100 transition-all duration-200 relative group">
-                        Home
-                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
-                    </a>
-                    <a href="{{ route('register') }}" class="text-white hover:text-blue-100 transition-all duration-200 relative group">
-                        Register
-                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
-                    </a>
-                @else
-                    <!-- Full navigation for regular terms viewing -->
-                    <a href="{{ route('home') }}" class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('home') ? 'font-semibold' : '' }}">
-                        Home
-                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('home') ? 'w-full' : '' }}"></span>
-                    </a>
-                    <a href="{{ route('about') }}" class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('about') ? 'font-semibold' : '' }}">
-                        About Us
-                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('about') ? 'w-full' : '' }}"></span>
-                    </a>
-                    <a href="{{ route('contact') }}" class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('contact') ? 'font-semibold' : '' }}">
-                        Contact
-                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('contact') ? 'w-full' : '' }}"></span>
-                    </a>
-                    @auth
-                        <a href="{{ route('profile.show') }}" class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('profile.show') ? 'font-semibold' : '' }}">
-                            My Profile
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('profile.show') ? 'w-full' : '' }}"></span>
-                        </a>
-                        <a href="#" onclick="confirmLogout()" class="text-white hover:text-blue-100 transition-all duration-200">
-                            Logout
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}" id="logout-form" class="hidden">
-                            @csrf
-                        </form>
-                    @else
-                        <a href="{{ route('login') }}" class="text-white hover:text-blue-100 transition-all duration-200 relative group">
-                            Login
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
-                        </a>
-                        <a href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all duration-200">Register</a>
-                    @endauth
-                @endif
-            </nav>
+            
+            <!-- Right Side - Government Logos -->
+            <div class="flex items-center space-x-2">
+                <img src="{{ asset('Municipal Seal of Lagonoy.png') }}" alt="Municipal Seal of Lagonoy" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
+                <img src="{{ asset('bagong-pilipinas-logo.png') }}" alt="Bagong Pilipinas Logo" class="w-8 h-8 md:w-10 md:h-10 object-contain drop-shadow-sm">
+                <img src="{{ asset('Provincial Logo of Camarines Sur.png') }}" alt="Provincial Logo of Camarines Sur" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
+                <img src="{{ asset('Department of Tourism (DOT) Philippines Logo.png') }}" alt="Department of Tourism Philippines" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
+            </div>
         </div>
     </header>
 
@@ -113,34 +76,14 @@
     <div class="border-t border-gray-200 my-10 hidden lg:block"></div>
 
     <!-- Footer -->
-    <footer style="background-color: #012844ff;" class="text-white py-10">
+    <footer style="background-color: #064e3b;" class="text-white py-10">
         <div class="max-w-6xl mx-auto px-5">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="text-xl font-playfair font-bold mb-4">Pagsurong Lagonoy</h3>
-                    <p class="text-gray-300">
-                        Your gateway to authentic Camarines Sur tourism experiences. Connect with local businesses
-                        and discover the beauty of Pagsurong Lagonoy.
-                    </p>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('home') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Home</a></li>
-                        <li><a href="{{ route('about') }}" class="text-gray-300 hover:text-white transition-colors duration-200">About Us</a></li>
-                        <li><a href="{{ route('contact') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Contact</a></li>
-                        <li><a href="{{ route('terms') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Terms & Conditions</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Support</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Help Center</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Privacy Policy</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">FAQ</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">Report Issue</a></li>
-                    </ul>
-                </div>
+            <div class="text-center">
+                <h3 class="text-xl font-playfair font-bold mb-4">Pagsurong Lagonoy</h3>
+                <p class="text-gray-300 mb-6">
+                    Your gateway to authentic Camarines Sur tourism experiences. Connect with local businesses
+                    and discover the beauty of Pagsurong Lagonoy.
+                </p>
             </div>
             <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400 text-sm">
                 <p>&copy; {{ $currentYear }} Pagsurong Lagonoy. All rights reserved.</p>

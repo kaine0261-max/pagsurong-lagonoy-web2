@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.customer')
 
 @section('title', $business->name . ' - Pagsurong Lagonoy')
 
@@ -120,7 +120,7 @@
         </h2>
         
         @if($products && $products->count() > 0)
-            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @foreach($products as $product)
                     <div class="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow">
                         @if($product->image)
@@ -155,21 +155,21 @@
                             @endif
                         </div>
                         
-                        <div class="mt-3">
+                        <div class="mt-3 space-y-2">
                             @if(($product->current_stock ?? 0) > 0)
                                 @auth
                                     <form action="{{ route('customer.cart.add') }}" method="POST" class="inline">
                                         @csrf
                                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                                         <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                        <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm">
                                             <i class="fas fa-shopping-cart mr-2"></i>
                                             Add to Cart
                                         </button>
                                     </form>
                                 @else
                                     <a href="{{ route('login') }}" 
-                                       class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm flex items-center justify-center">
+                                       class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm flex items-center justify-center">
                                         <i class="fas fa-shopping-cart mr-2"></i>
                                         Add to Cart
                                     </a>
@@ -180,6 +180,39 @@
                                     Out of Stock
                                 </button>
                             @endif
+                            
+                            <!-- Feedback Button -->
+                            @auth
+                                <button onclick="showComments({{ $product->id }})" class="w-full flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm">
+                                    <i class="fas fa-comment-dots mr-2"></i>
+                                    <span>Feedback</span>
+                                    @php
+                                        try {
+                                            $commentCount = method_exists($product, 'comments') ? $product->comments()->count() : 0;
+                                        } catch (Exception $e) {
+                                            $commentCount = 0;
+                                        }
+                                    @endphp
+                                    @if($commentCount > 0)
+                                        <span class="ml-2 bg-green-500 text-white text-xs rounded-full px-2 py-0.5">{{ $commentCount }}</span>
+                                    @endif
+                                </button>
+                            @else
+                                <button onclick="viewComments({{ $product->id }}, '{{ addslashes($product->name) }}')" class="w-full flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm">
+                                    <i class="fas fa-comment-dots mr-2"></i>
+                                    <span>View Feedback</span>
+                                    @php
+                                        try {
+                                            $commentCount = method_exists($product, 'comments') ? $product->comments()->count() : 0;
+                                        } catch (Exception $e) {
+                                            $commentCount = 0;
+                                        }
+                                    @endphp
+                                    @if($commentCount > 0)
+                                        <span class="ml-2 bg-green-500 text-white text-xs rounded-full px-2 py-0.5">{{ $commentCount }}</span>
+                                    @endif
+                                </button>
+                            @endauth
                         </div>
                     </div>
                 @endforeach
@@ -476,6 +509,157 @@ window.deleteComment = function(commentId) {
         });
     }
 };
+
+// Product Comments Modal Functions
+@auth
+    const authUser = true;
+@else
+    const authUser = false;
+@endauth
+
+function viewComments(productId, productName) {
+    showCommentsModal(productId, productName, false); // false = read-only mode
+}
+
+function showComments(productId) {
+    showCommentsModal(productId, 'Product', true);
+}
+
+function showCommentsModal(productId, productName, canComment = true) {
+    const modal = createCommentsModal(productId, productName, canComment);
+    document.body.appendChild(modal);
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    
+    // Load existing comments
+    loadProductComments(productId);
+}
+
+function createCommentsModal(productId, productName, canComment = true) {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    modal.id = `comments-modal-${productId}`;
+    
+    const commentFormHtml = canComment ? `
+        <!-- Add Comment Form -->
+        <form id="comment-form-${productId}" onsubmit="submitProductComment(event, ${productId})" class="border-t pt-4">
+            <div class="flex space-x-3">
+                <textarea name="comment" rows="2" class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none" 
+                          placeholder="Write a comment..." required></textarea>
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </form>
+    ` : `
+        <div class="border-t pt-4 text-center">
+            <p class="text-gray-500 text-sm mb-3">Want to leave a comment?</p>
+            <a href="{{ route('login') }}" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors inline-block">
+                Login to Comment
+            </a>
+        </div>
+    `;
+    
+    modal.innerHTML = `
+        <div class="bg-white rounded-lg p-6 max-w-lg w-full mx-4 max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Comments - ${productName}</h3>
+                <button onclick="closeCommentsModal(${productId})" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Comments List -->
+            <div class="flex-1 overflow-y-auto mb-4" id="comments-list-${productId}">
+                <div class="text-center py-4 text-gray-500">Loading comments...</div>
+            </div>
+            
+            ${commentFormHtml}
+        </div>
+    `;
+    
+    return modal;
+}
+
+function closeCommentsModal(productId) {
+    const modal = document.getElementById(`comments-modal-${productId}`);
+    if (modal) {
+        modal.remove();
+        document.body.style.overflow = 'auto';
+    }
+}
+
+function loadProductComments(productId) {
+    fetch(`/products/${productId}/comments`, {
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const commentsList = document.getElementById(`comments-list-${productId}`);
+        if (data.comments && data.comments.length > 0) {
+            commentsList.innerHTML = data.comments.map(comment => `
+                <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                            ${comment.user && comment.user.profile_picture ? 
+                                `<img src="${comment.user.profile_picture}" alt="${comment.user.name}" class="w-full h-full object-cover">` :
+                                `<div class="w-full h-full bg-green-500 flex items-center justify-center text-white text-sm font-medium">
+                                    ${comment.user && comment.user.name ? comment.user.name.charAt(0).toUpperCase() : 'U'}
+                                </div>`
+                            }
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-medium text-sm">${comment.user ? comment.user.name : 'User'}</span>
+                                <span class="text-xs text-gray-500">${comment.created_at_human || comment.created_at}</span>
+                            </div>
+                            <p class="text-sm text-gray-700">${comment.comment}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            commentsList.innerHTML = '<div class="text-center py-4 text-gray-500">No comments yet. Be the first to comment!</div>';
+        }
+    })
+    .catch(error => {
+        console.error('Error loading comments:', error);
+        const commentsList = document.getElementById(`comments-list-${productId}`);
+        commentsList.innerHTML = '<div class="text-center py-4 text-red-500">Error loading comments</div>';
+    });
+}
+
+function submitProductComment(event, productId) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const formData = new FormData(form);
+    
+    fetch(`/products/${productId}/comment`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            form.reset();
+            loadProductComments(productId);
+            // Reload page after 1 second to update comment count badges
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            alert(data.error || 'Error submitting comment');
+        }
+    })
+    .catch(error => {
+        console.error('Error submitting comment:', error);
+        alert('Error submitting comment');
+    });
+}
 </script>
 
 @endsection

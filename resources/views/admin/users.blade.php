@@ -20,12 +20,6 @@
                     Search
                 </button>
             </form>
-            <form method="GET" action="{{ route('admin.users') }}">
-                <input type="hidden" name="export" value="csv">
-                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm transition-colors">
-                    Export CSV
-                </button>
-            </form>
             <a href="{{ route('admin.users.archived') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm transition-colors">
                 Archived Users
             </a>

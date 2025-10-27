@@ -32,15 +32,16 @@
                     @enderror
                 </div>
 
-                <!-- Birthday -->
+                <!-- Birthdate -->
                 <div>
                     <label for="birthday" class="block text-sm font-medium text-gray-700 mb-2">
-                        Birthday <span class="text-red-500">*</span>
+                        Birthdate <span class="text-red-500">*</span>
                     </label>
                     <input type="date" 
                            id="birthday" 
                            name="birthday" 
                            value="{{ old('birthday', $profile->birthday) }}"
+                           min="1900-01-01" max="{{ date('Y-m-d') }}"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            required>
                     @error('birthday')
@@ -97,6 +98,8 @@
                            value="{{ old('phone_number', $profile->phone_number) }}"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            placeholder="Enter your phone number"
+                           maxlength="11"
+                           pattern="[0-9]{11}"
                            required>
                     @error('phone_number')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

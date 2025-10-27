@@ -37,15 +37,15 @@ class BusinessApprovalController extends Controller
             ->orderBy('approved_at', 'desc')
             ->paginate(10, ['*'], 'approved_page');
 
-        $rejectedBusinesses = BusinessProfile::with('user')
-            ->where('status', 'rejected')
+        $declinedBusinesses = BusinessProfile::with('user')
+            ->where('status', 'declined')
             ->orderBy('updated_at', 'desc')
-            ->paginate(10, ['*'], 'rejected_page');
+            ->paginate(10, ['*'], 'declined_page');
 
         return view('admin.business-approvals.index', compact(
             'pendingBusinesses',
             'approvedBusinesses',
-            'rejectedBusinesses'
+            'declinedBusinesses'
         ));
     }
 
@@ -56,8 +56,17 @@ class BusinessApprovalController extends Controller
     {
         $business->load('user');
         
-        // Get the business permit file URL
-        $businessPermitUrl = Storage::url($business->business_permit_path);
+        // Get the business permit file URLs (now supports multiple files)
+        $businessPermitUrls = [];
+        if (!empty($business->business_permit_path)) {
+            foreach ($business->business_permit_path as $permitPath) {
+                $businessPermitUrls[] = [
+                    'url' => Storage::url($permitPath),
+                    'path' => $permitPath,
+                    'name' => basename($permitPath)
+                ];
+            }
+        }
         
         // Get any additional licenses
         $licenses = [];
@@ -72,7 +81,7 @@ class BusinessApprovalController extends Controller
 
         return view('admin.business-approvals.show', compact(
             'business',
-            'businessPermitUrl',
+            'businessPermitUrls',
             'licenses'
         ));
     }
@@ -90,15 +99,15 @@ class BusinessApprovalController extends Controller
     }
 
     /**
-     * Reject a business profile.
+     * Decline a business profile.
      */
-    public function reject(Request $request, BusinessProfile $business)
+    public function decline(Request $request, BusinessProfile $business)
     {
         $request->validate([
-            'rejection_reason' => 'required|string|max:1000',
+            'decline_reason' => 'required|string|max:1000',
         ]);
 
-        return $this->updateBusinessStatus($business, 'rejected', $request->rejection_reason);
+        return $this->updateBusinessStatus($business, 'declined', $request->decline_reason);
     }
 
     /**
@@ -108,7 +117,7 @@ class BusinessApprovalController extends Controller
     {
         $payload = [
             'status' => $status,
-            'rejection_reason' => $status === 'rejected' ? $notes : null,
+            'decline_reason' => $status === 'declined' ? $notes : null,
             'approved_at' => $status === 'approved' ? now() : $business->approved_at,
             'approved_by' => $status === 'approved' ? auth()->id() : $business->approved_by,
         ];
@@ -163,8 +172,20 @@ class BusinessApprovalController extends Controller
         $this->authorize('view', $business);
         
         if ($type === 'permit') {
-            $filePath = $business->business_permit_path;
-            $fileName = 'business_permit_' . Str::slug($business->business_name) . '.' . 
+            // Handle business_permit_path as array (supports multiple permits)
+            $permits = $business->business_permit_path ?? [];
+            
+            if ($index !== null && isset($permits[$index])) {
+                $filePath = $permits[$index];
+            } elseif (count($permits) > 0) {
+                // If no index specified, download the first permit
+                $filePath = $permits[0];
+            } else {
+                abort(404, 'No business permit found');
+            }
+            
+            $fileName = 'business_permit_' . ($index !== null ? ($index + 1) . '_' : '') . 
+                Str::slug($business->business_name) . '.' . 
                 pathinfo($filePath, PATHINFO_EXTENSION);
         } elseif ($type === 'license' && $index !== null && isset($business->licenses[$index])) {
             $filePath = $business->licenses[$index]['path'];
@@ -173,11 +194,11 @@ class BusinessApprovalController extends Controller
             abort(404);
         }
 
-        if (!Storage::exists($filePath)) {
-            abort(404);
+        if (!Storage::disk('public')->exists($filePath)) {
+            abort(404, 'File not found in storage');
         }
 
-        return Storage::download($filePath, $fileName);
+        return Storage::disk('public')->download($filePath, $fileName);
     }
 
     /**

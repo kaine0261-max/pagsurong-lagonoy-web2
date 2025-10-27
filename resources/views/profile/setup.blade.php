@@ -37,7 +37,7 @@
                         <div class="flex flex-col items-center">
                             <div class="relative">
                                 <!-- Upload Zone -->
-                                <div id="upload-zone" class="relative w-32 h-32 rounded-full border-4 border-dashed border-blue-300 bg-blue-50 hover:bg-blue-100 transition-all duration-300 cursor-pointer group">
+                                <div id="upload-zone" class="relative w-32 h-32 rounded-full border-4 border-dashed border-green-300 bg-green-50 hover:bg-green-100 transition-all duration-300 cursor-pointer group">
                                     <div class="absolute inset-0 rounded-full overflow-hidden">
                                         <img id="preview" class="w-full h-full object-cover" src="{{ asset('uploads/default.png') }}" alt="Profile Picture">
                                     </div>
@@ -69,7 +69,7 @@
                             <!-- Progress Bar -->
                             <div id="progress-container" class="hidden mt-3 w-32">
                                 <div class="bg-gray-200 rounded-full h-2">
-                                    <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                    <div id="progress-bar" class="bg-green-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
                                 </div>
                                 <p id="progress-text" class="text-xs text-gray-500 mt-1 text-center">Uploading...</p>
                             </div>
@@ -80,30 +80,39 @@
                     </div>
 
                     <div class="py-2">
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                        <input id="email" name="email" type="email" readonly 
+                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 cursor-not-allowed"
+                               value="{{ auth()->user()->email }}">
+                        <p class="text-xs text-gray-500 mt-1">This is your registered email address</p>
+                    </div>
+
+                    <div class="py-2">
                         <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name <span class="text-red-500">*</span></label>
                         <input id="full_name" name="full_name" type="text" required 
-                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                placeholder="Juan Dela Cruz" value="{{ old('full_name', auth()->user()->name) }}">
                     </div>
 
                     <div class="py-2">
-                        <label for="birthday" class="block text-sm font-medium text-gray-700">Birthday <span class="text-red-500">*</span></label>
+                        <label for="birthday" class="block text-sm font-medium text-gray-700">Birthdate <span class="text-red-500">*</span></label>
                         <input id="birthday" name="birthday" type="date" required 
-                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 text-gray-900"
+                               min="1900-01-01" max="{{ date('Y-m-d') }}"
                                value="{{ old('birthday') }}">
                     </div>
 
                     <div class="py-2">
                         <label for="age" class="block text-sm font-medium text-gray-700">Age <span class="text-red-500">*</span></label>
                         <input id="age" name="age" type="number" min="1" max="120" required 
-                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                placeholder="25" value="{{ old('age') }}">
                     </div>
 
                     <div class="py-2">
                         <label for="sex" class="block text-sm font-medium text-gray-700">Sex <span class="text-red-500">*</span></label>
                         <select id="sex" name="sex" required 
-                                class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500">
                             <option value="">Select</option>
                             <option value="Male" {{ old('sex') === 'Male' ? 'selected' : '' }}>Male</option>
                             <option value="Female" {{ old('sex') === 'Female' ? 'selected' : '' }}>Female</option>
@@ -114,8 +123,8 @@
                     <div class="py-2">
                         <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number <span class="text-red-500">*</span></label>
                         <input id="phone_number" name="phone_number" type="tel" required 
-                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
-                               placeholder="09xxxxxxxxx" value="{{ old('phone_number') }}">
+                               class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
+                               placeholder="09xxxxxxxxx" value="{{ old('phone_number') }}" maxlength="11" pattern="[0-9]{11}">
                     </div>
 
                     <div class="py-2">
@@ -125,15 +134,15 @@
                     <div class="py-2">
                         <label for="bio" class="block text-sm font-medium text-gray-700">Short Bio</label>
                         <textarea id="bio" name="bio" rows="4"
-                                  class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 text-gray-900"
+                                  class="appearance-none relative block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 placeholder-gray-500 text-gray-900"
                                   placeholder="Tell us a bit about yourself...">{{ old('bio') }}</textarea>
                     </div>
                 </div>
 
                 <div>
-                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
                         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                            <svg class="h-5 w-5 text-blue-500 group-hover:text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <svg class="h-5 w-5 text-green-500 group-hover:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                             </svg>
                         </span>
@@ -235,17 +244,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Drag and drop
     uploadZone.addEventListener('dragover', function(e) {
         e.preventDefault();
-        uploadZone.classList.add('border-blue-500', 'bg-blue-200');
+        uploadZone.classList.add('border-green-500', 'bg-green-200');
     });
 
     uploadZone.addEventListener('dragleave', function(e) {
         e.preventDefault();
-        uploadZone.classList.remove('border-blue-500', 'bg-blue-200');
+        uploadZone.classList.remove('border-green-500', 'bg-green-200');
     });
 
     uploadZone.addEventListener('drop', function(e) {
         e.preventDefault();
-        uploadZone.classList.remove('border-blue-500', 'bg-blue-200');
+        uploadZone.classList.remove('border-green-500', 'bg-green-200');
 
         const files = e.dataTransfer.files;
         if (files.length > 0) {

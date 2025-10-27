@@ -20,16 +20,17 @@
                             <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name</label>
                             <input type="text" id="full_name" name="full_name" 
                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                   placeholder="Juan Dela Cruz" value="{{ old('full_name') }}" required>
+                                   placeholder="Juan Dela Cruz" value="{{ old('full_name', auth()->user()->name) }}" required>
                             @error('full_name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div>
-                            <label for="birthday" class="block text-sm font-medium text-gray-700">Birthday</label>
+                            <label for="birthday" class="block text-sm font-medium text-gray-700">Birthdate</label>
                             <input type="date" id="birthday" name="birthday" 
                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                   min="1900-01-01" max="{{ date('Y-m-d') }}"
                                    value="{{ old('birthday') }}" required>
                             @error('birthday')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -47,10 +48,10 @@
                         </div>
 
                         <div>
-                            <label for="sex" class="block text-sm font-medium text-gray-700">Gender</label>
+                            <label for="sex" class="block text-sm font-medium text-gray-700">Sex</label>
                             <select id="sex" name="sex" 
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
-                                <option value="">Select Gender</option>
+                                <option value="">Select Sex</option>
                                 <option value="Male" {{ old('sex') === 'Male' ? 'selected' : '' }}>Male</option>
                                 <option value="Female" {{ old('sex') === 'Female' ? 'selected' : '' }}>Female</option>
                                 <option value="Other" {{ old('sex') === 'Other' ? 'selected' : '' }}>Other</option>
@@ -89,7 +90,9 @@
                             <label for="contact_number" class="block text-sm font-medium text-gray-700">Contact Number</label>
                             <input type="tel" id="contact_number" name="contact_number" 
                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                   placeholder="e.g. 0956 456 1525"
+                                   placeholder="e.g. 09564561525"
+                                   maxlength="11"
+                                   pattern="[0-9]{11}"
                                    value="{{ old('contact_number') }}" required>
                             @error('contact_number')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -141,18 +144,22 @@
 
                         <!-- Business Permit -->
                         <div class="col-span-2">
-                            <label for="business_permit" class="block text-sm font-medium text-gray-700">Business Permit</label>
-                            <input type="file" id="business_permit" name="business_permit" 
+                            <label for="business_permit" class="block text-sm font-medium text-gray-700">Business Permit(s)</label>
+                            <input type="file" id="business_permit" name="business_permit[]" 
                                    class="mt-1 block w-full text-sm text-gray-500
                                           file:mr-4 file:py-2 file:px-4
                                           file:rounded-md file:border-0
                                           file:text-sm file:font-semibold
                                           file:bg-blue-50 file:text-blue-700
                                           hover:file:bg-blue-100"
-                                   accept=".pdf,.jpg,.jpeg,.png"
+                                   accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                   multiple
                                    required>
-                            <p class="mt-1 text-xs text-gray-500">Upload a clear photo or scan of your business permit (PDF, JPG, or PNG, max 5MB)</p>
+                            <p class="mt-1 text-xs text-gray-500">Upload business permit documents (PDF, JPG, PNG, DOC, DOCX - max 5MB each, multiple files allowed)</p>
                             @error('business_permit')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            @error('business_permit.*')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>

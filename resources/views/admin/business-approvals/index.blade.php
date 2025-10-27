@@ -13,8 +13,8 @@
             <a href="#approved" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                 Approved ({{ $approvedBusinesses->total() }})
             </a>
-            <a href="#rejected" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                Rejected ({{ $rejectedBusinesses->total() }})
+            <a href="#declined" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                Declined ({{ $declinedBusinesses->total() }})
             </a>
         </div>
     </div>
@@ -96,7 +96,7 @@
                                             </button>
                                         </form>
                                         <button type="button"
-                                            onclick="document.getElementById('reject-form-{{ $business->id }}').classList.toggle('hidden')"
+                                            onclick="document.getElementById('decline-form-{{ $business->id }}').classList.toggle('hidden')"
                                             class="px-3 py-1 text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
                                             Decline
                                         </button>
@@ -106,14 +106,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Inline Reject Form -->
-                            <div id="reject-form-{{ $business->id }}" class="hidden px-4 pb-4 sm:px-6">
-                                <form action="{{ route('admin.business-approvals.reject', $business) }}" method="POST" class="bg-red-50 border border-red-200 rounded-md p-4">
+                            <!-- Inline Decline Form -->
+                            <div id="decline-form-{{ $business->id }}" class="hidden px-4 pb-4 sm:px-6">
+                                <form action="{{ route('admin.business-approvals.decline', $business) }}" method="POST" class="bg-red-50 border border-red-200 rounded-md p-4">
                                     @csrf
-                                    <label for="rejection_reason_{{ $business->id }}" class="block text-sm font-medium text-red-700">Reason for Decline</label>
-                                    <textarea id="rejection_reason_{{ $business->id }}" name="rejection_reason" rows="2" class="mt-1 w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required></textarea>
+                                    <label for="decline_reason_{{ $business->id }}" class="block text-sm font-medium text-red-700">Reason for Decline</label>
+                                    <textarea id="decline_reason_{{ $business->id }}" name="decline_reason" rows="2" class="mt-1 w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required></textarea>
                                     <div class="mt-3 flex justify-end space-x-2">
-                                        <button type="button" class="px-3 py-1 text-sm rounded-md border" onclick="document.getElementById('reject-form-{{ $business->id }}').classList.add('hidden')">Cancel</button>
+                                        <button type="button" class="px-3 py-1 text-sm rounded-md border" onclick="document.getElementById('decline-form-{{ $business->id }}').classList.add('hidden')">Cancel</button>
                                         <button type="submit" class="px-3 py-1 text-sm rounded-md text-white bg-red-600 hover:bg-red-700">Confirm Decline</button>
                                     </div>
                                 </form>
@@ -215,23 +215,23 @@
         @endif
     </div>
 
-    <!-- Rejected Businesses -->
-    <div id="rejected">
+    <!-- Declined Businesses -->
+    <div id="declined">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-semibold text-gray-800">Rejected Businesses</h2>
+            <h2 class="text-xl font-semibold text-gray-800">Declined Businesses</h2>
             <span class="px-3 py-1 text-sm font-medium rounded-full bg-red-100 text-red-800">
-                {{ $rejectedBusinesses->total() }} Rejected
+                {{ $declinedBusinesses->total() }} Declined
             </span>
         </div>
 
-        @if($rejectedBusinesses->isEmpty())
+        @if($declinedBusinesses->isEmpty())
             <div class="bg-white rounded-lg shadow p-6 text-center">
-                <p class="text-gray-500">No rejected businesses.</p>
+                <p class="text-gray-500">No declined businesses.</p>
             </div>
         @else
             <div class="bg-white shadow overflow-hidden sm:rounded-md">
                 <ul class="divide-y divide-gray-200">
-                    @foreach($rejectedBusinesses as $business)
+                    @foreach($declinedBusinesses as $business)
                         <li>
                             <div class="px-4 py-4 sm:px-6">
                                 <div class="flex items-center justify-between">
@@ -265,14 +265,14 @@
                                                     <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
                                                 </svg>
                                                 <p>
-                                                    Rejected on <time datetime="{{ $business->updated_at->format('Y-m-d') }}">{{ $business->updated_at->format('M d, Y') }}</time>
+                                                    Declined on <time datetime="{{ $business->updated_at->format('Y-m-d') }}">{{ $business->updated_at->format('M d, Y') }}</time>
                                                 </p>
                                             </div>
                                         </div>
-                                        @if($business->rejection_reason)
+                                        @if($business->decline_reason)
                                             <div class="mt-2">
                                                 <p class="text-sm text-red-600">
-                                                    <span class="font-medium">Reason:</span> {{ $business->rejection_reason }}
+                                                    <span class="font-medium">Reason:</span> {{ $business->decline_reason }}
                                                 </p>
                                             </div>
                                         @endif
@@ -287,9 +287,9 @@
                         </li>
                     @endforeach
                 </ul>
-                @if($rejectedBusinesses->hasPages())
+                @if($declinedBusinesses->hasPages())
                     <div class="px-4 py-3 bg-gray-50 border-t border-gray-200 sm:px-6">
-                        {{ $rejectedBusinesses->links() }}
+                        {{ $declinedBusinesses->links() }}
                     </div>
                 @endif
             </div>

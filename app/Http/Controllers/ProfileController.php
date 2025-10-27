@@ -120,7 +120,7 @@ class ProfileController extends Controller
 
         Profile::create($profileData);
 
-        return redirect()->route('terms', ['from' => 'profile_setup'])
+        return redirect()->route('customer.products')
             ->with('success', 'Profile setup completed successfully!');
     }
 
@@ -182,8 +182,8 @@ class ProfileController extends Controller
         // Create business using Business model
         $business = \App\Models\Business::create($businessData);
 
-        return redirect()->route('terms', ['from' => 'profile_setup'])
-            ->with('success', 'Business profile setup completed! You can now start adding products.');
+        return redirect()->route('business.setup')
+            ->with('success', 'Business profile setup completed! Please complete your business setup.');
     }
 
     public function edit()
@@ -286,5 +286,82 @@ class ProfileController extends Controller
     public function storeProfile(Request $request)
     {
         return $this->store($request);
+    }
+
+    /**
+     * Delete the user's account and all related data.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deleteAccount()
+    {
+        $user = Auth::user();
+
+        try {
+            \DB::beginTransaction();
+
+            // Delete profile picture if exists
+            if ($user->profile && $user->profile->profile_picture) {
+                Storage::disk('public')->delete($user->profile->profile_picture);
+            }
+
+            // Delete user's profile
+            if ($user->profile) {
+                $user->profile->forceDelete();
+            }
+
+            // Delete business-related data if business owner
+            if ($user->role === 'business_owner' && $user->businessProfile) {
+                // Delete business profile images
+                if ($user->businessProfile->cover_image) {
+                    Storage::disk('public')->delete($user->businessProfile->cover_image);
+                }
+
+                // Delete business galleries
+                if ($user->businessProfile->galleries) {
+                    foreach ($user->businessProfile->galleries as $gallery) {
+                        if ($gallery->image_path) {
+                            Storage::disk('public')->delete($gallery->image_path);
+                        }
+                        $gallery->forceDelete();
+                    }
+                }
+
+                // Delete business profile
+                $user->businessProfile->forceDelete();
+            }
+
+            // Delete user's orders
+            if ($user->orders) {
+                $user->orders()->forceDelete();
+            }
+
+            // Delete user's cart items
+            if ($user->cart) {
+                $user->cart()->forceDelete();
+            }
+
+            // Delete user's sent and received messages
+            $user->sentMessages()->forceDelete();
+            $user->receivedMessages()->forceDelete();
+
+            // Finally, PERMANENTLY delete the user account from database
+            $user->forceDelete();
+
+            \DB::commit();
+
+            // Logout the user
+            Auth::logout();
+
+            return redirect()->route('home')
+                ->with('success', 'Your account has been permanently deleted. We\'re sorry to see you go!');
+
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            \Log::error('Error deleting account: ' . $e->getMessage());
+            
+            return redirect()->back()
+                ->with('error', 'An error occurred while deleting your account. Please try again or contact support.');
+        }
     }
 }

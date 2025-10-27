@@ -10,34 +10,91 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+    // PUBLIC route method - for non-authenticated users or general public access
     public function index()
     {
-        if (Auth::check() && Auth::user()->role === 'customer') {
-            // For customers, show only shops (exclude hotels and resorts)
-            $businesses = Business::with(['products', 'businessProfile'])
-                ->whereHas('businessProfile', function($query) {
-                    $query->whereNotIn('business_type', ['hotel', 'resort']);
-                })
-                ->where('is_published', true)
-                ->get();
-
-            // Get some featured products from shops only
-            $featuredProducts = Product::with(['business.businessProfile'])
-                ->whereHas('business', function($query) {
-                    $query->where('is_published', true)
-                          ->whereHas('businessProfile', function($subQuery) {
-                              $subQuery->whereNotIn('business_type', ['hotel', 'resort']);
-                          });
-                })
-                ->take(8)
-                ->get();
-
-            return view('customer.products', compact('businesses', 'featuredProducts'));
-        }
-
-        // For public view, show all products
-        $products = Product::with(['business'])->paginate(12);
+        // Fair display algorithm: Use daily-seeded random order for equal visibility
+        // Seed changes daily to rotate products fairly
+        $dailySeed = (int) date('Ymd');
+        srand($dailySeed);
+        
+        // For public view, show all products from published businesses
+        $products = Product::with(['business.businessProfile'])
+            ->whereHas('business', function($query) {
+                $query->where('is_published', true)
+                      ->whereHas('businessProfile', function($subQuery) {
+                          $subQuery->where('status', 'approved')
+                                   ->whereNotIn('business_type', ['hotel', 'resort']);
+                      });
+            })
+            ->inRandomOrder()
+            ->paginate(12);
         return view('products.index', compact('products'));
+    }
+
+    // CUSTOMER route method - for authenticated customers only
+    public function customerIndex()
+    {
+        // For customers, show only shops (exclude hotels and resorts)
+        $businesses = Business::with(['products', 'businessProfile'])
+            ->whereHas('businessProfile', function($query) {
+                $query->whereNotIn('business_type', ['hotel', 'resort']);
+            })
+            ->where('is_published', true)
+            ->get();
+
+        // Get some featured products from shops only
+        $featuredProducts = Product::with(['business.businessProfile'])
+            ->whereHas('business', function($query) {
+                $query->where('is_published', true)
+                      ->whereHas('businessProfile', function($subQuery) {
+                          $subQuery->whereNotIn('business_type', ['hotel', 'resort']);
+                      });
+            })
+            ->take(8)
+            ->get();
+
+        return view('customer.products', compact('businesses', 'featuredProducts'));
+    }
+
+    // PUBLIC shops method
+    public function shops()
+    {
+        // Fair display algorithm: Use daily-seeded random order for equal visibility
+        $dailySeed = (int) date('Ymd');
+        srand($dailySeed);
+        
+        // For public view, show all shops (businesses) from published businesses
+        $shops = Business::with(['businessProfile'])
+            ->whereHas('businessProfile', function($query) {
+                $query->where('status', 'approved')
+                      ->whereNotIn('business_type', ['hotel', 'resort']);
+            })
+            ->where('is_published', true)
+            ->inRandomOrder()
+            ->paginate(12);
+        
+        return view('shops.index', compact('shops'));
+    }
+
+    // CUSTOMER shops method
+    public function customerShops()
+    {
+        // Fair display algorithm: Use daily-seeded random order for equal visibility
+        $dailySeed = (int) date('Ymd');
+        srand($dailySeed);
+        
+        // For customers, show all shops (businesses) from published businesses
+        $shops = Business::with(['businessProfile'])
+            ->whereHas('businessProfile', function($query) {
+                $query->where('status', 'approved')
+                      ->whereNotIn('business_type', ['hotel', 'resort']);
+            })
+            ->where('is_published', true)
+            ->inRandomOrder()
+            ->paginate(12);
+        
+        return view('customer.shops', compact('shops'));
     }
 
     public function hotels(Request $request)
@@ -73,6 +130,27 @@ class ProductController extends Controller
     {
         $product->load(['business']);
         return view('customer.product-show', compact('product'));
+    }
+
+    // PUBLIC shop detail view
+    public function showShop(BusinessProfile $shop)
+    {
+        // Check if shop is approved and published
+        if ($shop->status !== 'approved' || !$shop->is_published) {
+            abort(404, 'Shop not found');
+        }
+
+        // Check if it's not a hotel or resort
+        if (in_array($shop->business_type, ['hotel', 'resort'])) {
+            abort(404, 'Shop not found');
+        }
+
+        // Load products and galleries
+        $shop->load(['products', 'galleries' => function($query) {
+            $query->whereNull('room_id')->whereNull('cottage_id');
+        }]);
+
+        return view('shops.show', compact('shop'));
     }
 
     public function showBusiness(Business $business)

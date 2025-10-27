@@ -14,6 +14,7 @@ class Room extends Model
     protected $fillable = [
         'business_profile_id',
         'name',
+        'room_type',
         'description',
         'price_per_night',
         'capacity',

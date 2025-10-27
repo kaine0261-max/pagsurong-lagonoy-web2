@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.customer')
 
 @section('content')
 <div class="container mx-auto max-w-3xl">
@@ -32,7 +32,7 @@
                                              alt="{{ $otherUser->name }}"
                                              class="h-full w-full object-cover">
                                     @else
-                                        <div class="h-full w-full bg-blue-500 flex items-center justify-center">
+                                        <div class="h-full w-full bg-green-500 flex items-center justify-center">
                                             <span class="text-white font-medium text-sm">
                                                 {{ strtoupper(substr($otherUser->name, 0, 1)) }}
                                             </span>

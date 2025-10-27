@@ -21,12 +21,12 @@ use Illuminate\Support\Facades\Storage;
 <!-- Hero Banner Section with Dynamic Background -->
 <div class="w-full h-64 relative bg-gray-200"
      id="cover-banner"
-     @if($business && $business->cover_image)
-         style="background-image: url('{{ Storage::url($business->cover_image) }}'); background-size: cover; background-position: center;"
+     @if($businessProfile && $businessProfile->cover_image)
+         style="background-image: url('{{ Storage::url($businessProfile->cover_image) }}'); background-size: cover; background-position: center;"
      @endif>
      
     <!-- Cover Photo Upload Form -->
-    <div class="absolute top-4 right-4 z-40">
+    <div class="absolute top-20 right-4 z-40">
         <form action="{{ route('business.updateCover') }}" method="POST" enctype="multipart/form-data" class="inline">
             @csrf
             <label class="bg-white bg-opacity-90 text-gray-700 px-4 py-2 rounded-lg hover:bg-opacity-100 transition-all duration-200 flex items-center text-sm font-medium cursor-pointer shadow-lg">
@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Storage;
 </div>
 
 <!-- Main Content Section -->
-<div class="min-h-screen bg-gray-100">
+<div class="bg-gray-100 pb-8 min-h-[calc(100vh-16rem)]">
     <div class="w-full max-w-7xl mx-auto px-4 -mt-12 md:-mt-16 lg:-mt-20 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left Side - Profile and Resort Info -->
@@ -54,13 +54,13 @@ use Illuminate\Support\Facades\Storage;
                                          alt="{{ $business->business_name }}" 
                                          class="w-full h-full object-cover profile-photo">
                                 @else
-                                    <div class="w-full h-full bg-blue-600 flex items-center justify-center">
+                                    <div class="w-full h-full bg-green-600 flex items-center justify-center">
                                         <i class="fas fa-umbrella-beach text-white text-4xl"></i>
                                     </div>
                                 @endif
                             </div>
                             <div class="absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow-md">
-                                <i class="fas fa-camera text-blue-600 text-sm"></i>
+                                <i class="fas fa-camera text-green-600 text-sm"></i>
                             </div>
                         </div>
                         <input type="file" id="profile-photo" class="hidden" accept="image/*" onchange="uploadProfilePhoto(this)">
@@ -130,7 +130,7 @@ use Illuminate\Support\Facades\Storage;
                             @else
                                 <form action="{{ route('business.publish') }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">
                                         Publish Now
                                     </button>
                                 </form>
@@ -145,8 +145,8 @@ use Illuminate\Support\Facades\Storage;
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Resort Statistics</h3>
                     <div class="space-y-4">
                         <div class="flex items-center">
-                            <div class="p-2 bg-blue-100 rounded-lg mr-3">
-                                <i class="fas fa-door-open text-blue-600"></i>
+                            <div class="p-2 bg-green-100 rounded-lg mr-3">
+                                <i class="fas fa-door-open text-green-600"></i>
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500">Total Rooms</p>
@@ -187,7 +187,7 @@ use Illuminate\Support\Facades\Storage;
                                 <p class="text-2xl font-semibold text-gray-900">{{ $totalRooms }}</p>
                                 <p class="text-xs text-gray-500">{{ $availableRooms }} available</p>
                             </div>
-                            <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                            <div class="p-3 rounded-full bg-green-100 text-green-600">
                                 <i class="fas fa-door-open text-xl"></i>
                             </div>
                         </div>
@@ -211,7 +211,7 @@ use Illuminate\Support\Facades\Storage;
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">Resort Rooms</h3>
                         <div class="flex items-center gap-3">
-                            <button type="button" onclick="openModal('addRoomModal')" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
+                            <button type="button" onclick="openModal('addRoomModal')" class="inline-flex items-center px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
                                 <i class="fas fa-plus mr-1"></i> Add Room
                             </button>
                         </div>
@@ -258,7 +258,7 @@ use Illuminate\Support\Facades\Storage;
                                             {{ $room->description ?? 'No description available' }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <a href="#" onclick="editRoom({{ $room->id }})" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
+                                            <a href="#" onclick="editRoom({{ $room->id }})" class="text-green-600 hover:text-green-900 mr-3">Edit</a>
                                             <a href="#" onclick="deleteRoom({{ $room->id }})" class="text-red-600 hover:text-red-900">Delete</a>
                                         </td>
                                     </tr>
@@ -325,7 +325,7 @@ use Illuminate\Support\Facades\Storage;
                                             {{ $cottage->description ?? 'No description available' }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <a href="#" onclick="editCottage({{ $cottage->id }})" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
+                                            <a href="#" onclick="editCottage({{ $cottage->id }})" class="text-green-600 hover:text-green-900 mr-3">Edit</a>
                                             <a href="#" onclick="deleteCottage({{ $cottage->id }})" class="text-red-600 hover:text-red-900">Delete</a>
                                         </td>
                                     </tr>
@@ -346,16 +346,16 @@ use Illuminate\Support\Facades\Storage;
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">Gallery</h3>
                         <div class="flex items-center gap-3">
-                            <button type="button" onclick="openModal('galleryModal')" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
+                            <button type="button" onclick="openModal('galleryModal')" class="inline-flex items-center px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
                                 <i class="fas fa-plus mr-1"></i> Add Photos
                             </button>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        @forelse($business->gallery ?? [] as $image)
+                        @forelse($galleries as $image)
                             <div class="relative group">
-                                <img src="{{ Storage::url($image->path) }}" alt="Gallery Image" class="w-full h-32 object-cover rounded-lg hover:shadow-md transition-shadow cursor-pointer"
-                                     onclick="openImageModal('{{ Storage::url($image->path) }}')">
+                                <img src="{{ Storage::url($image->image_path) }}" alt="Gallery Image" class="w-full h-32 object-cover rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                                     onclick="openImageModal('{{ Storage::url($image->image_path) }}')">
                                 <button type="button" onclick="deleteImage({{ $image->id }})" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <i class="fas fa-times text-xs"></i>
                                 </button>
@@ -445,7 +445,7 @@ use Illuminate\Support\Facades\Storage;
                         <div class="col-span-2">
                             <label for="images" class="block text-sm font-medium text-gray-700">Room Images</label>
                             <input type="file" name="images[]" id="images" accept="image/*" multiple
-                                   class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                   class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
                             <p class="mt-1 text-sm text-gray-500">Upload multiple images to showcase your room</p>
                             
                             <!-- Image Previews -->
@@ -455,10 +455,10 @@ use Illuminate\Support\Facades\Storage;
                     </div>
                     
                     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-                        <button type="button" onclick="closeModal('addRoomModal')" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <button type="button" onclick="closeModal('addRoomModal')" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                             Cancel
                         </button>
-                        <button type="submit" id="roomModalButton" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <button type="submit" id="roomModalButton" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                             Add Room
                         </button>
                     </div>
@@ -590,10 +590,10 @@ use Illuminate\Support\Facades\Storage;
                 </div>
                 
                 <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-                    <button type="button" onclick="closeModal('galleryModal')" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <button type="button" onclick="closeModal('galleryModal')" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                         Cancel
                     </button>
-                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                         Upload Photos
                     </button>
                 </div>
@@ -929,8 +929,14 @@ use Illuminate\Support\Facades\Storage;
                 closeModal('addRoomModal');
                 window.location.reload();
             } else {
-                // Show error message
-                alert('Error: ' + (data.message || 'Failed to save room'));
+                // Show error message with debug info
+                console.error('Error response:', data);
+                if (data.debug) {
+                    console.log('Debug info:', data.debug);
+                    alert('Error: ' + (data.message || 'Failed to save room') + '\n\nDebug Info:\nUser ID: ' + data.debug.user_id + '\nBusinesses Count: ' + data.debug.businesses_count + '\nCheck console for details.');
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to save room'));
+                }
             }
         })
         .catch(error => {

@@ -1,10 +1,12 @@
-@extends('layouts.app')
+@extends(auth()->user()->role === 'business_owner' ? 'layouts.app' : 'layouts.customer')
 
 @section('content')
 <div class="container mx-auto max-w-3xl">
     <!-- Chat Header -->
     <div class="bg-white shadow rounded-t-lg p-4 flex items-center">
-        <a href="{{ url()->previous() }}" class="text-blue-600 mr-3">←</a>
+        <a href="{{ url()->previous() }}" class="text-green-600 hover:text-green-700 mr-3">
+            <i class="fas fa-arrow-left"></i>
+        </a>
         <div class="flex items-center">
             <div class="w-10 h-10 rounded-full overflow-hidden">
                 @if($user->profile && $user->profile->profile_picture)
@@ -12,7 +14,7 @@
                          alt="{{ $user->name }}"
                          class="h-full w-full object-cover">
                 @else
-                    <div class="h-full w-full bg-blue-500 flex items-center justify-center">
+                    <div class="h-full w-full bg-green-600 flex items-center justify-center">
                         <span class="text-white font-bold">
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </span>
@@ -33,12 +35,12 @@
         @forelse($messages as $msg)
             <div class="flex {{ $msg->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }}">
                 <div class="max-w-xs px-4 py-2 rounded-lg 
-                    {{ $msg->sender_id == auth()->id() ? 'bg-blue-500 text-white' : 'bg-white border' }}">
+                    {{ $msg->sender_id == auth()->id() ? 'bg-green-600 text-white' : 'bg-white border' }}">
                     <div>{!! nl2br(e($msg->content)) !!}</div>
 
                     @if($msg->order)
                         <div class="mt-2 text-xs italic border-t pt-1 
-                            {{ $msg->sender_id == auth()->id() ? 'text-blue-100' : 'text-gray-600' }}">
+                            {{ $msg->sender_id == auth()->id() ? 'text-green-100' : 'text-gray-600' }}">
                             🔗 Refers to Order #{{ $msg->order->id }}
                         </div>
                     @endif
@@ -60,12 +62,12 @@
         <textarea 
             name="content" 
             rows="1" 
-            class="flex-1 border rounded-full px-4 py-2 resize-none focus:outline-none"
+            class="flex-1 border rounded-full px-4 py-2 resize-none focus:outline-none focus:border-green-500"
             placeholder="Type a message..."
             required
             autofocus></textarea>
-        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full">
-            Send
+        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full transition-colors">
+            <i class="fas fa-paper-plane mr-1"></i>Send
         </button>
     </form>
 </div>

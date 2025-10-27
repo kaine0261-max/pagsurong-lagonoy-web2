@@ -206,7 +206,7 @@
                         <!-- Business Permit -->
                         <div class="sm:col-span-6">
                             <label for="business_permit" class="block text-sm font-medium text-gray-700">
-                                Business Permit/Mayor's Permit <span class="text-red-500">*</span>
+                                Business Permit(s)/Mayor's Permit <span class="text-red-500">*</span>
                             </label>
                             <div class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                                 <div class="space-y-1 text-center">
@@ -216,13 +216,13 @@
                                     <div class="flex text-sm text-gray-600">
                                         <label for="business_permit" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
                                             <span>Upload a file</span>
-                                            <input id="business_permit" name="business_permit" type="file" required
-                                                class="sr-only" accept=".pdf,.jpg,.jpeg,.png">
+                                            <input id="business_permit" name="business_permit[]" type="file" required
+                                                class="sr-only" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" multiple>
                                         </label>
                                         <p class="pl-1">or drag and drop</p>
                                     </div>
                                     <p class="text-xs text-gray-500">
-                                        PDF, JPG, or PNG up to 5MB
+                                        PDF, JPG, PNG, DOC, DOCX up to 5MB each (multiple files allowed)
                                     </p>
                                 </div>
                             </div>

@@ -20,7 +20,7 @@
                         'roboto': ['"Roboto"', 'sans-serif']
                     },
                     colors: {
-                        'primary': '#1d4ed8', // blue-700
+                        'primary': '#15803d', // green-700
                         'secondary': '#f97316' // orange-500
                     }
                 }
@@ -46,34 +46,55 @@
 <body class="font-roboto text-gray-800 leading-relaxed bg-gray-50 antialiased">
 
     <!-- Skip to Content (Accessibility) -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 bg-blue-600 text-white px-4 py-2 rounded-md z-50">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 bg-green-600 text-white px-4 py-2 rounded-md z-50">
         Skip to main content
     </a>
 
     <!-- Header -->
-    <header style="background-color: #012844ff;" class="text-white shadow-md fixed w-full top-0 left-0 right-0 z-50">
+    <header style="background-color: #064e3b;" class="text-white shadow-md fixed w-full top-0 left-0 right-0 z-50">
         <!-- Mobile Top Header -->
         <div class="md:hidden px-4 py-3 flex items-center justify-between">
-            <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-8 h-auto">
-
-            <!-- Mobile Category Navigation -->
-            <div class="flex items-center space-x-4 text-xs">
+            <!-- Left Side - Main Branding -->
+            <div class="flex items-center space-x-2">
+                <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-8 h-auto">
+                <div class="font-playfair text-lg font-bold">Pagsurong Lagonoy</div>
+            </div>
+            
+            <!-- Right Side - Government Logos -->
+            <div class="flex items-center space-x-1">
+                <img src="{{ asset('Municipal Seal of Lagonoy.png') }}" alt="Municipal Seal of Lagonoy" class="w-5 h-5 object-cover rounded-full border border-white">
+                <img src="{{ asset('bagong-pilipinas-logo.png') }}" alt="Bagong Pilipinas Logo" class="w-5 h-5 object-contain">
+                <img src="{{ asset('Provincial Logo of Camarines Sur.png') }}" alt="Provincial Logo of Camarines Sur" class="w-5 h-5 object-cover rounded-full border border-white">
+                <img src="{{ asset('Department of Tourism (DOT) Philippines Logo.png') }}" alt="Department of Tourism Philippines" class="w-5 h-5 object-cover rounded-full border border-white">
+            </div>
+        </div>
+        
+        <!-- Mobile Category Navigation -->
+        <div class="md:hidden px-4 py-2 flex items-center justify-center space-x-4 text-xs border-t border-green-700">
                 @auth
                     @php
                         $user = auth()->user();
                     @endphp
                     @if($user->role === 'customer' && $user->hasCompletedProfile())
-                        <a href="{{ route('customer.products') }}" class="text-white hover:text-blue-200 transition-colors {{ request()->routeIs('customer.products') ? 'font-semibold' : '' }}">
+                        <a href="{{ route('customer.products') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.products') ? 'font-semibold' : '' }}">
                             Products
+                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.products') ? 'w-full' : 'w-0' }}"></span>
                         </a>
-                        <a href="{{ route('customer.hotels') }}" class="text-white hover:text-blue-200 transition-colors {{ request()->routeIs('customer.hotels') ? 'font-semibold' : '' }}">
+                        <a href="{{ route('customer.shops') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.shops') ? 'font-semibold' : '' }}">
+                            Shops
+                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.shops') ? 'w-full' : 'w-0' }}"></span>
+                        </a>
+                        <a href="{{ route('customer.hotels') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.hotels') ? 'font-semibold' : '' }}">
                             Hotels
+                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.hotels') ? 'w-full' : 'w-0' }}"></span>
                         </a>
-                        <a href="{{ route('customer.resorts') }}" class="text-white hover:text-blue-200 transition-colors {{ request()->routeIs('customer.resorts') ? 'font-semibold' : '' }}">
+                        <a href="{{ route('customer.resorts') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.resorts') ? 'font-semibold' : '' }}">
                             Resorts
+                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.resorts') ? 'w-full' : 'w-0' }}"></span>
                         </a>
-                        <a href="{{ route('customer.attractions') }}" class="text-white hover:text-blue-200 transition-colors {{ request()->routeIs('customer.attractions') ? 'font-semibold' : '' }}">
+                        <a href="{{ route('customer.attractions') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.attractions') ? 'font-semibold' : '' }}">
                             Attractions
+                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.attractions') ? 'w-full' : 'w-0' }}"></span>
                         </a>
                     @elseif($user->role === 'customer' && !$user->hasCompletedProfile())
                         <span class="text-white text-xs opacity-75">Complete your profile to access all features</span>
@@ -95,17 +116,17 @@
                 @if($user->role === 'customer')
                     @if($user->hasCompletedProfile())
                         <!-- Mobile Bottom Navigation - Full customer features -->
-                        <a href="{{ route('customer.dashboard') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('customer.dashboard') ? 'text-blue-500' : '' }}">
+                        <a href="{{ route('customer.dashboard') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs('customer.dashboard') ? 'text-green-500' : '' }}">
                             <i class="fas fa-home text-xl mb-1"></i>
                             <span class="text-[10px] leading-tight">Home</span>
                         </a>
 
-                        <a href="{{ route('customer.orders') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('customer.orders') ? 'text-blue-500' : '' }}">
+                        <a href="{{ route('customer.orders') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('customer.orders') ? 'text-green-500' : '' }}">
                             <i class="fas fa-shopping-bag text-xl mb-1"></i>
                             <span class="text-[10px] leading-tight">Orders</span>
                         </a>
 
-                        <a href="{{ route('customer.messages') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('customer.messages') ? 'text-blue-500' : '' }}">
+                        <a href="{{ route('customer.messages') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('customer.messages') ? 'text-green-500' : '' }}">
                             <div class="relative">
                                 <i class="fas fa-envelope text-xl mb-1"></i>
                                 @if($unreadMessages)
@@ -117,7 +138,7 @@
                             <span class="text-[10px] leading-tight">Messages</span>
                         </a>
 
-                        <a href="{{ route('customer.cart') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('customer.cart') ? 'text-blue-500' : '' }}">
+                        <a href="{{ route('customer.cart') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('customer.cart') ? 'text-green-500' : '' }}">
                             <div class="relative">
                                 <i class="fas fa-shopping-cart text-xl mb-1"></i>
                                 @if($cartCount)
@@ -129,13 +150,13 @@
                             <span class="text-[10px] leading-tight">Cart</span>
                         </a>
 
-                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 focus:outline-none">
+                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
                             @if($user->profile && $user->profile->profile_picture)
                                 <img src="{{ Storage::url($user->profile->profile_picture) }}"
                                      alt="Profile"
-                                     class="w-8 h-8 rounded-full object-cover border border-blue-400 mb-1">
+                                     class="w-8 h-8 rounded-full object-cover border border-green-400 mb-1">
                             @else
-                                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm mb-1">
+                                <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-sm mb-1">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
                             @endif
@@ -143,18 +164,18 @@
                         </button>
                     @else
                         <!-- Mobile Bottom Navigation - Simple during profile setup -->
-                        <a href="{{ route('profile.setup') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('profile.setup') ? 'text-blue-500' : '' }}">
+                        <a href="{{ route('profile.setup') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs('profile.setup') ? 'text-green-500' : '' }}">
                             <i class="fas fa-user-edit text-xl mb-1"></i>
                             <span class="text-[10px] leading-tight">Setup</span>
                         </a>
 
-                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 focus:outline-none">
+                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
                             @if($user->profile && $user->profile->profile_picture)
                                 <img src="{{ Storage::url($user->profile->profile_picture) }}"
                                      alt="Profile"
-                                     class="w-8 h-8 rounded-full object-cover border border-blue-400 mb-1">
+                                     class="w-8 h-8 rounded-full object-cover border border-green-400 mb-1">
                             @else
-                                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm mb-1">
+                                <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-sm mb-1">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
                             @endif
@@ -176,23 +197,24 @@
                     @if($isApproved || $isPublished)
                         <!-- Business Owner Mobile Navigation - When Business is Approved/Published -->
                         @if($bizProfile && $bizProfile->business_type === 'resort')
-                            <a href="{{ route('business.my-resort') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('business.my-resort') ? 'text-blue-500' : '' }}">
+                            <a href="{{ route('business.my-resort') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs('business.my-resort') ? 'text-green-500' : '' }}">
                                 <i class="fas fa-umbrella-beach text-xl mb-1"></i>
                                 <span class="text-[10px] leading-tight">My Resort</span>
                             </a>
                         @elseif($bizProfile && $bizProfile->business_type === 'hotel')
-                            <a href="{{ route('business.my-hotel') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('business.my-hotel') ? 'text-blue-500' : '' }}">
+                            <a href="{{ route('business.my-hotel') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs('business.my-hotel') ? 'text-green-500' : '' }}">
                                 <i class="fas fa-hotel text-xl mb-1"></i>
                                 <span class="text-[10px] leading-tight">My Hotel</span>
                             </a>
                         @else
-                            <a href="{{ route('business.my-shop') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('business.my-shop') ? 'text-blue-500' : '' }}">
+                            <a href="{{ route('business.my-shop') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs('business.my-shop') ? 'text-green-500' : '' }}">
                                 <i class="fas fa-store text-xl mb-1"></i>
                                 <span class="text-[10px] leading-tight">My Shop</span>
                             </a>
                         @endif
                         
-                        <a href="{{ route('business.orders') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('business.orders') ? 'text-blue-500' : '' }}">
+                        @if($bizProfile && $bizProfile->business_type === 'shop')
+                        <a href="{{ route('business.orders') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('business.orders') ? 'text-green-500' : '' }}">
                             <div class="relative">
                                 <i class="fas fa-shopping-bag text-xl mb-1"></i>
                                 @if($pendingOrdersCount > 0)
@@ -203,8 +225,9 @@
                             </div>
                             <span class="text-[10px] leading-tight">Orders</span>
                         </a>
+                        @endif
                         
-                        <a href="{{ route('messages.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors relative {{ request()->routeIs('messages.*') ? 'text-blue-500' : '' }}">
+                        <a href="{{ route('messages.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('messages.*') ? 'text-green-500' : '' }}">
                             <div class="relative">
                                 <i class="fas fa-envelope text-xl mb-1"></i>
                                 @if($unreadMessages)
@@ -216,13 +239,13 @@
                             <span class="text-[10px] leading-tight">Messages</span>
                         </a>
                         
-                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 focus:outline-none">
+                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
                             @if($user->profile && $user->profile->profile_picture)
                                 <img src="{{ Storage::url($user->profile->profile_picture) }}"
                                      alt="Profile"
-                                     class="w-8 h-8 rounded-full object-cover border border-blue-400 mb-1">
+                                     class="w-8 h-8 rounded-full object-cover border border-green-400 mb-1">
                             @else
-                                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm mb-1">
+                                <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-sm mb-1">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
                             @endif
@@ -230,53 +253,48 @@
                         </button>
                     @else
                         <!-- Business Owner Mobile Navigation - When Business Needs Setup/Approval -->
-                        @php
-                            $setupLabel = 'Shop';
-                            $setupRoute = 'business.setup';
-                            $setupIcon = 'fas fa-store';
-                            if ($bizProfile && $bizProfile->business_type === 'hotel') {
-                                $setupLabel = 'Hotel';
-                                $setupRoute = 'business.my-hotel';
-                                $setupIcon = 'fas fa-hotel';
-                            } elseif ($bizProfile && $bizProfile->business_type === 'resort') {
-                                $setupLabel = 'Resort';
-                                $setupRoute = 'business.my-resort';
-                                $setupIcon = 'fas fa-umbrella-beach';
-                            } elseif (session('business_type') === 'hotel') {
-                                $setupLabel = 'Hotel';
-                                $setupRoute = 'business.my-hotel';
-                                $setupIcon = 'fas fa-hotel';
-                            } elseif (session('business_type') === 'resort') {
-                                $setupLabel = 'Resort';
-                                $setupRoute = 'business.my-resort';
-                                $setupIcon = 'fas fa-umbrella-beach';
-                            }
-                        @endphp
-                        
-                        <a href="{{ route($setupRoute) }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs($setupRoute) ? 'text-blue-500' : '' }}">
-                            <i class="{{ $setupIcon }} text-xl mb-1"></i>
-                            <span class="text-[10px] leading-tight text-center">Setup<br>{{ $setupLabel }}</span>
-                        </a>
-                        
-                        @if($bizProfile && $bizProfile->status === 'pending')
-                            <div class="flex flex-col items-center px-2 py-3 text-xs text-yellow-600">
-                                <i class="fas fa-clock text-xl mb-1"></i>
-                                <span class="text-[10px] leading-tight text-center">Pending<br>Approval</span>
-                            </div>
+                        {{-- Only show navigation links if user has completed business setup (has business profile) --}}
+                        @if($bizProfile)
+                            @php
+                                $setupLabel = 'Shop';
+                                $setupRoute = 'business.my-shop';
+                                $setupIcon = 'fas fa-store';
+                                if ($bizProfile->business_type === 'hotel') {
+                                    $setupLabel = 'Hotel';
+                                    $setupRoute = 'business.my-hotel';
+                                    $setupIcon = 'fas fa-hotel';
+                                } elseif ($bizProfile->business_type === 'resort') {
+                                    $setupLabel = 'Resort';
+                                    $setupRoute = 'business.my-resort';
+                                    $setupIcon = 'fas fa-umbrella-beach';
+                                }
+                            @endphp
+                            
+                            <a href="{{ route($setupRoute) }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs($setupRoute) ? 'text-green-500' : '' }}">
+                                <i class="{{ $setupIcon }} text-xl mb-1"></i>
+                                <span class="text-[10px] leading-tight text-center">My<br>{{ $setupLabel }}</span>
+                            </a>
+                            
+                            @if($bizProfile->status === 'pending')
+                                <div class="flex flex-col items-center px-2 py-3 text-xs text-yellow-600">
+                                    <i class="fas fa-clock text-xl mb-1"></i>
+                                    <span class="text-[10px] leading-tight text-center">Pending<br>Approval</span>
+                                </div>
+                            @endif
                         @endif
                         
-                        <a href="{{ route('dashboard') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('dashboard') ? 'text-blue-500' : '' }}">
+                        <a href="{{ route('dashboard') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs('dashboard') ? 'text-green-500' : '' }}">
                             <i class="fas fa-home text-xl mb-1"></i>
                             <span class="text-[10px] leading-tight">Home</span>
                         </a>
                         
-                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 focus:outline-none">
+                        <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
                             @if($user->profile && $user->profile->profile_picture)
                                 <img src="{{ Storage::url($user->profile->profile_picture) }}"
                                      alt="Profile"
-                                     class="w-8 h-8 rounded-full object-cover border border-blue-400 mb-1">
+                                     class="w-8 h-8 rounded-full object-cover border border-green-400 mb-1">
                             @else
-                                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm mb-1">
+                                <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-sm mb-1">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
                             @endif
@@ -285,33 +303,28 @@
                     @endif
                 @elseif($user->role === 'admin')
                     <!-- Admin Mobile Navigation -->
-                    <a href="{{ route('dashboard') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('dashboard') ? 'text-blue-500' : '' }}">
-                        <i class="fas fa-home text-xl mb-1"></i>
-                        <span class="text-[10px] leading-tight">Home</span>
-                    </a>
-                    
-                    <a href="{{ route('admin.dashboard') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('admin.dashboard') ? 'text-blue-500' : '' }}">
+                    <a href="{{ route('admin.dashboard') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs('admin.dashboard') ? 'text-green-500' : '' }}">
                         <i class="fas fa-tachometer-alt text-xl mb-1"></i>
                         <span class="text-[10px] leading-tight">Dashboard</span>
                     </a>
                     
-                    <a href="{{ route('admin.business-approvals.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('admin.business-approvals.*') ? 'text-blue-500' : '' }}">
+                    <a href="{{ route('admin.business-approvals.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs('admin.business-approvals.*') ? 'text-green-500' : '' }}">
                         <i class="fas fa-clipboard-check text-xl mb-1"></i>
                         <span class="text-[10px] leading-tight">Approvals</span>
                     </a>
                     
-                    <a href="{{ route('admin.users') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 transition-colors {{ request()->routeIs('admin.users') ? 'text-blue-500' : '' }}">
+                    <a href="{{ route('admin.users') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs('admin.users') ? 'text-green-500' : '' }}">
                         <i class="fas fa-users text-xl mb-1"></i>
                         <span class="text-[10px] leading-tight">Users</span>
                     </a>
                     
-                    <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-blue-500 focus:outline-none">
+                    <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
                         @if($user->profile && $user->profile->profile_picture)
                             <img src="{{ Storage::url($user->profile->profile_picture) }}"
                                  alt="Profile"
-                                 class="w-8 h-8 rounded-full object-cover border border-blue-400 mb-1">
+                                 class="w-8 h-8 rounded-full object-cover border border-green-400 mb-1">
                         @else
-                            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm mb-1">
+                            <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-sm mb-1">
                                 {{ strtoupper(substr($user->name, 0, 1)) }}
                             </div>
                         @endif
@@ -323,8 +336,9 @@
     </div>
         
         <!-- Desktop Header -->
-        <div class="hidden md:flex py-3 px-4 md:px-10 flex-col md:flex-row justify-between items-center">
-            <div class="flex items-center mb-4 md:mb-0">
+        <div class="hidden md:flex py-3 px-4 md:px-10 justify-between items-center">
+            <!-- Left Side - Main Branding -->
+            <div class="flex items-center">
                 <a href="javascript:history.back()" class="flex items-center hover:opacity-80 transition-opacity">
                     <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3 drop-shadow-sm">
                     <div class="font-playfair text-2xl font-bold">Pagsurong Lagonoy</div>
@@ -356,98 +370,95 @@
                         <!-- Business Owner Nav - When Business is Approved/Published -->
                         @if($bizProfile && $bizProfile->business_type === 'resort')
                             <a href="{{ route('business.my-resort') }}" 
-                               class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-resort') ? 'font-semibold' : '' }}">
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-resort') ? 'font-semibold' : '' }}">
                                 <i class="fas fa-umbrella-beach mr-1"></i> My Resort
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-resort') ? 'w-full' : '' }}"></span>
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-resort') ? 'w-full' : '' }}"></span>
                             </a>
                         @elseif($bizProfile && $bizProfile->business_type === 'hotel')
                             <a href="{{ route('business.my-hotel') }}" 
-                               class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-hotel') ? 'font-semibold' : '' }}">
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-hotel') ? 'font-semibold' : '' }}">
                                 <i class="fas fa-hotel mr-1"></i> My Hotel
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-hotel') ? 'w-full' : '' }}"></span>
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-hotel') ? 'w-full' : '' }}"></span>
                             </a>
                         @else
                             <a href="{{ route('business.my-shop') }}" 
-                               class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-shop') ? 'font-semibold' : '' }}">
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-shop') ? 'font-semibold' : '' }}">
                                 <i class="fas fa-store mr-1"></i> My Shop
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-shop') ? 'w-full' : '' }}"></span>
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-shop') ? 'w-full' : '' }}"></span>
                             </a>
                         @endif
                         
+                        @if($bizProfile && $bizProfile->business_type === 'shop')
                         <a href="{{ route('business.orders') }}" 
-                           class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('business.orders') ? 'font-semibold' : '' }}">
+                           class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.orders') ? 'font-semibold' : '' }}">
                             <i class="fas fa-shopping-bag mr-1"></i> Orders
                             @if($pendingOrdersCount > 0)
                                 <span class="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
                                     {{ $pendingOrdersCount }}
                                 </span>
                             @endif
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.orders') ? 'w-full' : '' }}"></span>
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.orders') ? 'w-full' : '' }}"></span>
                         </a>
+                        @endif
                         
                     @else
                         <!-- Business Owner Nav - When Business Needs Setup/Approval -->
-                        @php
-                            $setupLabel = 'Shop';
-                            if ($bizProfile && $bizProfile->business_type === 'hotel') {
-                                $setupLabel = 'Hotel';
-                            } elseif ($bizProfile && $bizProfile->business_type === 'resort') {
-                                $setupLabel = 'Resort';
-                            } elseif (session('business_type') === 'hotel') {
-                                $setupLabel = 'Hotel';
-                            } elseif (session('business_type') === 'resort') {
-                                $setupLabel = 'Resort';
-                            }
-                        @endphp
-                        @if($setupLabel === 'Hotel')
-                            <a href="{{ route('business.my-hotel') }}" 
-                               class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-hotel') ? 'font-semibold' : '' }}">
-                                <i class="fas fa-hotel mr-1"></i> Set Up Your {{ $setupLabel }}
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-hotel') ? 'w-full' : '' }}"></span>
-                            </a>
-                        @elseif($setupLabel === 'Resort')
-                            <a href="{{ route('business.my-resort') }}" 
-                               class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-resort') ? 'font-semibold' : '' }}">
-                                <i class="fas fa-umbrella-beach mr-1"></i> Set Up Your {{ $setupLabel }}
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-resort') ? 'w-full' : '' }}"></span>
-                            </a>
-                        @else
-                            <a href="{{ route('business.setup') }}" 
-                               class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('business.setup') ? 'font-semibold' : '' }}">
-                                <i class="fas fa-store mr-1"></i> Set Up Your {{ $setupLabel }}
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.setup') ? 'w-full' : '' }}"></span>
-                            </a>
+                        {{-- Only show navigation links if user has completed business setup (has business profile) --}}
+                        @if($bizProfile)
+                            @php
+                                $setupLabel = 'Shop';
+                                if ($bizProfile->business_type === 'hotel') {
+                                    $setupLabel = 'Hotel';
+                                } elseif ($bizProfile->business_type === 'resort') {
+                                    $setupLabel = 'Resort';
+                                }
+                            @endphp
+                            @if($setupLabel === 'Hotel')
+                                <a href="{{ route('business.my-hotel') }}" 
+                                   class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-hotel') ? 'font-semibold' : '' }}">
+                                    <i class="fas fa-hotel mr-1"></i> My {{ $setupLabel }}
+                                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-hotel') ? 'w-full' : '' }}"></span>
+                                </a>
+                            @elseif($setupLabel === 'Resort')
+                                <a href="{{ route('business.my-resort') }}" 
+                                   class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-resort') ? 'font-semibold' : '' }}">
+                                    <i class="fas fa-umbrella-beach mr-1"></i> My {{ $setupLabel }}
+                                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-resort') ? 'w-full' : '' }}"></span>
+                                </a>
+                            @else
+                                <a href="{{ route('business.my-shop') }}" 
+                                   class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-shop') ? 'font-semibold' : '' }}">
+                                    <i class="fas fa-store mr-1"></i> My {{ $setupLabel }}
+                                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-shop') ? 'w-full' : '' }}"></span>
+                                </a>
+                            @endif
+                            @if($bizProfile->status === 'pending')
+                                <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                    Pending Approval
+                                </span>
+                            @endif
                         @endif
-                        @if($bizProfile && $bizProfile->status === 'pending')
-                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                Pending Approval
-                            </span>
-                        @endif
+                        {{-- No navigation links shown during initial business setup --}}
                     @endif
                     @elseif($user->role === 'admin')
                         <!-- Admin Nav -->
-                        <a href="{{ route('dashboard') }}" 
-                           class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('home') ? 'font-semibold' : '' }}">
-                            Home
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('home') ? 'w-full' : '' }}"></span>
-                        </a>
                         <a href="{{ route('admin.dashboard') }}" 
-                           class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('admin.dashboard') ? 'font-semibold' : '' }}">
+                           class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('admin.dashboard') ? 'font-semibold' : '' }}">
                             Dashboard
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('admin.dashboard') ? 'w-full' : '' }}"></span>
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('admin.dashboard') ? 'w-full' : '' }}"></span>
                         </a>
                         <a href="{{ route('admin.business-approvals.index') }}" 
-                           class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('admin.business-approvals.*') ? 'font-semibold' : '' }}">
+                           class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('admin.business-approvals.*') ? 'font-semibold' : '' }}">
                             Approval
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('admin.business-approvals.*') ? 'w-full' : '' }}"></span>
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('admin.business-approvals.*') ? 'w-full' : '' }}"></span>
                         </a>
                         <a href="{{ route('admin.users') }}" 
-                           class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('admin.users') ? 'font-semibold' : '' }}">
+                           class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('admin.users') ? 'font-semibold' : '' }}">
                             Users
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('admin.users') ? 'w-full' : '' }}"></span>
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('admin.users') ? 'w-full' : '' }}"></span>
                         </a>
                         <a href="{{ route('admin.upload.spots') }}" 
-                           class="text-white hover:text-blue-100 transition-colors duration-200 {{ request()->routeIs('admin.upload.spots') ? 'font-semibold' : '' }}">
+                           class="text-white hover:text-green-100 transition-colors duration-200 {{ request()->routeIs('admin.upload.spots') ? 'font-semibold' : '' }}">
                             Promotions
                         </a>
 
@@ -455,47 +466,52 @@
                     <!-- Customer Nav - Desktop -->
                     <div class="hidden md:flex items-center space-x-6">
                         @if($user->hasCompletedProfile())
-                            <!-- Full customer navigation - after profile completion -->
+                            <!-- Full customer navigation - consistent with public design (no icons) -->
                             <a href="{{ route('customer.dashboard') }}"
-                               class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('customer.dashboard') ? 'font-semibold' : '' }}">
-                                <i class="fas fa-home mr-1"></i> Home
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.dashboard') ? 'w-full' : '' }}"></span>
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.dashboard') ? 'font-semibold' : '' }}">
+                                Home
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.dashboard') ? 'w-full' : '' }}"></span>
                             </a>
                             <a href="{{ route('customer.products') }}"
-                               class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('customer.products') ? 'font-semibold' : '' }}">
-                                <i class="fas fa-shopping-basket mr-1"></i> Products & Shops
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.products') ? 'w-full' : '' }}"></span>
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.products') ? 'font-semibold' : '' }}">
+                                Products
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.products') ? 'w-full' : '' }}"></span>
+                            </a>
+                            <a href="{{ route('customer.shops') }}"
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.shops') ? 'font-semibold' : '' }}">
+                                Shops
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.shops') ? 'w-full' : '' }}"></span>
                             </a>
                             <a href="{{ route('customer.hotels') }}"
-                               class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('customer.hotels') ? 'font-semibold' : '' }}">
-                                <i class="fas fa-hotel mr-1"></i> Hotels
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.hotels') ? 'w-full' : '' }}"></span>
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.hotels') ? 'font-semibold' : '' }}">
+                                Hotels
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.hotels') ? 'w-full' : '' }}"></span>
                             </a>
                             <a href="{{ route('customer.resorts') }}"
-                               class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('customer.resorts') ? 'font-semibold' : '' }}">
-                                <i class="fas fa-umbrella-beach mr-1"></i> Resorts
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.resorts') ? 'w-full' : '' }}"></span>
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.resorts') ? 'font-semibold' : '' }}">
+                                Resorts
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.resorts') ? 'w-full' : '' }}"></span>
                             </a>
                             <a href="{{ route('customer.attractions') }}"
-                               class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('customer.attractions') ? 'font-semibold' : '' }}">
-                                <i class="fas fa-map-marked-alt mr-1"></i> Attractions
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.attractions') ? 'w-full' : '' }}"></span>
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.attractions') ? 'font-semibold' : '' }}">
+                                Attractions
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.attractions') ? 'w-full' : '' }}"></span>
                             </a>
-                            <a href="{{ route('customer.cart') }}" class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('customer.cart') ? 'font-semibold' : '' }}">
-                                <i class="fas fa-shopping-cart"></i> My Cart
+                            <a href="{{ route('customer.cart') }}" class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.cart') ? 'font-semibold' : '' }}">
+                                My Cart
                                 @if($cartCount > 0)
-                                    <span class="absolute -top-1 -right-2 bg-orange-500 text-white text-xs rounded-full px-1 min-w-[16px] text-center text-[10px]">
+                                    <span class="ml-1 bg-orange-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
                                         {{ $cartCount }}
                                     </span>
                                 @endif
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.cart') ? 'w-full' : '' }}"></span>
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.cart') ? 'w-full' : '' }}"></span>
                             </a>
                         @else
                             <!-- Simple navigation - during profile setup -->
                             <a href="{{ route('profile.setup') }}"
-                               class="text-white hover:text-blue-100 transition-all duration-200 relative group {{ request()->routeIs('profile.setup') ? 'font-semibold' : '' }}">
-                                <i class="fas fa-user-edit mr-1"></i> Complete Profile
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('profile.setup') ? 'w-full' : '' }}"></span>
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('profile.setup') ? 'font-semibold' : '' }}">
+                                Complete Profile
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('profile.setup') ? 'w-full' : '' }}"></span>
                             </a>
                         @endif
                     </div>
@@ -507,9 +523,9 @@
                         @if($user->profile && $user->profile->profile_picture)
                             <img src="{{ Storage::url($user->profile->profile_picture) }}" 
                                  alt="Profile" 
-                                 class="w-10 h-10 rounded-full object-cover border-2 border-blue-500">
+                                 class="w-10 h-10 rounded-full object-cover border-2 border-green-500">
                         @else
-                            <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+                            <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-semibold">
                                 {{ strtoupper(substr($user->name, 0, 1)) }}
                             </div>
                         @endif
@@ -524,6 +540,11 @@
                             <i class="fas fa-edit mr-2"></i> Edit Profile
                         </a>
                         <hr class="my-1 border-gray-100">
+                        <button type="button" onclick="confirmDeleteAccount()" 
+                                class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
+                            <i class="fas fa-trash-alt mr-2"></i> Delete My Account
+                        </button>
+                        <hr class="my-1 border-gray-100">
                         <form method="POST" action="{{ route('logout') }}" id="logout-form" class="hidden">
                             @csrf
                         </form>
@@ -535,13 +556,21 @@
                 </div>
             @else
                 <!-- Guest Navigation -->
-                <a href="{{ route('login') }}" class="text-white hover:text-blue-100 transition-all duration-200 relative group">
+                <a href="{{ route('login') }}" class="text-white hover:text-green-100 transition-all duration-200 relative group">
                     Login
-                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300"></span>
                 </a>
-                <a href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all duration-200">Register</a>
+                <a href="{{ route('register') }}" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-all duration-200">Register</a>
             @endauth
         </nav>
+        
+        <!-- Right Side - Government Logos -->
+        <div class="flex items-center space-x-2">
+            <img src="{{ asset('Municipal Seal of Lagonoy.png') }}" alt="Municipal Seal of Lagonoy" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
+            <img src="{{ asset('bagong-pilipinas-logo.png') }}" alt="Bagong Pilipinas Logo" class="w-8 h-8 md:w-10 md:h-10 object-contain drop-shadow-sm">
+            <img src="{{ asset('Provincial Logo of Camarines Sur.png') }}" alt="Provincial Logo of Camarines Sur" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
+            <img src="{{ asset('Department of Tourism (DOT) Philippines Logo.png') }}" alt="Department of Tourism Philippines" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
+        </div>
         </div>
     </header>
 
@@ -551,19 +580,27 @@
             <!-- Left Sidebar - Orders Panel (Desktop Only) -->
             @auth
                 @if(auth()->user()->role === 'customer' && auth()->user()->hasCompletedProfile())
-                    <div class="hidden lg:block w-80 bg-white border-r border-gray-200 overflow-y-auto flex-shrink-0">
+                    <div id="ordersPanel" class="hidden lg:block w-80 bg-white border-r border-gray-200 overflow-y-auto flex-shrink-0 transition-all duration-300">
                         <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
                             <div class="flex items-center justify-between">
                                 <h3 class="font-semibold text-gray-900 flex items-center">
-                                    <i class="fas fa-shopping-bag mr-2 text-blue-600"></i>
-                                    My Orders
+                                    <button onclick="toggleOrdersPanel()" class="flex items-center hover:text-green-700 transition-colors">
+                                        <i class="fas fa-shopping-bag text-green-600" id="ordersIcon"></i>
+                                        <i class="fas fa-chevron-right text-green-600 ml-1" id="ordersChevron" style="display: none;"></i>
+                                        <span id="ordersTitle" class="ml-2">My Orders</span>
+                                    </button>
                                 </h3>
-                                <a href="{{ route('customer.orders') }}" class="text-xs text-blue-600 hover:underline">
-                                    View All
-                                </a>
+                                <div class="flex items-center space-x-2">
+                                    <a href="{{ route('customer.orders') }}" class="text-xs text-green-600 hover:underline">
+                                        View All
+                                    </a>
+                                    <button onclick="toggleOrdersPanel()" class="text-gray-400 hover:text-gray-600 p-1">
+                                        <i id="ordersToggleIcon" class="fas fa-chevron-left text-sm"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="p-4">
+                        <div id="ordersContent" class="p-4">
                             @php
                                 $orders = auth()->user()->orders()->latest()->take(5)->get();
                             @endphp
@@ -577,7 +614,7 @@
                                                     <p class="text-sm font-medium text-gray-900">Order #{{ $order->id }}</p>
                                                     <p class="text-xs text-gray-500">{{ $order->created_at->format('M d, Y') }}</p>
                                                 </div>
-                                                <span class="px-2 py-1 text-xs rounded-full {{ $order->status === 'completed' ? 'bg-green-100 text-green-800' : ($order->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800') }}">
+                                                <span class="px-2 py-1 text-xs rounded-full {{ $order->status === 'completed' ? 'bg-green-100 text-green-800' : ($order->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800') }}">
                                                     {{ ucfirst($order->status) }}
                                                 </span>
                                             </div>
@@ -593,7 +630,7 @@
                                         <i class="fas fa-shopping-bag text-gray-400 text-xl"></i>
                                     </div>
                                     <p class="text-sm text-gray-500 mb-3">No orders yet</p>
-                                    <a href="{{ route('customer.products') }}" class="inline-flex items-center px-3 py-2 border border-blue-300 rounded-md text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors">
+                                    <a href="{{ route('customer.products') }}" class="inline-flex items-center px-3 py-2 border border-green-300 rounded-md text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 transition-colors">
                                         <i class="fas fa-shopping-basket mr-2"></i>
                                         Start Shopping
                                     </a>
@@ -611,26 +648,30 @@
             
             <!-- Right Sidebar - Messages Panel -->
             @auth
-                @if((auth()->user()->role === 'customer' && auth()->user()->hasCompletedProfile()) || (auth()->user()->role === 'business_owner' && auth()->user()->businessProfile && !request()->routeIs(['business.my-hotel', 'business.my-resort'])))
-                    <div id="messagesPanel" class="hidden lg:block w-80 bg-white border-l border-gray-200 overflow-y-auto flex-shrink-0 relative z-10">
+                @if((auth()->user()->role === 'customer' && auth()->user()->hasCompletedProfile()) || (auth()->user()->role === 'business_owner' && auth()->user()->businessProfile && request()->routeIs(['business.my-shop', 'business.orders', 'messages.*'])))
+                    <div id="messagesPanel" class="hidden lg:block w-80 bg-white border-l border-gray-200 overflow-y-auto flex-shrink-0 relative z-10 transition-all duration-300">
                         <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-20">
                             <div class="flex items-center justify-between">
                                 <h3 class="font-semibold text-gray-900 flex items-center">
-                                    <i class="fas fa-envelope mr-2 text-blue-600"></i>
-                                    Messages
-                                    @php
-                                        $unreadCount = auth()->user()->unreadMessages()->count();
-                                    @endphp
-                                    @if($unreadCount > 0)
-                                        <span class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">{{ $unreadCount }}</span>
-                                    @endif
+                                    <button onclick="toggleMessagesPanel()" class="flex items-center hover:text-green-700 transition-colors relative">
+                                        <i class="fas fa-chevron-left text-green-600 hidden" id="messagesChevronLeft"></i>
+                                        <i class="fas fa-envelope text-green-600 ml-1" id="messagesIcon"></i>
+                                        <span id="messagesText" class="ml-2">Messages</span>
+                                        @php
+                                            $unreadCount = auth()->user()->unreadMessages()->count();
+                                        @endphp
+                                        @if($unreadCount > 0)
+                                            <span id="messagesUnreadBadge" class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">{{ $unreadCount }}</span>
+                                            <span id="messagesUnreadDot" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+                                        @endif
+                                    </button>
                                 </h3>
-                                <a href="{{ route('customer.messages') }}" class="text-xs text-blue-600 hover:underline">
-                                    View All
-                                </a>
+                                <button onclick="toggleMessagesPanel()" class="text-green-600 hover:text-green-700 p-1" id="messagesToggleBtn">
+                                    <i id="messagesToggleIcon" class="fas fa-chevron-right text-sm"></i>
+                                </button>
                             </div>
                         </div>
-                        <div class="p-0">
+                        <div id="messagesContent" class="p-0">
                             @php
                                 $user = auth()->user();
                                 $threads = $user->threads()->take(10);
@@ -654,7 +695,7 @@
                                                                 alt="{{ $otherUser->name }}"
                                                                 class="h-full w-full object-cover">
                                                         @else
-                                                            <div class="h-full w-full bg-blue-500 flex items-center justify-center">
+                                                            <div class="h-full w-full bg-green-500 flex items-center justify-center">
                                                                 <span class="text-white font-medium text-sm">
                                                                     {{ strtoupper(substr($otherUser->name, 0, 1)) }}
                                                                 </span>
@@ -718,47 +759,33 @@
 <div class="border-t border-gray-200 my-10 hidden lg:block"></div>
 
 <!-- Footer -->
-<footer style="background-color: #012844ff;" class="text-white py-10">
+<footer style="background-color: #064e3b;" class="text-white py-10">
     <div class="max-w-6xl mx-auto px-5">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
                 <h3 class="text-xl font-playfair font-bold mb-4">Pagsurong Lagonoy</h3>
                 <p class="text-gray-300">
                     Showcasing the best of Lagonoy's local products, accommodations, and tourist destinations.
                 </p>
             </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('home') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Home</a></li>
-                        <li><a href="{{ route('about') }}" class="text-gray-300 hover:text-white transition-colors duration-200">About Us</a></li>
-                        <li><a href="{{ route('contact') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Contact</a></li>
-                        @auth
-                            <li><a href="{{ route('dashboard') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Dashboard</a></li>
-                        @else
-                            <li><a href="{{ route('login') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Login</a></li>
-                            <li><a href="{{ route('register') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Register</a></li>
-                        @endauth
-                    </ul>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
+                        <i class="fab fa-instagram"></i>
+                    </a>
                 </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    </div>
-                    <p class="mt-4 text-gray-300">
-                        Email: info@pagsuronglagonoy.com
-                    </p>
-                </div>
+                <p class="mt-4 text-gray-300">
+                    Email: info@pagsuronglagonoy.com
+                </p>
             </div>
+        </div>
             <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400 text-sm">
                 <p>&copy; {{ $currentYear }} Pagsurong Lagonoy. All rights reserved.</p>
             </div>
@@ -833,7 +860,7 @@
     
     <!-- Mobile Profile Sidebar -->
     @auth
-        @if((auth()->user()->role === 'customer' && auth()->user()->hasCompletedProfile()) || (auth()->user()->role === 'business_owner' && auth()->user()->businessProfile && !request()->routeIs(['business.my-hotel', 'business.my-resort'])))
+        @if((auth()->user()->role === 'customer' && auth()->user()->hasCompletedProfile()) || (auth()->user()->role === 'business_owner' && auth()->user()->businessProfile))
             <!-- Overlay -->
             <div id="mobileProfileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" onclick="closeMobileProfileSidebar()"></div>
             
@@ -841,7 +868,7 @@
             <div id="mobileProfileSidebar" class="fixed top-0 right-0 h-full w-80 bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 md:hidden">
                 <div class="flex flex-col h-full">
                     <!-- Header -->
-                    <div class="bg-blue-600 text-white p-6">
+                    <div class="bg-green-600 text-white p-6">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
                                 @if(auth()->user()->profile && auth()->user()->profile->profile_picture)
@@ -887,6 +914,11 @@
                                 <i class="fas fa-envelope mr-4 text-blue-600 w-5"></i>
                                 <span class="font-medium">Messages</span>
                             </a>
+                            <hr class="my-2 border-gray-200">
+                            <button type="button" onclick="confirmDeleteAccount()" class="w-full flex items-center px-6 py-4 text-red-600 hover:bg-red-50 transition-colors">
+                                <i class="fas fa-trash-alt mr-4 w-5"></i>
+                                <span class="font-medium">Delete My Account</span>
+                            </button>
                         @else
                             <!-- Business Owner Menu Items -->
                             <a href="{{ route('profile.show') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
@@ -915,10 +947,18 @@
                                 </a>
                             @endif
 
+                            <hr class="my-2 border-gray-200">
+                            <button type="button" onclick="confirmDeleteAccount()" class="w-full flex items-center px-6 py-4 text-red-600 hover:bg-red-50 transition-colors">
+                                <i class="fas fa-trash-alt mr-4 w-5"></i>
+                                <span class="font-medium">Delete My Account</span>
+                            </button>
+
+                            @if($user->businessProfile && $user->businessProfile->business_type === 'shop')
                             <a href="{{ route('business.orders') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
                                 <i class="fas fa-shopping-bag mr-4 text-blue-600 w-5"></i>
                                 <span class="font-medium">Orders</span>
                             </a>
+                            @endif
 
                             <a href="{{ route('messages.index') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
                                 <i class="fas fa-envelope mr-4 text-blue-600 w-5"></i>
@@ -992,7 +1032,190 @@
                 });
             });
         });
+
+        // Panel minimize/maximize functionality
+        function toggleOrdersPanel() {
+            const panel = document.getElementById('ordersPanel');
+            const content = document.getElementById('ordersContent');
+            const icon = document.getElementById('ordersToggleIcon');
+            const mainIcon = document.getElementById('ordersIcon');
+            const chevron = document.getElementById('ordersChevron');
+            const title = document.getElementById('ordersTitle');
+            const viewAllLink = document.querySelector('#ordersPanel .text-xs.text-green-600');
+            const toggleBtn = document.querySelector('#ordersPanel button[onclick="toggleOrdersPanel()"]:last-of-type');
+            
+            if (panel && content && icon && mainIcon && title && chevron) {
+                const isMinimized = content.style.display === 'none';
+                
+                if (isMinimized) {
+                    // Maximize
+                    content.style.display = 'block';
+                    title.style.display = 'inline';
+                    chevron.style.display = 'none';
+                    if (viewAllLink) viewAllLink.style.display = 'inline';
+                    if (toggleBtn) toggleBtn.style.display = 'block';
+                    panel.classList.remove('w-12');
+                    panel.classList.add('w-80');
+                    icon.classList.remove('fa-chevron-right');
+                    icon.classList.add('fa-chevron-left');
+                } else {
+                    // Minimize - Show shopping bag icon and chevron
+                    content.style.display = 'none';
+                    title.style.display = 'none';
+                    chevron.style.display = 'inline';
+                    if (viewAllLink) viewAllLink.style.display = 'none';
+                    if (toggleBtn) toggleBtn.style.display = 'none';
+                    panel.classList.remove('w-80');
+                    panel.classList.add('w-12');
+                    icon.classList.remove('fa-chevron-left');
+                    icon.classList.add('fa-chevron-right');
+                }
+            }
+        }
+
+        function toggleMessagesPanel() {
+            const panel = document.getElementById('messagesPanel');
+            const content = document.getElementById('messagesContent');
+            const icon = document.getElementById('messagesToggleIcon');
+            const text = document.getElementById('messagesText');
+            const badge = document.getElementById('messagesUnreadBadge');
+            const dot = document.getElementById('messagesUnreadDot');
+            const toggleBtn = document.getElementById('messagesToggleBtn');
+            const chevronLeft = document.getElementById('messagesChevronLeft');
+            
+            if (panel && content && icon && text) {
+                if (panel.classList.contains('w-80')) {
+                    // Collapse
+                    panel.classList.remove('w-80');
+                    panel.classList.add('w-16');
+                    content.classList.add('hidden');
+                    text.classList.add('hidden');
+                    if (badge) badge.classList.add('hidden');
+                    if (dot) dot.classList.remove('hidden');
+                    if (toggleBtn) toggleBtn.classList.add('hidden');
+                    if (chevronLeft) chevronLeft.classList.remove('hidden');
+                    icon.classList.remove('fa-chevron-right');
+                    icon.classList.add('fa-chevron-left');
+                    localStorage.setItem('messagesPanel', 'collapsed');
+                } else {
+                    // Expand
+                    panel.classList.remove('w-16');
+                    panel.classList.add('w-80');
+                    content.classList.remove('hidden');
+                    text.classList.remove('hidden');
+                    if (badge) badge.classList.remove('hidden');
+                    if (dot) dot.classList.add('hidden');
+                    if (toggleBtn) toggleBtn.classList.remove('hidden');
+                    if (chevronLeft) chevronLeft.classList.add('hidden');
+                    icon.classList.remove('fa-chevron-left');
+                    icon.classList.add('fa-chevron-right');
+                    localStorage.setItem('messagesPanel', 'expanded');
+                }
+            }
+        }
+
+        // Restore message panel state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const messagesState = localStorage.getItem('messagesPanel');
+            if (messagesState === 'collapsed') {
+                const panel = document.getElementById('messagesPanel');
+                const content = document.getElementById('messagesContent');
+                const icon = document.getElementById('messagesToggleIcon');
+                const text = document.getElementById('messagesText');
+                const badge = document.getElementById('messagesUnreadBadge');
+                const dot = document.getElementById('messagesUnreadDot');
+                const toggleBtn = document.getElementById('messagesToggleBtn');
+                const chevronLeft = document.getElementById('messagesChevronLeft');
+                
+                if (panel && content && icon && text) {
+                    panel.classList.remove('w-80');
+                    panel.classList.add('w-16');
+                    content.classList.add('hidden');
+                    text.classList.add('hidden');
+                    if (badge) badge.classList.add('hidden');
+                    if (dot) dot.classList.remove('hidden');
+                    if (toggleBtn) toggleBtn.classList.add('hidden');
+                    if (chevronLeft) chevronLeft.classList.remove('hidden');
+                    icon.classList.remove('fa-chevron-right');
+                    icon.classList.add('fa-chevron-left');
+                }
+            }
+        });
+
+        // Delete Account Confirmation
+        function confirmDeleteAccount() {
+            document.getElementById('deleteAccountModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDeleteAccountModal() {
+            document.getElementById('deleteAccountModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function deleteMyAccount() {
+            document.getElementById('delete-account-form').submit();
+        }
     </script>
+
+    <!-- Delete Account Confirmation Modal -->
+    <div id="deleteAccountModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-lg bg-white">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between pb-3 border-b">
+                <h3 class="text-xl font-bold text-gray-900">
+                    <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
+                    Delete Account
+                </h3>
+                <button type="button" onclick="closeDeleteAccountModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="py-4">
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                    <p class="text-sm text-red-800 font-semibold mb-2">
+                        <i class="fas fa-exclamation-circle mr-1"></i> Warning: This action cannot be undone!
+                    </p>
+                    <p class="text-sm text-red-700">
+                        Deleting your account will permanently remove:
+                    </p>
+                    <ul class="list-disc list-inside text-sm text-red-700 mt-2 space-y-1">
+                        <li>Your profile and personal information</li>
+                        <li>All your orders and order history</li>
+                        <li>Your messages and conversations</li>
+                        @if(auth()->user()->role === 'business_owner')
+                        <li>Your business profile and listings</li>
+                        <li>All products and services</li>
+                        @endif
+                    </ul>
+                </div>
+                
+                <p class="text-gray-700 text-sm mb-4">
+                    Are you absolutely sure you want to delete your account? This action is permanent and cannot be reversed.
+                </p>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="flex justify-end gap-3 pt-3 border-t">
+                <button type="button" onclick="closeDeleteAccountModal()" 
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                    <i class="fas fa-times mr-2"></i>Cancel
+                </button>
+                <button type="button" onclick="deleteMyAccount()" 
+                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-trash-alt mr-2"></i>Delete My Account
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Delete Account Form -->
+    <form id="delete-account-form" action="{{ route('account.delete') }}" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
 
     <!-- Rating System -->
     <script src="{{ asset('js/ratings.js') }}"></script>

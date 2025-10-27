@@ -9,8 +9,8 @@
 {{-- Body --}}
 # @if($status === 'approved')
 ✅ Your Business Has Been Approved!
-@elseif($status === 'rejected')
-❌ Your Business Requires Changes
+@elseif($status === 'declined')
+❌ Business Permit Not Valid
 @else
 ℹ️ Your Business Status Has Been Updated
 @endif
@@ -28,15 +28,22 @@ You can now start using all the features available to business owners on our pla
 
 [Go to Dashboard]({{ $actionUrl }})
 
-@elseif($status === 'rejected')
-We've reviewed your business **{{ $business->business_name }}**, but we need some additional information or changes before we can approve it.
+@elseif($status === 'declined')
+We've reviewed your business **{{ $business->business_name }}**, but unfortunately, the business permit(s) you submitted are not valid.
 
-**Reason for Rejection:**  
-{{ $notes ?? 'No specific reason was provided.' }}
+**Reason for Decline:**  
+{{ $notes ?? 'The business permit provided is not valid.' }}
 
-Please update your business profile with the required information and resubmit for review.
+**What you need to do:**  
+Please submit other valid business permit(s) again. Make sure your permits are:
+- Clear and readable
+- Current and not expired
+- Issued by the proper authorities
+- Match your business information
 
-[Update Business Profile]({{ $actionUrl }})
+You can update your business permits by editing your business profile.
+
+[Update Business Permits]({{ $actionUrl }})
 
 @else
 Your business **{{ $business->business_name }}** status has been updated to: **{{ ucfirst($status) }}**

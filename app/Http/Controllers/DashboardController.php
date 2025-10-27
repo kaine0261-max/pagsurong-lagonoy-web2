@@ -20,8 +20,8 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'customer') {
-            // Redirect customers to their dashboard
-            return redirect()->route('customer.dashboard');
+            // Redirect customers to products page
+            return redirect()->route('customer.products');
         } elseif ($user->role === 'business_owner') {
             // Redirect business owners to their shop
             return redirect()->route('business.my-shop');

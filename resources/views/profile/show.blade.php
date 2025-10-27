@@ -23,9 +23,9 @@
                     @if($profile && $profile->profile_picture)
                         <img src="{{ asset('storage/' . $profile->profile_picture) }}" 
                              alt="Profile Picture" 
-                             class="w-32 h-32 rounded-full object-cover mx-auto border-4 border-blue-500">
+                             class="w-32 h-32 rounded-full object-cover mx-auto border-4 border-green-500">
                     @else
-                        <div class="w-32 h-32 rounded-full bg-blue-500 flex items-center justify-center mx-auto">
+                        <div class="w-32 h-32 rounded-full bg-green-500 flex items-center justify-center mx-auto">
                             <span class="text-white text-4xl font-bold">{{ substr($user->name, 0, 1) }}</span>
                         </div>
                     @endif
@@ -66,7 +66,7 @@
                     <div class="text-center py-8">
                         <p class="text-gray-500 mb-4">No profile information found.</p>
                         <a href="{{ route('profile.setup') }}" 
-                           class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                           class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                             Complete Profile Setup
                         </a>
                     </div>
@@ -76,7 +76,7 @@
                 @if($profile)
                     <div class="pt-6 flex justify-center">
                         <a href="{{ route('profile.edit') }}" 
-                           class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
+                           class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200">
                             <i class="fas fa-edit mr-2"></i>
                             Edit Profile
                         </a>

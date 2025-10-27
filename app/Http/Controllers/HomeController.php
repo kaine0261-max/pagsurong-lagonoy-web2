@@ -12,16 +12,16 @@ class HomeController extends Controller
         return view('home');
     }
 
-    // About Page
+    // About Page - Redirect to home with anchor
     public function about()
     {
-        return view('about');
+        return redirect('/#about');
     }
 
-    // Contact Page
+    // Contact Page - Redirect to home with anchor
     public function contact()
     {
-        return view('contact');
+        return redirect('/#contact');
     }
 
     // Resorts Page

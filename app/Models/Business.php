@@ -199,7 +199,7 @@ class Business extends Model
      */
     public function resortRooms()
     {
-        return $this->hasMany(ResortRoom::class, 'business_id');
+        return $this->hasMany(ResortRoom::class, 'resort_id');
     }
 
     /**

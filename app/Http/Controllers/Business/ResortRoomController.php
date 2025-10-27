@@ -19,7 +19,7 @@ class ResortRoomController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $business = $user->businessProfile->business ?? null;
+        $business = Business::where('owner_id', $user->id)->first();
         
         if (!$business) {
             return redirect()->route('business.setup');
@@ -87,11 +87,31 @@ class ResortRoomController extends Controller
             return response()->json(['success' => false, 'message' => 'Business profile not found. Please complete your business setup first.'], 404);
         }
 
-        $business = $businessProfile->business ?? null;
+        // Get business directly by owner_id
+        $business = Business::where('owner_id', $user->id)->first();
+        
+        // If business doesn't exist, create it from business profile
+        if (!$business && $businessProfile) {
+            \Log::info('ResortRoomController: Creating missing Business record for user', ['user_id' => $user->id]);
+            
+            $business = Business::create([
+                'owner_id' => $user->id,
+                'name' => $businessProfile->business_name,
+                'description' => $businessProfile->description,
+                'address' => $businessProfile->address,
+                'contact_number' => $businessProfile->contact_number,
+                'business_type' => $businessProfile->business_type,
+            ]);
+            
+            \Log::info('ResortRoomController: Business record created', ['business_id' => $business->id]);
+        }
         
         if (!$business) {
-            \Log::error('ResortRoomController: No business found for business profile', ['business_profile_id' => $businessProfile->id]);
-            return response()->json(['success' => false, 'message' => 'Business not found. Please complete your business setup first.'], 404);
+            \Log::error('ResortRoomController: No business found and could not create', ['user_id' => $user->id]);
+            return response()->json([
+                'success' => false, 
+                'message' => 'Business not found. Please complete your business setup first.'
+            ], 404);
         }
 
         \Log::info('ResortRoomController business found', [

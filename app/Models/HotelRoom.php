@@ -33,4 +33,9 @@ class HotelRoom extends Model
     {
         return $this->belongsTo(Business::class);
     }
+
+    public function businessProfile()
+    {
+        return $this->belongsTo(BusinessProfile::class, 'business_id');
+    }
 }

@@ -1,37 +1,106 @@
-@extends('layouts.app')
+@extends('layouts.public')
 
 @section('title', 'Resorts - Pagsurong Lagonoy')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="mb-8 text-center">
-        <h1 class="text-3xl md:text-4xl font-serif font-bold text-gray-800 mb-2">Resorts in Lagonoy</h1>
-        <p class="text-gray-600">Explore beautiful beachfront properties and vacation destinations</p>
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-umbrella-beach mr-3 text-green-600"></i>
+                    Resorts
+                </h1>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Explore beautiful beachfront properties and vacation destinations in Lagonoy
+                </p>
+            </div>
+        </div>
     </div>
 
-    <div class="text-center py-12">
-        <div class="text-gray-400 mb-4">
-            <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v6H8V5z" />
-            </svg>
-        </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Coming Soon</h3>
-        <p class="text-gray-500 mb-4">Resort listings will be available soon!</p>
-        <a href="{{ route('dashboard') }}" 
-           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-            Back to Dashboard
-        </a>
+    <!-- Resorts Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        @if($resorts->count() > 0)
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                @foreach($resorts as $resort)
+                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                        <!-- Resort Image -->
+                        <div class="aspect-w-16 aspect-h-12 bg-gray-200">
+                            @if($resort->cover_image)
+                                <img src="{{ Storage::url($resort->cover_image) }}" 
+                                     alt="{{ $resort->business_name }}" 
+                                     class="w-full h-64 object-cover">
+                            @elseif($resort->business && $resort->business->cover_image)
+                                <img src="{{ Storage::url($resort->business->cover_image) }}" 
+                                     alt="{{ $resort->business_name }}" 
+                                     class="w-full h-64 object-cover">
+                            @else
+                                <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
+                                    <i class="fas fa-umbrella-beach text-gray-400 text-5xl"></i>
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Resort Info -->
+                        <div class="p-6">
+                            <!-- Resort Header -->
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                                    @if($resort->profile_avatar)
+                                        <img src="{{ Storage::url($resort->profile_avatar) }}" 
+                                             alt="{{ $resort->business_name }}" 
+                                             class="w-full h-full object-cover">
+                                    @else
+                                        <div class="w-full h-full bg-cyan-500 flex items-center justify-center">
+                                            <i class="fas fa-umbrella-beach text-white text-lg"></i>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-semibold text-lg text-gray-900 line-clamp-1">
+                                        {{ $resort->business_name }}
+                                    </h3>
+                                    <p class="text-sm text-gray-500 line-clamp-1">
+                                        <i class="fas fa-map-marker-alt mr-1"></i>
+                                        {{ $resort->address ?? 'Lagonoy, Camarines Sur' }}
+                                    </p>
+                                </div>
+                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                                    Published
+                                </span>
+                            </div>
+
+                            @if($resort->description)
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                                    {{ $resort->description }}
+                                </p>
+                            @endif
+
+                            <!-- Actions -->
+                            <div class="mt-4">
+                                <a href="{{ route('public.resorts.show', $resort->id) }}" 
+                                   class="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center text-lg font-medium">
+                                    <i class="fas fa-eye mr-2"></i>Read More
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-8">
+                {{ $resorts->links() }}
+            </div>
+        @else
+            <!-- No Resorts Message -->
+            <div class="text-center py-16">
+                <i class="fas fa-umbrella-beach text-gray-400 text-6xl mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">No Resorts Available</h3>
+                <p class="text-gray-500">Check back later for new resort listings!</p>
+            </div>
+        @endif
     </div>
 </div>
-@endsection
-
-@section('styles')
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap');
-    
-    .font-serif {
-        font-family: 'Playfair Display', serif;
-    }
-</style>
 @endsection

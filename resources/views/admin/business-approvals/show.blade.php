@@ -40,7 +40,7 @@
                         </form>
                     @endif
                     
-                    @if($business->is_rejected)
+                    @if($business->is_declined)
                         <form action="{{ route('admin.business-approvals.approve', $business) }}" method="POST" class="inline-block">
                             @csrf
                             <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
@@ -49,35 +49,35 @@
                         </form>
                     @endif
                     
-                    @if(!$business->is_rejected)
-                        <button type="button" onclick="document.getElementById('reject-form').classList.toggle('hidden')" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                            Reject
+                    @if(!$business->is_declined)
+                        <button type="button" onclick="document.getElementById('decline-form').classList.toggle('hidden')" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            Decline
                         </button>
                     @endif
                 </div>
             </div>
         </div>
 
-        <!-- Rejection Form (Hidden by default) -->
-        <div id="reject-form" class="hidden px-4 py-5 sm:px-6 border-b border-red-200 bg-red-50">
-            <form action="{{ route('admin.business-approvals.reject', $business) }}" method="POST">
+        <!-- Decline Form (Hidden by default) -->
+        <div id="decline-form" class="hidden px-4 py-5 sm:px-6 border-b border-red-200 bg-red-50">
+            <form action="{{ route('admin.business-approvals.decline', $business) }}" method="POST">
                 @csrf
                 <div>
-                    <label for="rejection_reason" class="block text-sm font-medium text-red-700">
-                        Reason for Rejection
+                    <label for="decline_reason" class="block text-sm font-medium text-red-700">
+                        Reason for Decline
                     </label>
                     <div class="mt-1">
-                        <textarea id="rejection_reason" name="rejection_reason" rows="3" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" required>{{ old('rejection_reason', $business->rejection_reason) }}</textarea>
+                        <textarea id="decline_reason" name="decline_reason" rows="3" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" required>{{ old('decline_reason', $business->decline_reason) }}</textarea>
                         <p class="mt-2 text-sm text-gray-500">
-                            Please provide a clear reason for rejection to help the business owner make the necessary changes.
+                            Please provide a clear reason for decline to help the business owner submit valid business permits.
                         </p>
                     </div>
                     <div class="mt-4 flex justify-end space-x-3">
-                        <button type="button" onclick="document.getElementById('reject-form').classList.add('hidden')" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <button type="button" onclick="document.getElementById('decline-form').classList.add('hidden')" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             Cancel
                         </button>
                         <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                            Confirm Rejection
+                            Confirm Decline
                         </button>
                     </div>
                 </div>
@@ -158,45 +158,59 @@
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                         <!-- Business Permit -->
                         <div class="mb-4">
-                            <h4 class="font-medium text-gray-700">Business Permit / Mayor's Permit</h4>
-                            <div class="mt-1 flex items-center">
-                                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                                </svg>
-                                <a href="{{ route('admin.business-approvals.download', [$business, 'permit']) }}" class="ml-2 text-blue-600 hover:text-blue-800">
-                                    Download Business Permit
-                                </a>
-                            </div>
-                            @php
-                                $permitExt = strtolower(pathinfo($business->business_permit_path ?? '', PATHINFO_EXTENSION));
-                                $isImage = in_array($permitExt, ['jpg','jpeg','png','gif','webp','bmp']);
-                            @endphp
-                            @if($isImage)
-                                <div class="mt-2">
-                                    <button type="button" onclick="openPermitModal()" class="group relative inline-block">
-                                        <img src="{{ $businessPermitUrl }}" alt="Business Permit Preview"
-                                             class="w-40 h-40 object-contain border border-gray-200 rounded-md shadow-sm cursor-zoom-in">
-                                        <span class="absolute -top-2 -left-2 text-gray-500 bg-white/80 rounded-full p-1 shadow">
-                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                                            </svg>
-                                        </span>
-                                    </button>
-                                </div>
+                            <h4 class="font-medium text-gray-700">Business Permit(s) / Mayor's Permit</h4>
+                            @if(!empty($businessPermitUrls) && count($businessPermitUrls) > 0)
+                                <div class="mt-2 space-y-4">
+                                    @foreach($businessPermitUrls as $index => $permit)
+                                        @php
+                                            $permitExt = strtolower(pathinfo($permit['path'], PATHINFO_EXTENSION));
+                                            $isImage = in_array($permitExt, ['jpg','jpeg','png','gif','webp','bmp']);
+                                        @endphp
+                                        <div class="border border-gray-200 rounded-md p-3">
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-sm font-medium text-gray-700">Permit {{ $index + 1 }}</span>
+                                                <a href="{{ route('admin.business-approvals.download', [$business, 'permit', $index]) }}" class="text-sm text-blue-600 hover:text-blue-800">
+                                                    <svg class="inline h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                    </svg>
+                                                    Download
+                                                </a>
+                                            </div>
+                                            @if($isImage)
+                                                <div class="mt-2">
+                                                    <button type="button" onclick="openPermitModal({{ $index }})" class="group relative inline-block">
+                                                        <img src="{{ $permit['url'] }}" alt="Business Permit {{ $index + 1 }}"
+                                                             class="w-40 h-40 object-contain border border-gray-200 rounded-md shadow-sm cursor-zoom-in">
+                                                        <span class="absolute -top-2 -left-2 text-gray-500 bg-white/80 rounded-full p-1 shadow">
+                                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                                                            </svg>
+                                                        </span>
+                                                    </button>
+                                                </div>
 
-                                <!-- Fullscreen Modal -->
-                                <div id="permit-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
-                                    <button type="button" aria-label="Close" onclick="closePermitModal()" class="absolute top-4 right-4 text-white text-2xl font-bold">
-                                        &times;
-                                    </button>
-                                    <div class="max-w-6xl max-h-[90vh] p-4">
-                                        <img src="{{ $businessPermitUrl }}" alt="Business Permit Fullscreen" class="w-auto max-w-full h-auto max-h-[85vh] rounded-md shadow-lg">
-                                    </div>
+                                                <!-- Fullscreen Modal -->
+                                                <div id="permit-modal-{{ $index }}" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
+                                                    <button type="button" aria-label="Close" onclick="closePermitModal({{ $index }})" class="absolute top-4 right-4 text-white text-2xl font-bold">
+                                                        &times;
+                                                    </button>
+                                                    <div class="max-w-6xl max-h-[90vh] p-4">
+                                                        <img src="{{ $permit['url'] }}" alt="Business Permit {{ $index + 1 }} Fullscreen" class="w-auto max-w-full h-auto max-h-[85vh] rounded-md shadow-lg">
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <div class="mt-2 text-sm text-gray-500">
+                                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                                        {{ strtoupper($permitExt) }} File
+                                                    </span>
+                                                    <span class="ml-2">Use download link to view</span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
                                 </div>
                             @else
-                                <div class="mt-2 text-sm text-gray-500">
-                                    Preview not available for this file type ({{ strtoupper($permitExt) }}). Use the download link above to view the document.
-                                </div>
+                                <div class="mt-2 text-sm text-gray-500">No business permits uploaded.</div>
                             @endif
                         </div>
 
@@ -240,7 +254,7 @@
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                                 {{ $business->status === 'approved' ? 'bg-green-100 text-green-800' : '' }}
                                 {{ $business->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                                {{ $business->status === 'rejected' ? 'bg-red-100 text-red-800' : '' }}">
+                                {{ $business->status === 'declined' ? 'bg-red-100 text-red-800' : '' }}">
                                 {{ ucfirst($business->status) }}
                             </span>
                         </div>
@@ -256,10 +270,10 @@
                                 </div>
                             @endif
                         @endif
-                        @if($business->is_rejected && $business->rejection_reason)
+                        @if($business->is_declined && $business->decline_reason)
                             <div class="mt-2 p-3 bg-red-50 rounded-md">
-                                <h4 class="text-sm font-medium text-red-800">Reason for Rejection:</h4>
-                                <p class="mt-1 text-sm text-red-700">{{ $business->rejection_reason }}</p>
+                                <h4 class="text-sm font-medium text-red-800">Reason for Decline:</h4>
+                                <p class="mt-1 text-sm text-red-700">{{ $business->decline_reason }}</p>
                             </div>
                         @endif
                     </dd>
@@ -270,7 +284,7 @@
 
     <!-- Action Buttons -->
     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse rounded-b-lg">
-        @if($business->is_pending || $business->is_rejected)
+        @if($business->is_pending || $business->is_declined)
             <form action="{{ route('admin.business-approvals.approve', $business) }}" method="POST" class="inline-block">
                 @csrf
                 <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
@@ -279,9 +293,9 @@
             </form>
         @endif
         
-        @if(!$business->is_rejected)
-            <button type="button" onclick="document.getElementById('reject-form').classList.toggle('hidden')" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                Reject Business
+        @if(!$business->is_declined)
+            <button type="button" onclick="document.getElementById('decline-form').classList.toggle('hidden')" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                Decline Business
             </button>
         @endif
         
@@ -293,29 +307,29 @@
 
 @push('scripts')
 <script>
-    // Toggle rejection reason field when reject button is clicked
-    function toggleRejectForm() {
-        const form = document.getElementById('reject-form');
+    // Toggle decline reason field when decline button is clicked
+    function toggleDeclineForm() {
+        const form = document.getElementById('decline-form');
         form.classList.toggle('hidden');
     }
     
-    // If there are validation errors, show the rejection form
-    @if($errors->has('rejection_reason'))
+    // If there are validation errors, show the decline form
+    @if($errors->has('decline_reason'))
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('reject-form').classList.remove('hidden');
+            document.getElementById('decline-form').classList.remove('hidden');
         });
     @endif
 
-    // Fullscreen permit modal controls
-    function openPermitModal() {
-        const modal = document.getElementById('permit-modal');
+    // Fullscreen permit modal controls (supports multiple permits)
+    function openPermitModal(index) {
+        const modal = document.getElementById('permit-modal-' + index);
         if (!modal) return;
         modal.classList.remove('hidden');
         modal.classList.add('flex');
     }
 
-    function closePermitModal() {
-        const modal = document.getElementById('permit-modal');
+    function closePermitModal(index) {
+        const modal = document.getElementById('permit-modal-' + index);
         if (!modal) return;
         modal.classList.add('hidden');
         modal.classList.remove('flex');

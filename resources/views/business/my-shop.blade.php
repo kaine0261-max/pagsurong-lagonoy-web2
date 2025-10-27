@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Storage;
          @endif>
          
         <!-- Cover Photo Upload Form -->
-        <div class="absolute top-4 right-4">
+        <div class="absolute top-20 right-4 z-40">
             <form action="{{ route('business.updateCover') }}" method="POST" enctype="multipart/form-data" class="inline">
                 @csrf
                 <label class="bg-white bg-opacity-90 text-gray-700 px-4 py-2 rounded-lg hover:bg-opacity-100 transition-all duration-200 flex items-center text-sm font-medium cursor-pointer">
@@ -753,7 +753,7 @@ use Illuminate\Support\Facades\Storage;
             </button>
         </div>
         
-        <form id="stockEditForm" method="POST">
+        <form id="stockEditForm" method="POST" onsubmit="updateProductStock(event)">
             @csrf
             @method('PUT')
             <div class="space-y-4">
@@ -795,6 +795,40 @@ function editProductStock(productId, currentStock, stockLimit) {
 
 function closeStockModal() {
     document.getElementById('stockEditModal').classList.add('hidden');
+}
+
+function updateProductStock(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const formData = new FormData(form);
+    const url = form.action;
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json'
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(data.message, 'success');
+            closeStockModal();
+            // Reload the page to update the stock display
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        } else {
+            showNotification(data.message || 'Error updating stock', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error updating stock', 'error');
+    });
 }
 
 function deleteProduct(productId, productName) {

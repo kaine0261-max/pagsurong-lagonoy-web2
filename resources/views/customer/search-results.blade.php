@@ -63,7 +63,7 @@
         <div class="mb-10">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xl font-semibold text-gray-800">Tourist Spots</h2>
-                <a href="{{ route('customer.attractions') }}" class="text-blue-600 hover:text-blue-800 text-sm">View all spots</a>
+                <a href="{{ route('public.attractions') }}" class="text-blue-600 hover:text-blue-800 text-sm">View all spots</a>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($attractions as $spot)

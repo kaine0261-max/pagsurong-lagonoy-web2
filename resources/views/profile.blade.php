@@ -106,7 +106,7 @@
                             <i class="fas fa-venus-mars text-pink-500 text-xl"></i>
                         </div>
                         <div>
-                            <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Gender</h3>
+                            <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Sex</h3>
                             <p class="mt-1 text-gray-900">{{ $user->sex ?? 'Not specified' }}</p>
                         </div>
                     </div>

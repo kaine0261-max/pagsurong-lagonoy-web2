@@ -39,6 +39,9 @@ class CartController extends Controller
 
         // Check if product is out of stock
         if ($product->isOutOfStock()) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'This product is currently out of stock!'], 400);
+            }
             return redirect()->back()->with('error', 'This product is currently out of stock!');
         }
 
@@ -53,6 +56,9 @@ class CartController extends Controller
         }
 
         if ($totalRequestedQuantity > $product->current_stock) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => "Only {$product->current_stock} items available in stock!"], 400);
+            }
             return redirect()->back()->with('error', "Only {$product->current_stock} items available in stock!");
         }
 
@@ -70,6 +76,12 @@ class CartController extends Controller
             ]);
         }
 
+        // Get updated cart count
+        $cartCount = Cart::where('user_id', Auth::id())->sum('quantity');
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Product added to cart!', 'cartCount' => $cartCount]);
+        }
         return redirect()->back()->with('success', 'Product added to cart!');
     }
 

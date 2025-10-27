@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.customer')
 
 @section('content')
-<div class="px-6 py-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Order Header -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
         <div class="flex items-center justify-between mb-4">
@@ -18,11 +18,11 @@
                 <span class="px-3 py-1 text-sm font-medium rounded-full 
                     {{ $order->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
                        ($order->status === 'completed' ? 'bg-green-100 text-green-800' : 
-                       ($order->status === 'ready_for_pickup' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800')) }}">
+                       ($order->status === 'ready_for_pickup' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800')) }}">
                     Status: {{ ucfirst(str_replace('_', ' ', $order->status)) }}
                 </span>
-                <a href="{{ route('customer.orders') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                    ← Back to Orders
+                <a href="{{ route('customer.orders') }}" class="text-green-600 hover:text-green-700 text-sm font-medium transition-colors">
+                    <i class="fas fa-arrow-left mr-1"></i>Back to Orders
                 </a>
             </div>
         </div>
@@ -38,16 +38,16 @@
         <!-- Order Progress -->
         <div class="mb-6">
             <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium {{ $order->status === 'pending' || $order->status === 'ready_for_pickup' || $order->status === 'completed' ? 'text-blue-600' : 'text-gray-400' }}">Pending</span>
-                <span class="text-sm font-medium {{ $order->status === 'ready_for_pickup' || $order->status === 'completed' ? 'text-blue-600' : 'text-gray-400' }}">Ready for Pickup</span>
-                <span class="text-sm font-medium {{ $order->status === 'completed' ? 'text-blue-600' : 'text-gray-400' }}">Completed</span>
+                <span class="text-sm font-medium {{ $order->status === 'pending' || $order->status === 'ready_for_pickup' || $order->status === 'completed' ? 'text-green-600' : 'text-gray-400' }}">Pending</span>
+                <span class="text-sm font-medium {{ $order->status === 'ready_for_pickup' || $order->status === 'completed' ? 'text-green-600' : 'text-gray-400' }}">Ready for Pickup</span>
+                <span class="text-sm font-medium {{ $order->status === 'completed' ? 'text-green-600' : 'text-gray-400' }}">Completed</span>
                 <span class="text-sm font-medium {{ $order->status === 'cancelled' ? 'text-red-600' : 'text-gray-400' }}">Cancelled</span>
             </div>
             <div class="flex items-center">
                 <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div class="h-full transition-all duration-300 
-                        {{ $order->status === 'pending' ? 'bg-blue-500 w-1/4' : 
-                           ($order->status === 'ready_for_pickup' ? 'bg-blue-500 w-2/4' : 
+                        {{ $order->status === 'pending' ? 'bg-green-500 w-1/4' : 
+                           ($order->status === 'ready_for_pickup' ? 'bg-green-500 w-2/4' : 
                            ($order->status === 'completed' ? 'bg-green-500 w-full' : 
                            ($order->status === 'cancelled' ? 'bg-red-500 w-full' : 'bg-gray-300 w-0'))) }}"></div>
                 </div>
@@ -61,7 +61,7 @@
             <h2 class="text-lg font-semibold text-gray-900">Order Summary</h2>
             <div class="text-right">
                 <div class="text-sm text-gray-500">Total Items: {{ $order->orderItems->sum('quantity') }}</div>
-                <div class="text-lg font-bold text-orange-600">Total Amount: ₱{{ number_format($order->total_amount ?? $order->total ?? $order->orderItems->sum(function($item) { return $item->quantity * $item->price; }), 2) }}</div>
+                <div class="text-lg font-bold text-green-600">Total Amount: ₱{{ number_format($order->total_amount ?? $order->total ?? $order->orderItems->sum(function($item) { return $item->quantity * $item->price; }), 2) }}</div>
             </div>
         </div>
         
@@ -94,7 +94,7 @@
         <div class="border-t border-gray-200 mt-6 pt-4">
             <div class="flex justify-between items-center">
                 <span class="text-lg font-semibold text-gray-900">Total:</span>
-                <span class="text-xl font-bold text-orange-600">₱{{ number_format($order->total_amount ?? $order->total ?? $order->orderItems->sum(function($item) { return $item->quantity * $item->price; }), 2) }}</span>
+                <span class="text-xl font-bold text-green-600">₱{{ number_format($order->total_amount ?? $order->total ?? $order->orderItems->sum(function($item) { return $item->quantity * $item->price; }), 2) }}</span>
             </div>
         </div>
     </div>

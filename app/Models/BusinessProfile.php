@@ -29,7 +29,7 @@ class BusinessProfile extends Model
         'business_permit_path',
         'licenses',
         'status',
-        'rejection_reason',
+        'decline_reason',
         'contact_number',
         'address',
         'location',
@@ -55,6 +55,7 @@ class BusinessProfile extends Model
      * @var array
      */
     protected $casts = [
+        'business_permit_path' => 'array',
         'licenses' => 'array',
         'is_published' => 'boolean',
         'published_at' => 'datetime',
@@ -66,7 +67,7 @@ class BusinessProfile extends Model
     // Business status constants
     const STATUS_PENDING = 'pending';
     const STATUS_APPROVED = 'approved';
-    const STATUS_REJECTED = 'rejected';
+    const STATUS_DECLINED = 'declined';
 
     // Business type constants
     const TYPE_LOCAL_PRODUCTS = 'local_products';
@@ -82,26 +83,21 @@ class BusinessProfile extends Model
     }
 
     /**
-     * Get all of the rooms for the business profile.
+     * Get all of the hotel rooms for the business profile.
+     * Uses hotel_rooms table with business_id foreign key
      */
     public function rooms()
     {
-        return $this->hasMany(Room::class);
+        return $this->hasMany(HotelRoom::class, 'business_id', 'id');
     }
     
     /**
-     * Get all of the resort rooms for the business profile through business.
+     * Get all of the resort rooms for the business profile.
+     * Uses resort_rooms table with resort_id foreign key pointing to business_profile.id
      */
     public function resortRooms()
     {
-        return $this->hasManyThrough(
-            ResortRoom::class,
-            Business::class,
-            'owner_id', // Foreign key on Business table
-            'resort_id', // Foreign key on ResortRoom table
-            'user_id', // Local key on BusinessProfile table
-            'id' // Local key on Business table
-        );
+        return $this->hasMany(ResortRoom::class, 'resort_id', 'id');
     }
     
     /**
@@ -137,6 +133,21 @@ class BusinessProfile extends Model
     public function business()
     {
         return $this->hasOne(Business::class, 'owner_id', 'user_id');
+    }
+
+    /**
+     * Get all products through the business relationship.
+     */
+    public function products()
+    {
+        return $this->hasManyThrough(
+            Product::class,
+            Business::class,
+            'owner_id', // Foreign key on Business table
+            'business_id', // Foreign key on Product table
+            'user_id', // Local key on BusinessProfile table
+            'id' // Local key on Business table
+        );
     }
 
     /**

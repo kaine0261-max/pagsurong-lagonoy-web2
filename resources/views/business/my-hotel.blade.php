@@ -5,41 +5,50 @@ use Illuminate\Support\Facades\Storage;
 @endphp
 
 @section('content')
-<div class="pt-16">
 <!-- Success/Error Messages -->
 @if(session('success'))
-    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded">
+    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded mx-4">
         {{ session('success') }}
     </div>
 @endif
 
 @if(session('error'))
-    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded mx-4">
         {{ session('error') }}
     </div>
 @endif
 
-<div class="w-full">
-    <!-- Hero Banner Section with Dynamic Background -->
-    <div class="w-full h-64 relative bg-gray-200"
-         id="cover-banner"
-         @if($business && $business->cover_image)
-             style="background-image: url('{{ Storage::url($business->cover_image) }}'); background-size: cover; background-position: center;"
-         @endif>
-         
-        <!-- Cover Photo Upload Form -->
-        <div class="absolute top-4 right-4 z-40">
-            <form action="{{ route('business.updateCover') }}" method="POST" enctype="multipart/form-data" class="inline">
-                @csrf
-                <label class="bg-white bg-opacity-90 text-gray-700 px-4 py-2 rounded-lg hover:bg-opacity-100 transition-all duration-200 flex items-center text-sm font-medium cursor-pointer shadow-lg">
-                    <i class="fas fa-camera mr-2"></i> Edit Cover Image
-                    <input type="file" name="cover_image" accept="image/*" class="hidden" onchange="this.form.submit()">
-                </label>
-            </form>
-        </div>
+@if($errors->any())
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded mx-4">
+        <ul class="list-disc list-inside">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
+@endif
 
-    <!-- Main Content Section -->
+<!-- Hero Banner Section with Dynamic Background -->
+<div class="w-full h-64 relative bg-gray-200"
+     id="cover-banner"
+     @if($businessProfile && $businessProfile->cover_image)
+         style="background-image: url('{{ Storage::url($businessProfile->cover_image) }}?v={{ time() }}'); background-size: cover; background-position: center;"
+     @endif>
+     
+    <!-- Cover Photo Upload Form -->
+    <div class="absolute top-20 right-4 z-40">
+        <form action="{{ route('business.updateCover') }}" method="POST" enctype="multipart/form-data" class="inline">
+            @csrf
+            <label class="bg-white bg-opacity-90 text-gray-700 px-4 py-2 rounded-lg hover:bg-opacity-100 transition-all duration-200 flex items-center text-sm font-medium cursor-pointer shadow-lg">
+                <i class="fas fa-camera mr-2"></i> Edit Cover Image
+                <input type="file" name="cover_image" accept="image/*" class="hidden" onchange="this.form.submit()">
+            </label>
+        </form>
+    </div>
+</div>
+
+<!-- Main Content Section -->
+<div class="bg-gray-100 pb-8 min-h-[calc(100vh-16rem)]">
     <div class="w-full max-w-7xl mx-auto px-4 -mt-12 md:-mt-16 lg:-mt-20 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left Side - Profile and Hotel Info -->
@@ -55,13 +64,13 @@ use Illuminate\Support\Facades\Storage;
                                          alt="{{ $businessProfile->business_name }}" 
                                          class="w-full h-full object-cover profile-photo">
                                 @else
-                                    <div class="w-full h-full bg-blue-600 flex items-center justify-center">
+                                    <div class="w-full h-full bg-green-600 flex items-center justify-center">
                                         <i class="fas fa-hotel text-white text-4xl"></i>
                                     </div>
                                 @endif
                             </div>
                             <div class="absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow-md">
-                                <i class="fas fa-camera text-blue-600 text-sm"></i>
+                                <i class="fas fa-camera text-green-600 text-sm"></i>
                             </div>
                         </div>
                         <input type="file" id="profile-photo" class="hidden" accept="image/*" onchange="uploadProfilePhoto(this)">
@@ -131,7 +140,7 @@ use Illuminate\Support\Facades\Storage;
                             @else
                                 <form action="{{ route('business.publish') }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">
                                         Publish Now
                                     </button>
                                 </form>
@@ -195,7 +204,7 @@ use Illuminate\Support\Facades\Storage;
                                 <p class="text-2xl font-semibold text-gray-900">{{ $totalRooms }}</p>
                                 <p class="text-xs text-gray-500">Rooms available</p>
                             </div>
-                            <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                            <div class="p-3 rounded-full bg-green-100 text-green-600">
                                 <i class="fas fa-door-open text-xl"></i>
                             </div>
                         </div>
@@ -219,7 +228,7 @@ use Illuminate\Support\Facades\Storage;
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">Rooms</h3>
                         <div class="flex items-center gap-3">
-                            <button type="button" onclick="resetRoomForm(); openModal('addRoomModal')" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
+                            <button type="button" onclick="resetRoomForm(); openModal('addRoomModal')" class="inline-flex items-center px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
                                 <i class="fas fa-plus mr-1"></i> Add Room
                             </button>
                         </div>
@@ -293,7 +302,7 @@ use Illuminate\Support\Facades\Storage;
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">Gallery</h3>
                         <div class="flex items-center gap-3">
-                            <button type="button" onclick="openModal('galleryModal')" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
+                            <button type="button" onclick="openModal('galleryModal')" class="inline-flex items-center px-3 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700">
                                 <i class="fas fa-plus mr-1"></i> Add Photos
                             </button>
                         </div>
@@ -321,7 +330,6 @@ use Illuminate\Support\Facades\Storage;
     </div>
 </div>
 
-
 <!-- Add Promotion Modal -->
 <div id="addPromotionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-[60] flex items-center justify-center pt-20">
     <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto mx-4">
@@ -341,20 +349,20 @@ use Illuminate\Support\Facades\Storage;
                             <label for="promotion_title" class="block text-sm font-medium text-gray-700">Promotion Title</label>
                             <input type="text" name="title" id="promotion_title" required
                                    placeholder="e.g., Summer Special 50% Off"
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
                         </div>
                         
                         <div>
                             <label for="promotion_description" class="block text-sm font-medium text-gray-700">Description</label>
                             <textarea name="description" id="promotion_description" rows="3" required
                                       placeholder="Describe your promotion details, terms and conditions..."
-                                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"></textarea>
+                                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"></textarea>
                         </div>
                         
                         <div>
                             <label for="promotion_image" class="block text-sm font-medium text-gray-700">Promotion Image</label>
                             <input type="file" name="image" id="promotion_image" accept="image/*" required
-                                   class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                   class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
                             <p class="mt-1 text-sm text-gray-500">Upload an attractive image for your promotion</p>
                         </div>
                     </div>
@@ -394,13 +402,13 @@ use Illuminate\Support\Facades\Storage;
                             <label for="room_number" class="block text-sm font-medium text-gray-700">Room Number</label>
                             <input type="text" name="room_number" id="room_number" required
                                    placeholder="e.g., 101, A-1, Deluxe-1"
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
                         </div>
                         
                         <div>
                             <label for="room_type" class="block text-sm font-medium text-gray-700">Room Type</label>
                             <select name="room_type" id="room_type" required
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
                                 <option value="">Select room type</option>
                                 <option value="standard">Standard Room</option>
                                 <option value="deluxe">Deluxe Room</option>
@@ -414,35 +422,35 @@ use Illuminate\Support\Facades\Storage;
                             <label for="room_price" class="block text-sm font-medium text-gray-700">Price per Night (₱)</label>
                             <input type="number" name="price_per_night" id="room_price" step="0.01" min="0" required
                                    placeholder="2500.00"
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
                         </div>
                         
                         <div>
                             <label for="room_capacity" class="block text-sm font-medium text-gray-700">Guest Capacity</label>
                             <input type="number" name="capacity" id="room_capacity" min="1" max="20" required
                                    placeholder="2"
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
                         </div>
                         
                         <div class="col-span-2">
                             <label for="room_description" class="block text-sm font-medium text-gray-700">Room Description</label>
                             <textarea name="description" id="room_description" rows="3" required
                                       placeholder="Describe the room features, amenities, and what makes it special..."
-                                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"></textarea>
+                                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"></textarea>
                         </div>
                         
                         <div class="col-span-2">
                             <label for="room_amenities" class="block text-sm font-medium text-gray-700">Amenities</label>
                             <input type="text" name="amenities" id="room_amenities"
                                    placeholder="e.g., WiFi, Air Conditioning, TV, Mini Bar, Ocean View"
-                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
                             <p class="mt-1 text-sm text-gray-500">Separate amenities with commas</p>
                         </div>
                         
                         <div class="col-span-2">
                             <label for="room_image" class="block text-sm font-medium text-gray-700">Room Image</label>
                             <input type="file" name="image" id="room_image" accept="image/*" onchange="previewRoomImages(this)"
-                                   class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                   class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
                             <div id="imagePreviews" class="mt-2 grid grid-cols-4 gap-2"></div>
                             <p class="mt-1 text-sm text-gray-500">Upload an image to showcase your room</p>
                         </div>
@@ -450,10 +458,10 @@ use Illuminate\Support\Facades\Storage;
                     </div>
                     
                     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-                        <button type="button" onclick="closeModal('addRoomModal')" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <button type="button" onclick="closeModal('addRoomModal')" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                             Cancel
                         </button>
-                        <button type="submit" id="roomSubmitBtn" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <button type="submit" id="roomSubmitBtn" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                             Add Room
                         </button>
                     </div>
@@ -490,10 +498,10 @@ use Illuminate\Support\Facades\Storage;
                 </div>
                 
                 <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-                    <button type="button" onclick="closeModal('galleryModal')" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <button type="button" onclick="closeModal('galleryModal')" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                         Cancel
                     </button>
-                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                         Upload Photos
                     </button>
                 </div>
@@ -501,6 +509,8 @@ use Illuminate\Support\Facades\Storage;
         </div>
     </div>
 </div>
+
+@endsection
 
 @push('scripts')
 <script>

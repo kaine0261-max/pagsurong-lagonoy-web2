@@ -33,8 +33,8 @@ class AdminController extends Controller
             ->limit(5)
             ->get();
 
-        // Gender Distribution (from user profiles)
-        $genderDistribution = Profile::select('sex', DB::raw('COUNT(*) as count'))
+        // Sex Distribution (from user profiles)
+        $sexDistribution = Profile::select('sex', DB::raw('COUNT(*) as count'))
             ->whereNotNull('sex')
             ->groupBy('sex')
             ->get();
@@ -153,7 +153,7 @@ class AdminController extends Controller
         // Pass all data to the dashboard view
         return view('admin.dashboard', compact(
             'topProducts',
-            'genderDistribution',
+            'sexDistribution',
             'ageDistribution',
             'locationDistribution',
             'mostVisitedShops',

@@ -57,23 +57,34 @@
 </head>
 <body class="font-roboto bg-gray-50 min-h-screen flex flex-col">
     <!-- Header -->
-    <header style="background-color: #012844ff;" class="py-4 px-4 md:px-10 flex flex-col md:flex-row justify-between items-center shadow-sm relative z-10">
+    <header style="background-color: #064e3b;" class="py-4 px-4 md:px-10 flex flex-col md:flex-row justify-between items-center shadow-sm relative z-10">
+        <!-- Left Side - Main Branding -->
         <div class="flex items-center mb-4 md:mb-0">
             <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3" />
             <div class="font-playfair text-2xl font-bold text-white">Pagsurong Lagonoy</div>
         </div>
-        <nav class="flex flex-wrap justify-center">
-            <a href="{{ route('home') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-blue-300">Home</a>
-            <a href="{{ route('about') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-blue-300">About Us</a>
-            <a href="{{ route('contact') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-blue-300">Contact Us</a>
+        
+        <!-- Center - Navigation -->
+        <nav class="flex flex-wrap justify-center mb-4 md:mb-0">
+            <a href="{{ route('home') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200">Home</a>
+            <a href="{{ route('about') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200">About Us</a>
+            <a href="{{ route('contact') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200">Contact Us</a>
             @auth
-                <a href="{{ route('dashboard') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-blue-300">Dashboard</a>
-                <a href="#" onclick="logoutUser (event)" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-blue-300">Logout</a>
+                <a href="{{ route('dashboard') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200">Dashboard</a>
+                <a href="#" onclick="logoutUser (event)" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200">Logout</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                     @csrf
                 </form>
             @endauth
         </nav>
+        
+        <!-- Right Side - Government Logos -->
+        <div class="flex items-center space-x-2">
+            <img src="{{ asset('Municipal Seal of Lagonoy.png') }}" alt="Municipal Seal of Lagonoy" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm" />
+            <img src="{{ asset('bagong-pilipinas-logo.png') }}" alt="Bagong Pilipinas Logo" class="w-8 h-8 md:w-10 md:h-10 object-contain drop-shadow-sm" />
+            <img src="{{ asset('Provincial Logo of Camarines Sur.png') }}" alt="Provincial Logo of Camarines Sur" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm" />
+            <img src="{{ asset('Department of Tourism (DOT) Philippines Logo.png') }}" alt="Department of Tourism Philippines" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm" />
+        </div>
     </header>
 
     <!-- Main Content -->
@@ -105,7 +116,7 @@
                         required
                         autocomplete="email"
                         autofocus
-                        class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200 text-sm sm:text-base"
+                        class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-all duration-200 text-sm sm:text-base"
                     />
                     @error('email')
                         <p class="text-red-500 text-xs italic mt-2 text-left">{{ $message }}</p>
@@ -115,7 +126,7 @@
                 <div class="mb-4 sm:mb-6">
                     <div class="flex justify-between items-center mb-2">
                         <label for="password" class="block text-gray-700 font-medium text-sm sm:text-base">Password</label>
-                        <a href="{{ route('password.request') }}" class="text-xs sm:text-sm text-blue-600 hover:underline">Forgot Password?</a>
+                        <a href="{{ route('password.request') }}" class="text-xs sm:text-sm text-green-600 hover:underline">Forgot Password?</a>
                     </div>
                     <div class="relative">
                         <input
@@ -123,13 +134,13 @@
                             name="password"
                             type="password"
                             placeholder="Enter your password"
-                            class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200 pr-12 text-sm sm:text-base"
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition-all duration-200 pr-12 text-sm sm:text-base"
                             required
                             autocomplete="current-password"
                         />
                         <button type="button" 
                                 onclick="togglePasswordVisibility('password')" 
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-blue-600 focus:outline-none">
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-green-600 focus:outline-none">
                             <i id="password-toggle-icon" class="far fa-eye"></i>
                         </button>
                     </div>
@@ -138,58 +149,13 @@
                     @enderror
                 </div>
 
-                <!-- Role Selection (styled like registration) -->
-                <div class="mb-4 sm:mb-6">
-                    <label class="block text-gray-700 font-medium mb-2 text-left text-sm sm:text-base">Login As:</label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                        <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                            <input type="radio" name="role" value="customer" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" {{ old('role') === 'customer' ? 'checked' : '' }}>
-                            <span class="ml-2 text-sm text-gray-700">Customer</span>
-                        </label>
-                        <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                            <input type="radio" name="role" value="business_owner" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" {{ old('role') === 'business_owner' ? 'checked' : '' }}>
-                            <span class="ml-2 text-sm text-gray-700">Business Owner</span>
-                        </label>
-                        <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50 sm:col-span-2">
-                            <input type="radio" name="role" value="admin" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" {{ old('role') === 'admin' ? 'checked' : '' }}>
-                            <span class="ml-2 text-sm text-gray-700">Admin</span>
-                        </label>
-                    </div>
-                    @error('role')
-                        <p class="text-red-500 text-xs italic mt-2 text-left">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Business Type (only when Business Owner is selected) -->
-                <div id="business-type-section" class="mb-4 sm:mb-6 hidden">
-                    <label class="block text-gray-700 font-medium mb-2 text-left text-sm sm:text-base">Business Type:</label>
-                    @php
-                        $businessTypes = [
-                            'local_products' => 'Local Products Shop',
-                            'hotel' => 'Hotel',
-                            'resort' => 'Resort',
-                        ];
-                        $oldBusinessType = old('business_type');
-                    @endphp
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                        @foreach ($businessTypes as $value => $label)
-                            <label class="flex items-center p-2 sm:p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="radio" name="business_type" value="{{ $value }}" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" {{ $oldBusinessType === $value ? 'checked' : '' }}>
-                                <span class="ml-2 text-sm text-gray-700">{{ $label }}</span>
-                            </label>
-                        @endforeach
-                    </div>
-                    @error('business_type')
-                        <p class="text-red-500 text-xs italic mt-2 text-left">{{ $message }}</p>
-                    @enderror
-                </div>
 
                 <div class="flex items-center justify-between mb-4 sm:mb-6">
                     <div class="flex items-center">
                         <input
                             id="remember"
                             type="checkbox"
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                             name="remember"
                             {{ old('remember') ? 'checked' : '' }}
                         >
@@ -201,7 +167,7 @@
 
                 <button
                     type="submit"
-                    class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 sm:py-3 px-4 rounded-md transition-colors duration-300 text-sm sm:text-base"
+                    class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 sm:py-3 px-4 rounded-md transition-colors duration-300 text-sm sm:text-base"
                 >
                     Login
                 </button>
@@ -209,34 +175,20 @@
 
             <div class="mt-6 text-center text-gray-600">
                 Don't have an account?
-                <a href="{{ route('register') }}" class="text-blue-500 hover:text-blue-700 font-medium">Register here</a>
+                <a href="{{ route('register') }}" class="text-green-500 hover:text-green-700 font-medium">Register here</a>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer style="background-color: #012844ff;" class="text-white py-10">
+    <footer style="background-color: #064e3b;" class="text-white py-10">
         <div class="max-w-6xl mx-auto px-5">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                     <h3 class="text-xl font-playfair font-bold mb-4">Pagsurong Lagonoy</h3>
                     <p class="text-gray-300">
                         Showcasing the best of Lagonoy's local products, accommodations, and tourist destinations.
                     </p>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('home') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Home</a></li>
-                        <li><a href="{{ route('about') }}" class="text-gray-300 hover:text-white transition-colors duration-200">About Us</a></li>
-                        <li><a href="{{ route('contact') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Contact</a></li>
-                        @auth
-                            <li><a href="{{ route('dashboard') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Dashboard</a></li>
-                        @else
-                            <li><a href="{{ route('login') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Login</a></li>
-                            <li><a href="{{ route('register') }}" class="text-gray-300 hover:text-white transition-colors duration-200">Register</a></li>
-                        @endauth
-                    </ul>
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
@@ -261,23 +213,7 @@
     </footer>
 
     <script>
-        // Toggle business type section based on role selection (like registration)
-        document.addEventListener('DOMContentLoaded', function() {
-            const roleInputs = document.querySelectorAll('input[name="role"]');
-            const btSection = document.getElementById('business-type-section');
-
-            function toggleBT() {
-                const selected = document.querySelector('input[name="role"]:checked');
-                if (selected && selected.value === 'business_owner') {
-                    btSection.classList.remove('hidden');
-                } else {
-                    btSection.classList.add('hidden');
-                }
-            }
-
-            roleInputs.forEach(i => i.addEventListener('change', toggleBT));
-            toggleBT();
-        });
+        // Role selection removed - users login with their assigned roles
 
         // Logout function
         function logoutUser(event) {

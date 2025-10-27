@@ -2,22 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ResortController;
+use App\Http\Controllers\AttractionController;
 
-// Test routes for session and CSRF debugging
-Route::get('/test-session', function () {
-    return response()->json([
-        'session_id' => session()->getId(),
-        'token' => csrf_token(),
-        'session_data' => session()->all()
-    ]);
-});
-
-Route::post('/test-csrf', function () {
-    return response()->json([
-        'message' => 'CSRF token is valid!',
-        'session_id' => session()->getId()
-    ]);
-});
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
@@ -32,8 +19,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HotelController;
-use App\Http\Controllers\ResortController;
-use App\Http\Controllers\AttractionController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\CommentController;
 
@@ -48,12 +33,27 @@ Route::get('/terms', [App\Http\Controllers\TermsController::class, 'show'])->nam
 Route::post('/terms/accept', [App\Http\Controllers\TermsController::class, 'accept'])->name('terms.accept');
 Route::post('/terms/decline', [App\Http\Controllers\TermsController::class, 'decline'])->name('terms.decline');
 
-// Public browsing
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+// Public browsing routes
+Route::get('/products', [ProductController::class, 'index'])->name('public.products');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('public.products.show');
+Route::get('/shops', [ProductController::class, 'shops'])->name('public.shops');
+Route::get('/shops/{shop}', [ProductController::class, 'showShop'])->name('public.shops.show');
+Route::get('/hotels', [HotelController::class, 'index'])->name('public.hotels');
+Route::get('/hotels/{hotel}', [HotelController::class, 'show'])->name('public.hotels.show');
+Route::get('/resorts', [ResortController::class, 'index'])->name('public.resorts');
+Route::get('/resorts/{id}', [ResortController::class, 'show'])->name('public.resorts.show');
+Route::get('/attractions', [AttractionController::class, 'index'])->name('public.attractions');
+Route::get('/attractions/{id}', [AttractionController::class, 'show'])->name('public.attractions.show');
 
 // Comment count routes (accessible to all)
 Route::get('/businesses/{business}/comment-count', [RatingController::class, 'getBusinessCommentCount'])->name('businesses.comment-count');
+
+// Public comment viewing routes (no auth required)
+Route::get('/businesses/{business}/comments', [RatingController::class, 'getBusinessComments'])->name('businesses.comments');
+Route::get('/products/{product}/comments', [RatingController::class, 'getProductComments'])->name('products.comments');
+Route::get('/hotels/{businessProfile}/comments', [RatingController::class, 'getHotelComments'])->name('hotels.comments');
+Route::get('/resorts/{businessProfile}/comments', [RatingController::class, 'getResortComments'])->name('resorts.comments');
+Route::get('/tourist-spots/{touristSpot}/comments', [RatingController::class, 'getTouristSpotComments'])->name('tourist-spot.comments');
 
 // Unified Rating and Like System
 Route::middleware('auth')->group(function () {
@@ -61,25 +61,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/businesses/{business}/rate', [RatingController::class, 'rateBusiness'])->name('businesses.rate');
     Route::post('/businesses/{business}/like', [RatingController::class, 'toggleBusinessLike'])->name('businesses.like');
     Route::post('/businesses/{business}/comment', [RatingController::class, 'commentBusiness'])->name('businesses.comment');
-    Route::get('/businesses/{business}/comments', [RatingController::class, 'getBusinessComments'])->name('businesses.comments');
     Route::delete('/comments/{comment}', [RatingController::class, 'deleteComment'])->name('comments.delete');
     
     Route::post('/products/{product}/rate', [RatingController::class, 'rateProduct'])->name('products.rate');
     Route::post('/products/{product}/like', [RatingController::class, 'toggleProductLike'])->name('products.like');
     Route::post('/products/{product}/comment', [RatingController::class, 'commentProduct'])->name('products.comment');
-    Route::get('/products/{product}/comments', [RatingController::class, 'getProductComments'])->name('products.comments');
     Route::delete('/product-comments/{comment}', [RatingController::class, 'deleteProductComment'])->name('product-comments.destroy');
     
     Route::post('/hotels/{businessProfile}/rate', [RatingController::class, 'rateHotel'])->name('hotels.rate');
     Route::post('/hotels/{businessProfile}/like', [RatingController::class, 'toggleHotelLike'])->name('hotels.like');
     Route::post('/hotels/{businessProfile}/comment', [RatingController::class, 'commentHotel'])->name('hotels.comment');
-    Route::get('/hotels/{businessProfile}/comments', [RatingController::class, 'getHotelComments'])->name('hotels.comments');
     Route::delete('/hotel-comments/{comment}', [RatingController::class, 'deleteHotelComment'])->name('hotel-comments.delete');
     
     Route::post('/resorts/{businessProfile}/rate', [RatingController::class, 'rateResort'])->name('resorts.rate');
     Route::post('/resorts/{businessProfile}/like', [RatingController::class, 'toggleResortLike'])->name('resorts.like');
     Route::post('/resorts/{businessProfile}/comment', [RatingController::class, 'commentResort'])->name('resorts.comment');
-    Route::get('/resorts/{businessProfile}/comments', [RatingController::class, 'getResortComments'])->name('resorts.comments');
     Route::delete('/resort-comments/{comment}', [RatingController::class, 'deleteResortComment'])->name('resort-comments.delete');
     
     // Room and cottage ratings (legacy support)
@@ -91,7 +87,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/tourist-spots/{touristSpot}/like', [RatingController::class, 'toggleTouristSpotLike'])->name('tourist-spot.like');
     Route::get('/tourist-spots/{touristSpot}/like-status', [RatingController::class, 'getTouristSpotLikeStatus'])->name('tourist-spot.like-status');
     Route::post('/tourist-spots/{touristSpot}/comment', [RatingController::class, 'commentTouristSpot'])->name('tourist-spot.comment');
-    Route::get('/tourist-spots/{touristSpot}/comments', [RatingController::class, 'getTouristSpotComments'])->name('tourist-spot.comments');
     Route::delete('/tourist-spots/comments/{comment}', [RatingController::class, 'deleteTouristSpotComment'])->name('tourist-spot.comment.delete');
     
     // Comment likes and deletes (unified)
@@ -100,19 +95,14 @@ Route::middleware('auth')->group(function () {
 });
 
 // --- Dynamic Tourism Pages ---
-Route::get('/hotels', [HotelController::class, 'index'])->name('hotels');
-Route::get('/hotels/{hotel}', [HotelController::class, 'show'])->name('hotels.show');
+// Routes moved to public section above
 
-// Resort routes handled by CustomerController below
-
-// Removed duplicate attractions routes - using CustomerController instead
-
-// Auth
-Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+// Auth - Redirect to home page with modals
+Route::get('/register', function() { return redirect('/#register'); })->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
 
-// Authentication Routes
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+// Authentication Routes - Redirect to home page with modals
+Route::get('/login', function() { return redirect('/#login'); })->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
@@ -147,6 +137,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profile/picture', [ProfileController::class, 'updatePicture'])->name('profile.picture.update');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/account/delete', [ProfileController::class, 'deleteAccount'])->name('account.delete');
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -169,9 +160,15 @@ Route::middleware(['auth'])->group(function () {
         // Search
         Route::get('/customer/search', [CustomerController::class, 'search'])->name('customer.search');
 
+        // Use public views for consistent layout (no feeds, simple grid)
         Route::get('/customer/products', [ProductController::class, 'index'])->name('customer.products');
-        Route::get('/customer/hotels', [ProductController::class, 'hotels'])->name('customer.hotels');
-        Route::get('/customer/hotels/{business}', [CustomerController::class, 'showBusiness'])->name('customer.hotels.show');
+        Route::get('/customer/shops', [ProductController::class, 'shops'])->name('customer.shops');
+        Route::get('/customer/hotels', [HotelController::class, 'index'])->name('customer.hotels');
+        Route::get('/customer/hotels/{hotel}', [HotelController::class, 'show'])->name('customer.hotels.show');
+        Route::get('/customer/resorts', [ResortController::class, 'index'])->name('customer.resorts');
+        Route::get('/customer/resorts/{id}', [ResortController::class, 'show'])->name('customer.resorts.show');
+        Route::get('/customer/attractions', [AttractionController::class, 'index'])->name('customer.attractions');
+        Route::get('/customer/attractions/{id}', [AttractionController::class, 'show'])->name('customer.attractions.show');
         Route::get('/customer/product/{product}', [ProductController::class, 'show'])->name('customer.product.show');
 
         // Orders
@@ -225,6 +222,7 @@ Route::middleware(['auth'])->group(function () {
             
             // Profile routes
             Route::post('/update-profile-avatar', [\App\Http\Controllers\Business\BusinessController::class, 'updateProfileAvatar'])->name('updateProfileAvatar');
+            Route::post('/update-avatar', [\App\Http\Controllers\Business\BusinessController::class, 'updateProfileAvatar'])->name('updateAvatar');
             
             // Gallery routes
             Route::post('/gallery', [\App\Http\Controllers\Business\BusinessController::class, 'storeGallery'])->name('gallery.store');
@@ -233,11 +231,6 @@ Route::middleware(['auth'])->group(function () {
             // Promotion routes
             Route::post('/promotions', [\App\Http\Controllers\Business\BusinessController::class, 'storePromotion'])->name('promotions.store');
             Route::delete('/promotions/{id}', [\App\Http\Controllers\Business\BusinessController::class, 'destroyPromotion'])->name('promotions.destroy');
-            
-            // Debug route for testing room creation
-            Route::get('/rooms/test', function() {
-                return response()->json(['message' => 'Rooms endpoint is working', 'controller' => 'ResortRoomController']);
-            })->name('rooms.test');
             
             // Resort Room routes
             Route::post('/rooms', [\App\Http\Controllers\Business\ResortRoomController::class, 'store'])->name('rooms.store');
@@ -272,22 +265,18 @@ Route::middleware(['auth'])->group(function () {
             
             // Common routes for all businesses
             Route::post('/update-cover', [\App\Http\Controllers\Business\BusinessController::class, 'updateCover'])->name('updateCover');
-            Route::post('/update-avatar', [\App\Http\Controllers\Business\BusinessController::class, 'updateProfileAvatar'])->name('updateAvatar');
             Route::post('/update-profile-avatar', [\App\Http\Controllers\Business\BusinessController::class, 'updateProfileAvatar'])->name('updateProfileAvatar');
             Route::get('/orders', [OrderController::class, 'businessOrders'])->name('orders');
             Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update.status');
             Route::get('/messages', [MessageController::class, 'indexOwner'])->name('messages');
             Route::post('/gallery/upload', [\App\Http\Controllers\Business\BusinessController::class, 'galleryUpload'])->name('gallery.upload');
-            Route::post('/gallery/store', [\App\Http\Controllers\Business\BusinessController::class, 'storeGallery'])->name('gallery.store');
-            Route::delete('/gallery/{id}', [\App\Http\Controllers\Business\BusinessController::class, 'destroyGallery'])->name('gallery.destroy');
             
-            Route::post('/cottages', [\App\Http\Controllers\Business\CottageController::class, 'store'])->name('cottages.store');
-            Route::put('/cottages/{cottage}', [\App\Http\Controllers\Business\CottageController::class, 'update'])->name('cottages.update');
-            Route::delete('/cottages/{cottage}', [\App\Http\Controllers\Business\CottageController::class, 'destroy'])->name('cottages.destroy');
-            
-            // Publishing routes
-            Route::post('/publish', [\App\Http\Controllers\Business\BusinessController::class, 'publish'])->name('publish');
-            Route::post('/unpublish', [\App\Http\Controllers\Business\BusinessController::class, 'unpublish'])->name('unpublish');
+            // Product management routes
+            Route::get('/products', [\App\Http\Controllers\Business\BusinessController::class, 'products'])->name('products');
+            Route::get('/products/create', [\App\Http\Controllers\Business\BusinessController::class, 'createProduct'])->name('products.create');
+            Route::post('/products', [\App\Http\Controllers\Business\BusinessController::class, 'storeProduct'])->name('products.store');
+            Route::put('/products/{product}/stock', [\App\Http\Controllers\Business\BusinessController::class, 'updateProductStock'])->name('products.updateStock');
+            Route::delete('/products/{product}', [\App\Http\Controllers\Business\BusinessController::class, 'deleteProduct'])->name('products.destroy');
         });
 
     // =========================
@@ -298,13 +287,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/thread/{user}', [MessageController::class, 'thread'])->name('thread');
         Route::post('/send', [MessageController::class, 'send'])->name('send');
     });
-
-    // Business Profile Routes (commented out - using BusinessController instead)
-    // Route::prefix('business/profile')->name('business.profile.')->group(function () {
-    //     Route::get('/', [BusinessProfileController::class, 'edit'])->name('edit');
-    //     Route::put('/', [BusinessProfileController::class, 'update'])->name('update');
-    //     Route::post('/picture', [BusinessProfileController::class, 'updatePicture'])->name('updatePicture');
-    // });
 
     // =========================
     // ADMIN ROUTES
@@ -318,7 +300,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', [\App\Http\Controllers\Admin\BusinessApprovalController::class, 'index'])->name('index');
                 Route::get('/{business}', [\App\Http\Controllers\Admin\BusinessApprovalController::class, 'show'])->name('show');
                 Route::post('/{business}/approve', [\App\Http\Controllers\Admin\BusinessApprovalController::class, 'approve'])->name('approve');
-                Route::post('/{business}/reject', [\App\Http\Controllers\Admin\BusinessApprovalController::class, 'reject'])->name('reject');
+                Route::post('/{business}/decline', [\App\Http\Controllers\Admin\BusinessApprovalController::class, 'decline'])->name('decline');
                 Route::post('/{business}/toggle-publish', [\App\Http\Controllers\Admin\BusinessApprovalController::class, 'togglePublish'])->name('toggle-publish');
                 Route::get('/{business}/download/{type}/{index?}', [\App\Http\Controllers\Admin\BusinessApprovalController::class, 'downloadDocument'])->name('download');
             });
@@ -359,21 +341,14 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/upload-spots/gallery', [\App\Http\Controllers\Admin\TouristSpotController::class, 'uploadGallery'])->name('upload.spots.gallery');
             Route::get('/tourist-spots/{touristSpot}/edit', [\App\Http\Controllers\Admin\TouristSpotController::class, 'edit'])->name('tourist.spots.edit');
             Route::put('/tourist-spots/{touristSpot}', [\App\Http\Controllers\Admin\TouristSpotController::class, 'update'])->name('tourist.spots.update');
+            Route::post('/tourist-spots/{touristSpot}/gallery/remove', [\App\Http\Controllers\Admin\TouristSpotController::class, 'removeGalleryImage'])->name('tourist.spots.gallery.remove');
             Route::delete('/tourist-spots/{touristSpot}', [\App\Http\Controllers\Admin\TouristSpotController::class, 'destroy'])->name('tourist.spots.destroy');
         });
 });
 
 // =========================
-// CUSTOMER RESORT ROUTES (Public)
+// CUSTOMER RESORT AND ATTRACTION ROUTES (moved to public section above)
 // =========================
-Route::get('/resorts', [CustomerController::class, 'resorts'])->name('customer.resorts');
-Route::get('/resorts/{id}', [CustomerController::class, 'showResort'])->name('customer.resorts.show');
-
-// =========================
-// CUSTOMER TOURIST SPOTS ROUTES (Public)
-// =========================
-Route::get('/attractions', [CustomerController::class, 'touristSpots'])->name('customer.attractions');
-Route::get('/attractions/{id}', [CustomerController::class, 'showTouristSpot'])->name('customer.attractions.show');
 
 // Legacy tourist spot routes (kept for compatibility)
 Route::middleware('auth')->group(function () {

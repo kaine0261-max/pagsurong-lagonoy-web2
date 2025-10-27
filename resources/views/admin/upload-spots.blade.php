@@ -4,135 +4,79 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Left Sidebar - Admin Profile -->
-        <div class="lg:col-span-3">
-            <div class="bg-white rounded-lg shadow-md p-6 sticky top-8">
-                <!-- Admin Profile Section -->
-                <div class="text-center mb-6">
-                    <div class="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200">
-                        @if(auth()->user()->profile && auth()->user()->profile->profile_picture)
-                            <img src="{{ asset('storage/' . auth()->user()->profile->profile_picture) }}" 
-                                 alt="{{ auth()->user()->name }}" 
-                                 class="w-full h-full object-cover">
-                        @else
-                            <div class="w-full h-full bg-blue-500 flex items-center justify-center">
-                                <span class="text-white text-lg font-bold">
-                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                                </span>
-                            </div>
-                        @endif
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900">{{ auth()->user()->name }}</h3>
-                    <p class="text-sm text-gray-600">Administrator</p>
+    <div class="flex gap-6">
+        <!-- Left Sidebar - Uploaded Tourist Spots -->
+        <div id="touristSpotsPanel" class="hidden lg:flex flex-col bg-white rounded-lg shadow-md sticky top-8 h-[calc(100vh-6rem)] w-80 transition-all duration-300">
+            <!-- Header with Toggle -->
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <button onclick="toggleTouristSpotsPanel()" class="flex items-center hover:text-blue-700 transition-colors">
+                        <i class="fas fa-map-marked-alt text-blue-600 text-xl"></i>
+                        <span id="touristSpotsTitle" class="ml-2 font-semibold text-gray-900">Uploaded Tourist Spots</span>
+                    </button>
+                    <button id="touristSpotsToggleBtn" onclick="toggleTouristSpotsPanel()" class="text-gray-400 hover:text-gray-600 p-1">
+                        <i id="touristSpotsToggleIcon" class="fas fa-chevron-left text-sm"></i>
+                    </button>
                 </div>
+            </div>
 
-                <!-- Tourist Spot Statistics Section -->
-                <div class="border-t pt-6">
-                    <h4 class="text-md font-semibold text-gray-900 mb-4">Tourist Spot Statistics</h4>
-                    
-                    <!-- Most Popular (Likes) -->
-                    <div class="mb-4">
-                        <h5 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                            <i class="fas fa-heart text-red-500 mr-2"></i>Most Popular
-                        </h5>
-                        @if($mostPopular)
-                            <div class="bg-red-50 border border-red-200 rounded-lg p-3">
-                                <div class="flex items-center space-x-2">
-                                    <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-                                        @if($mostPopular->profile_avatar)
-                                            <img src="{{ asset('storage/' . $mostPopular->profile_avatar) }}" 
-                                                 alt="{{ $mostPopular->name }}" 
-                                                 class="w-full h-full object-cover">
-                                        @else
-                                            <div class="w-full h-full bg-red-500 flex items-center justify-center">
-                                                <span class="text-white text-xs font-bold">
-                                                    {{ strtoupper(substr($mostPopular->name, 0, 1)) }}
-                                                </span>
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-medium text-gray-900">{{ $mostPopular->name }}</p>
-                                        <p class="text-xs text-red-600">{{ $mostPopular->likes_count }} likes</p>
-                                    </div>
-                                </div>
-                            </div>
-                        @else
-                            <p class="text-xs text-gray-500">No data available</p>
-                        @endif
-                    </div>
-
-                    <!-- Top Rated -->
-                    <div class="mb-4">
-                        <h5 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                            <i class="fas fa-star text-yellow-500 mr-2"></i>Top Rated
-                        </h5>
-                        @if($topRated)
-                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                                <div class="flex items-center space-x-2">
-                                    <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-                                        @if($topRated->profile_avatar)
-                                            <img src="{{ asset('storage/' . $topRated->profile_avatar) }}" 
-                                                 alt="{{ $topRated->name }}" 
-                                                 class="w-full h-full object-cover">
-                                        @else
-                                            <div class="w-full h-full bg-yellow-500 flex items-center justify-center">
-                                                <span class="text-white text-xs font-bold">
-                                                    {{ strtoupper(substr($topRated->name, 0, 1)) }}
-                                                </span>
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-medium text-gray-900">{{ $topRated->name }}</p>
-                                        <p class="text-xs text-yellow-600">{{ number_format($topRated->average_rating, 1) }} ★ ({{ $topRated->total_ratings }} ratings)</p>
-                                    </div>
-                                </div>
-                            </div>
-                        @else
-                            <p class="text-xs text-gray-500">No data available</p>
-                        @endif
-                    </div>
-
-                    <!-- Most Talked (Comments) -->
-                    <div class="mb-4">
-                        <h5 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                            <i class="fas fa-comments text-blue-500 mr-2"></i>Most Talked
-                        </h5>
-                        @if($mostTalked)
-                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                                <div class="flex items-center space-x-2">
-                                    <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-                                        @if($mostTalked->profile_avatar)
-                                            <img src="{{ asset('storage/' . $mostTalked->profile_avatar) }}" 
-                                                 alt="{{ $mostTalked->name }}" 
+            <!-- Content -->
+            <div id="touristSpotsContent" class="flex-1 overflow-y-auto p-4">
+                @if($touristSpots->count() > 0)
+                    <div class="space-y-4">
+                        @foreach($touristSpots as $spot)
+                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start space-x-3">
+                                    <!-- Profile Avatar -->
+                                    <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                                        @if($spot->profile_avatar)
+                                            <img src="{{ asset('storage/' . $spot->profile_avatar) }}" 
+                                                 alt="{{ $spot->name }}" 
                                                  class="w-full h-full object-cover">
                                         @else
                                             <div class="w-full h-full bg-blue-500 flex items-center justify-center">
-                                                <span class="text-white text-xs font-bold">
-                                                    {{ strtoupper(substr($mostTalked->name, 0, 1)) }}
+                                                <span class="text-white text-sm font-bold">
+                                                    {{ strtoupper(substr($spot->name, 0, 1)) }}
                                                 </span>
                                             </div>
                                         @endif
                                     </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-medium text-gray-900">{{ $mostTalked->name }}</p>
-                                        <p class="text-xs text-blue-600">{{ $mostTalked->comments_count }} comments</p>
+                                    
+                                    <!-- Spot Info -->
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="text-sm font-semibold text-gray-900 truncate">{{ $spot->name }}</h4>
+                                        @if($spot->location)
+                                            <p class="text-xs text-gray-600 truncate">{{ $spot->location }}</p>
+                                        @endif
                                     </div>
                                 </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="flex space-x-2 mt-3">
+                                    <button onclick="editTouristSpot({{ $spot->id }})" 
+                                            class="flex-1 bg-blue-600 text-white text-xs py-2 px-3 rounded hover:bg-blue-700 transition-colors">
+                                        <i class="fas fa-edit mr-1"></i> Edit
+                                    </button>
+                                    <button onclick="deleteTouristSpot({{ $spot->id }})" 
+                                            class="flex-1 bg-red-600 text-white text-xs py-2 px-3 rounded hover:bg-red-700 transition-colors">
+                                        <i class="fas fa-trash mr-1"></i> Delete
+                                    </button>
+                                </div>
                             </div>
-                        @else
-                            <p class="text-xs text-gray-500">No data available</p>
-                        @endif
+                        @endforeach
                     </div>
-                </div>
-
+                @else
+                    <div class="text-center py-8">
+                        <i class="fas fa-map-marked-alt text-4xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500">No tourist spots uploaded yet</p>
+                        <p class="text-sm text-gray-400">Upload your first spot using the form</p>
+                    </div>
+                @endif
             </div>
         </div>
 
-        <!-- Middle Content - Upload Form -->
-        <div class="lg:col-span-6">
+        <!-- Main Content - Upload Form -->
+        <div class="flex-1">
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="mb-6">
                     <h1 class="text-2xl font-bold text-gray-900">Upload Tourist Spot</h1>
@@ -247,82 +191,12 @@
                 </form>
             </div>
         </div>
-
-        <!-- Right Sidebar - Tourist Spots -->
-        <div class="lg:col-span-3">
-
-            <div class="bg-white rounded-lg shadow-md p-6 sticky top-8">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Uploaded Tourist Spots</h3>
-                
-                @if($touristSpots->count() > 0)
-                    <div class="space-y-4 max-h-96 overflow-y-auto">
-                        @foreach($touristSpots as $spot)
-                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                                <div class="flex items-start space-x-3">
-                                    <!-- Profile Avatar -->
-                                    <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
-                                        @if($spot->profile_avatar)
-                                            <img src="{{ asset('storage/' . $spot->profile_avatar) }}" 
-                                                 alt="{{ $spot->name }}" 
-                                                 class="w-full h-full object-cover">
-                                        @else
-                                            <div class="w-full h-full bg-blue-500 flex items-center justify-center">
-                                                <span class="text-white text-sm font-bold">
-                                                    {{ strtoupper(substr($spot->name, 0, 1)) }}
-                                                </span>
-                                            </div>
-                                        @endif
-                                    </div>
-                                    
-                                    <!-- Spot Info -->
-                                    <div class="flex-1 min-w-0">
-                                        <h4 class="text-sm font-semibold text-gray-900 truncate">{{ $spot->name }}</h4>
-                                        @if($spot->location)
-                                            <p class="text-xs text-gray-600 truncate">{{ $spot->location }}</p>
-                                        @endif
-                                        <div class="flex items-center mt-1">
-                                            <div class="flex items-center">
-                                                @for($i = 1; $i <= 5; $i++)
-                                                    <svg class="w-3 h-3 {{ $i <= $spot->average_rating ? 'text-yellow-400' : 'text-gray-300' }}" 
-                                                         fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                                    </svg>
-                                                @endfor
-                                            </div>
-                                            <span class="text-xs text-gray-600 ml-1">({{ $spot->total_ratings }})</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Action Buttons -->
-                                <div class="flex space-x-2 mt-3">
-                                    <button onclick="editTouristSpot({{ $spot->id }})" 
-                                            class="flex-1 bg-blue-600 text-white text-xs py-2 px-3 rounded hover:bg-blue-700 transition-colors">
-                                        <i class="fas fa-edit mr-1"></i> Edit
-                                    </button>
-                                    <button onclick="deleteTouristSpot({{ $spot->id }})" 
-                                            class="flex-1 bg-red-600 text-white text-xs py-2 px-3 rounded hover:bg-red-700 transition-colors">
-                                        <i class="fas fa-trash mr-1"></i> Delete
-                                    </button>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <div class="text-center py-8">
-                        <i class="fas fa-map-marked-alt text-4xl text-gray-300 mb-4"></i>
-                        <p class="text-gray-500">No tourist spots uploaded yet</p>
-                        <p class="text-sm text-gray-400">Upload your first spot using the form</p>
-                    </div>
-                @endif
-            </div>
-        </div>
     </div>
 
     <!-- Edit Modal -->
     <div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
+            <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
                 <div class="p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold text-gray-900">Edit Tourist Spot</h3>
@@ -331,9 +205,11 @@
                         </button>
                     </div>
                     
-                    <form id="editForm" method="POST" enctype="multipart/form-data">
+                    <form id="editForm" method="POST" enctype="multipart/form-data" onsubmit="handleEditFormSubmit(event)">
                         @csrf
                         @method('PUT')
+                        <!-- Hidden input for location (will be populated from edit_location) -->
+                        <input type="hidden" name="location" id="final_location">
                         
                         <div class="space-y-4">
                             <div>
@@ -349,7 +225,7 @@
                             </div>
                             
                             <div>
-                                <x-location-select name="location">
+                                <x-location-select name="edit_location">
                                     Location
                                 </x-location-select>
                             </div>
@@ -373,6 +249,21 @@
                                            class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                                 </div>
                             </div>
+                            
+                            <!-- Gallery Images Section -->
+                            <div class="border-t pt-4 mt-4 bg-gray-50 p-4 rounded-lg">
+                                <h4 class="text-md font-semibold text-gray-900 mb-3">📸 Gallery Images</h4>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Upload New Gallery Images</label>
+                                <input type="file" name="gallery_images[]" multiple accept="image/*"
+                                       class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                <p class="text-xs text-gray-500 mt-1">📌 Upload multiple images for the gallery. This will replace existing gallery images.</p>
+                                
+                                <!-- Current Gallery Preview -->
+                                <div id="current-gallery-preview" class="mt-4">
+                                    <p class="text-sm font-medium text-gray-700 mb-2">Current Gallery Images:</p>
+                                    <div id="current-gallery-grid" class="grid grid-cols-3 gap-2"></div>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="flex justify-end space-x-3 mt-6">
@@ -393,21 +284,37 @@
 </div>
 
 <script>
+// Global variables
+let currentTouristSpotId = null;
+let currentGalleryImages = [];
+
 // Global functions for edit and delete
 function editTouristSpot(id) {
+    currentTouristSpotId = id;
     fetch(`/admin/tourist-spots/${id}/edit`)
         .then(response => response.json())
         .then(data => {
             document.getElementById('edit_name').value = data.name || '';
             document.getElementById('edit_description').value = data.description || '';
-            // Set location value for the location component
-            const locationSearchInput = document.getElementById('location_search');
-            const locationHiddenInput = document.getElementById('location');
-            if (locationSearchInput && locationHiddenInput) {
-                locationSearchInput.value = data.location || '';
-                locationHiddenInput.value = data.location || '';
+            // Set location value for the edit location component
+            const editLocationSearchInput = document.getElementById('edit_location_search');
+            const editLocationHiddenInput = document.getElementById('edit_location');
+            if (editLocationSearchInput && editLocationHiddenInput) {
+                editLocationSearchInput.value = data.location || '';
+                editLocationHiddenInput.value = data.location || '';
             }
             document.getElementById('edit_additional_info').value = data.additional_info || '';
+            
+            // Store current gallery images
+            try {
+                currentGalleryImages = data.gallery_images ? 
+                    (typeof data.gallery_images === 'string' ? JSON.parse(data.gallery_images) : data.gallery_images) : [];
+            } catch (e) {
+                currentGalleryImages = [];
+            }
+            
+            // Load current gallery images
+            loadCurrentGallery(data.gallery_images);
             
             document.getElementById('editForm').action = `/admin/tourist-spots/${id}`;
             document.getElementById('editModal').classList.remove('hidden');
@@ -418,8 +325,148 @@ function editTouristSpot(id) {
         });
 }
 
+function loadCurrentGallery(galleryImages) {
+    console.log('Loading gallery images:', galleryImages);
+    const galleryGrid = document.getElementById('current-gallery-grid');
+    const galleryPreview = document.getElementById('current-gallery-preview');
+    
+    if (!galleryGrid || !galleryPreview) {
+        console.error('Gallery elements not found');
+        return;
+    }
+    
+    // Clear existing content
+    galleryGrid.innerHTML = '';
+    
+    if (galleryImages) {
+        let images = [];
+        try {
+            // Parse JSON if it's a string
+            images = typeof galleryImages === 'string' ? JSON.parse(galleryImages) : galleryImages;
+        } catch (e) {
+            console.error('Error parsing gallery images:', e);
+            images = [];
+        }
+        
+        console.log('Parsed images:', images);
+        
+        if (Array.isArray(images) && images.length > 0) {
+            galleryPreview.style.display = 'block';
+            images.forEach((imagePath, index) => {
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'relative group';
+                
+                const img = document.createElement('img');
+                img.src = '/storage/' + imagePath;
+                img.className = 'w-full h-16 object-cover rounded border';
+                img.alt = 'Gallery image';
+                
+                // Delete button
+                const deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.className = 'absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity';
+                deleteBtn.innerHTML = '×';
+                deleteBtn.title = 'Remove image';
+                deleteBtn.onclick = () => removeGalleryImage(imagePath, index);
+                
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(deleteBtn);
+                galleryGrid.appendChild(imgContainer);
+            });
+        } else {
+            galleryPreview.style.display = 'none';
+            console.log('No gallery images to display');
+        }
+    } else {
+        galleryPreview.style.display = 'none';
+        console.log('No gallery images provided');
+    }
+}
+
+function removeGalleryImage(imagePath, index) {
+    if (!confirm('Are you sure you want to remove this image from the gallery?')) {
+        return;
+    }
+    
+    if (!currentTouristSpotId) {
+        alert('Error: Tourist spot ID not found');
+        return;
+    }
+    
+    // Show loading state
+    const deleteBtn = event.target;
+    const originalText = deleteBtn.innerHTML;
+    deleteBtn.innerHTML = '⏳';
+    deleteBtn.disabled = true;
+    
+    fetch(`/admin/tourist-spots/${currentTouristSpotId}/gallery/remove`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            image_path: imagePath,
+            image_index: index
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the current gallery images array
+            currentGalleryImages = data.updated_gallery || [];
+            // Reload the gallery display
+            loadCurrentGallery(currentGalleryImages);
+            // Show success message
+            showMessage('Image removed successfully!', 'success');
+        } else {
+            alert('Error removing image: ' + (data.message || 'Unknown error'));
+            // Restore button state
+            deleteBtn.innerHTML = originalText;
+            deleteBtn.disabled = false;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error removing image');
+        // Restore button state
+        deleteBtn.innerHTML = originalText;
+        deleteBtn.disabled = false;
+    });
+}
+
+function showMessage(message, type = 'info') {
+    // Create a temporary message element
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `fixed top-4 right-4 z-50 px-4 py-2 rounded-md text-white ${
+        type === 'success' ? 'bg-green-500' : 
+        type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+    }`;
+    messageDiv.textContent = message;
+    
+    document.body.appendChild(messageDiv);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        if (messageDiv.parentNode) {
+            messageDiv.parentNode.removeChild(messageDiv);
+        }
+    }, 3000);
+}
+
+function handleEditFormSubmit(event) {
+    // Copy the edit_location value to the final_location hidden input
+    const editLocationValue = document.getElementById('edit_location').value;
+    document.getElementById('final_location').value = editLocationValue;
+    
+    // Let the form submit normally
+    return true;
+}
+
 function closeEditModal() {
     document.getElementById('editModal').classList.add('hidden');
+    currentTouristSpotId = null;
+    currentGalleryImages = [];
 }
 
 function deleteTouristSpot(id) {
@@ -525,5 +572,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Toggle Tourist Spots Panel (Minimize/Maximize)
+function toggleTouristSpotsPanel() {
+    const panel = document.getElementById('touristSpotsPanel');
+    const content = document.getElementById('touristSpotsContent');
+    const icon = document.getElementById('touristSpotsToggleIcon');
+    const title = document.getElementById('touristSpotsTitle');
+    const toggleBtn = document.getElementById('touristSpotsToggleBtn');
+    
+    if (panel && content && icon && title && toggleBtn) {
+        const isMinimized = content.style.display === 'none';
+        
+        if (isMinimized) {
+            // Maximize
+            content.style.display = 'block';
+            title.style.display = 'inline';
+            toggleBtn.style.display = 'block';
+            panel.classList.remove('w-12');
+            panel.classList.add('w-80');
+            icon.classList.remove('fa-chevron-right');
+            icon.classList.add('fa-chevron-left');
+        } else {
+            // Minimize - Show only icon
+            content.style.display = 'none';
+            title.style.display = 'none';
+            toggleBtn.style.display = 'none';
+            panel.classList.remove('w-80');
+            panel.classList.add('w-12');
+            icon.classList.remove('fa-chevron-left');
+            icon.classList.add('fa-chevron-right');
+        }
+    }
+}
 </script>
 @endsection

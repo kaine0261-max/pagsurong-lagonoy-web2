@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.customer')
 
 @section('title', $business->businessProfile->business_name . ' - Resort - Pagsurong Lagonoy')
 
@@ -101,7 +101,7 @@
                                 </div>
                             @endif
                             
-                            <h3 class="font-semibold text-gray-900 mb-2">{{ $room->room_type ?? $room->name }}</h3>
+                            <h3 class="font-semibold text-gray-900 mb-2">{{ $room->room_name ?? $room->room_type }}</h3>
                             <p class="text-gray-600 text-sm mb-3">{{ $room->description }}</p>
                             
                             <div class="flex items-center justify-between">

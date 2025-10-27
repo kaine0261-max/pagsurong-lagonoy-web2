@@ -179,7 +179,7 @@ class CustomerController extends Controller
                     'location' => $spot->location ?? 'Location not specified',
                     'description' => $spot->description ?? '',
                     'image' => $image,
-                    'profile_avatar' => null,
+                    'profile_avatar' => $spot->profile_avatar ? Storage::url($spot->profile_avatar) : null,
                     'rating' => (float)($spot->average_rating ?? 0),
                     'rating_count' => (int)($spot->total_ratings ?? 0),
                     'like_count' => $likeCount,
@@ -626,7 +626,7 @@ class CustomerController extends Controller
         $business->businessProfile = $businessProfile;
 
         // Get rooms and cottages for this resort (only available ones for customers)
-        $rooms = $businessProfile->rooms()
+        $rooms = $businessProfile->resortRooms()
             ->with('images')
             ->where('is_available', true)
             ->get();

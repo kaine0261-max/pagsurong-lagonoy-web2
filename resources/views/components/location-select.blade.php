@@ -23,22 +23,36 @@
         
         <!-- Dropdown List -->
         <div id="{{ $name }}_dropdown" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto hidden">
+            <!-- Barangays -->
+            <div class="px-3 py-1 bg-gray-100 text-xs font-semibold text-gray-600 uppercase tracking-wide">Barangays</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Agosais, Lagonoy, Camarines Sur')">Agosais, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Burabod, Lagonoy, Camarines Sur')">Burabod, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Cabotonan, Lagonoy, Camarines Sur')">Cabotonan, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Cabungahan, Lagonoy, Camarines Sur')">Cabungahan, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Daligan, Lagonoy, Camarines Sur')">Daligan, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Genorangan, Lagonoy, Camarines Sur')">Genorangan, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Gibat (Gubat), Lagonoy, Camarines Sur')">Gibat (Gubat), Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Gimagtocon, Lagonoy, Camarines Sur')">Gimagtocon, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Guinaban, Lagonoy, Camarines Sur')">Guinaban, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Guijalo, Lagonoy, Camarines Sur')">Guijalo, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Himanag, Lagonoy, Camarines Sur')">Himanag, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Hiwacloy, Lagonoy, Camarines Sur')">Hiwacloy, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Kinahulogan, Lagonoy, Camarines Sur')">Kinahulogan, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Loho, Lagonoy, Camarines Sur')">Loho, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Lungib, Lagonoy, Camarines Sur')">Lungib, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Mapid, Lagonoy, Camarines Sur')">Mapid, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Oma-oma, Lagonoy, Camarines Sur')">Oma-oma, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Pag-oring Nuevo, Lagonoy, Camarines Sur')">Pag-oring Nuevo, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Pag-oring Viejo, Lagonoy, Camarines Sur')">Pag-oring Viejo, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Panagan, Lagonoy, Camarines Sur')">Panagan, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Panicuan, Lagonoy, Camarines Sur')">Panicuan, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Pinamihagan, Lagonoy, Camarines Sur')">Pinamihagan, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Poblacion Zone 1, Lagonoy, Camarines Sur')">Poblacion Zone 1, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Poblacion Zone 2, Lagonoy, Camarines Sur')">Poblacion Zone 2, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Poblacion Zone 3, Lagonoy, Camarines Sur')">Poblacion Zone 3, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Poblacion Zone 4, Lagonoy, Camarines Sur')">Poblacion Zone 4, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Poblacion Zone 5, Lagonoy, Camarines Sur')">Poblacion Zone 5, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Sagrada, Lagonoy, Camarines Sur')">Sagrada, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'San Antonio, Lagonoy, Camarines Sur')">San Antonio, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'San Francisco, Lagonoy, Camarines Sur')">San Francisco, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'San Isidro, Lagonoy, Camarines Sur')">San Isidro, Lagonoy, Camarines Sur</div>
@@ -53,13 +67,19 @@
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Santa Catalina, Lagonoy, Camarines Sur')">Santa Catalina, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Santa Cruz, Lagonoy, Camarines Sur')">Santa Cruz, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Santa Lourdes, Lagonoy, Camarines Sur')">Santa Lourdes, Lagonoy, Camarines Sur</div>
-            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Santa Maria, Lagonoy, Camarines Sur')">Santa Maria, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Sta. Maria, Lagonoy, Camarines Sur')">Sta. Maria, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Santa Maria Dos, Lagonoy, Camarines Sur')">Santa Maria Dos, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Santa Teresita, Lagonoy, Camarines Sur')">Santa Teresita, Lagonoy, Camarines Sur</div>
-            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Sagrada, Lagonoy, Camarines Sur')">Sagrada, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Sto. Niño, Lagonoy, Camarines Sur')">Sto. Niño, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Talisay, Lagonoy, Camarines Sur')">Talisay, Lagonoy, Camarines Sur</div>
             <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Tamat, Lagonoy, Camarines Sur')">Tamat, Lagonoy, Camarines Sur</div>
+            
+            <!-- Sitios -->
+            <div class="px-3 py-1 bg-gray-100 text-xs font-semibold text-gray-600 uppercase tracking-wide mt-2">Sitios (Sub-Villages)</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Sitio Ininuman, Agosais, Lagonoy, Camarines Sur')">Sitio Ininuman, Agosais, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Sitio Tingtingon, Genorangan, Lagonoy, Camarines Sur')">Sitio Tingtingon, Genorangan, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Sitio Managnag, Genorangan, Lagonoy, Camarines Sur')">Sitio Managnag, Genorangan, Lagonoy, Camarines Sur</div>
+            <div class="location-option px-3 py-2 hover:bg-blue-50 cursor-pointer text-sm" onclick="selectLocation('{{ $name }}', 'Sitio Baliwag, Burabod, Lagonoy, Camarines Sur')">Sitio Baliwag, Burabod, Lagonoy, Camarines Sur</div>
         </div>
         
         <!-- Chevron down icon -->

@@ -168,4 +168,50 @@ class TouristSpotController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Tourist spot deleted successfully!']);
     }
+
+    public function removeGalleryImage(Request $request, TouristSpot $touristSpot)
+    {
+        $request->validate([
+            'image_path' => 'required|string',
+            'image_index' => 'required|integer|min:0'
+        ]);
+
+        $imagePath = $request->input('image_path');
+        $imageIndex = $request->input('image_index');
+
+        // Get current gallery images
+        $currentImages = [];
+        if ($touristSpot->gallery_images) {
+            $currentImages = json_decode($touristSpot->gallery_images, true);
+            if (!is_array($currentImages)) {
+                $currentImages = [];
+            }
+        }
+
+        // Check if the image exists at the specified index
+        if (!isset($currentImages[$imageIndex]) || $currentImages[$imageIndex] !== $imagePath) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Image not found or index mismatch'
+            ]);
+        }
+
+        // Delete the physical file
+        if (Storage::disk('public')->exists($imagePath)) {
+            Storage::disk('public')->delete($imagePath);
+        }
+
+        // Remove the image from the array
+        array_splice($currentImages, $imageIndex, 1);
+
+        // Update the database
+        $touristSpot->gallery_images = json_encode($currentImages);
+        $touristSpot->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Gallery image removed successfully',
+            'updated_gallery' => $currentImages
+        ]);
+    }
 }
