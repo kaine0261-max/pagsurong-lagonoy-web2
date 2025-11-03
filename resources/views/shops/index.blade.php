@@ -24,26 +24,26 @@
         @if($shops->count() > 0)
             <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
                 @foreach($shops as $shop)
-                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col h-full">
                         <!-- Shop Image -->
-                        <div class="aspect-w-16 aspect-h-12 bg-gray-200">
+                        <div class="aspect-w-16 aspect-h-12 bg-gray-200 flex-shrink-0">
                             @if($shop->businessProfile && $shop->businessProfile->cover_image)
                                 <img src="{{ Storage::url($shop->businessProfile->cover_image) }}" 
                                      alt="{{ $shop->businessProfile->business_name }}" 
-                                     class="w-full h-40 sm:h-48 md:h-56 lg:h-64 object-cover">
+                                     class="w-full h-40 sm:h-48 md:h-56 object-cover">
                             @elseif($shop->cover_image)
                                 <img src="{{ Storage::url($shop->cover_image) }}" 
                                      alt="{{ $shop->name }}" 
-                                     class="w-full h-40 sm:h-48 md:h-56 lg:h-64 object-cover">
+                                     class="w-full h-40 sm:h-48 md:h-56 object-cover">
                             @else
-                                <div class="w-full h-40 sm:h-48 md:h-56 lg:h-64 bg-gray-200 flex items-center justify-center">
+                                <div class="w-full h-40 sm:h-48 md:h-56 bg-gray-200 flex items-center justify-center">
                                     <i class="fas fa-store text-gray-400 text-3xl sm:text-4xl md:text-5xl"></i>
                                 </div>
                             @endif
                         </div>
 
                         <!-- Shop Info -->
-                        <div class="p-2 sm:p-3 md:p-4 lg:p-6">
+                        <div class="p-2 sm:p-3 md:p-4 lg:p-6 flex flex-col flex-grow">
                             <!-- Shop Header -->
                             <div class="flex items-center space-x-2 sm:space-x-3 mb-2 sm:mb-3">
                                 <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0">
@@ -66,19 +66,19 @@
                                         {{ $shop->businessProfile->address ?? 'Lagonoy, Camarines Sur' }}
                                     </p>
                                 </div>
-                                <span class="hidden sm:inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                                <span class="hidden sm:inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full flex-shrink-0">
                                     Published
                                 </span>
                             </div>
 
                             @if($shop->businessProfile && $shop->businessProfile->description)
-                                <p class="hidden sm:block text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">
+                                <p class="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">
                                     {{ $shop->businessProfile->description }}
                                 </p>
                             @endif
 
                             <!-- Rating Display -->
-                            <div class="flex items-center justify-center text-sm text-gray-600 mb-4">
+                            <div class="flex items-center justify-center text-sm text-gray-600 mb-3">
                                 @auth
                                     <button onclick="showShopRating({{ $shop->id }})" class="flex items-center hover:text-yellow-500 transition-colors">
                                         <i class="fas fa-star text-yellow-400 mr-1"></i>
@@ -111,17 +111,17 @@
                             </div>
 
                             <!-- Actions -->
-                            <div class="mt-2 sm:mt-3 md:mt-4 space-y-1.5 sm:space-y-2">
-                                <a href="{{ route('public.shops.show', $shop->businessProfile->id ?? $shop->id) }}" 
+                            <div class="mt-auto space-y-1.5 sm:space-y-2">
+                                <a href="{{ auth()->check() && auth()->user()->role === 'customer' ? route('customer.shops.show', $shop->businessProfile->id ?? $shop->id) : route('public.shops.show', $shop->businessProfile->id ?? $shop->id) }}" 
                                    class="w-full bg-green-600 hover:bg-green-700 text-white py-2 sm:py-2.5 md:py-3 px-3 sm:px-4 rounded-lg transition-colors duration-200 flex items-center justify-center text-sm sm:text-base md:text-lg font-medium">
                                     <i class="fas fa-eye mr-1 sm:mr-2 text-sm sm:text-base"></i><span class="hidden sm:inline">View Shop</span><span class="sm:hidden">View</span>
                                 </a>
                                 
-                                <!-- Feedback Button -->
+                                <!-- Reviews Button -->
                                 @auth
                                     <button onclick="showShopComments({{ $shop->id }})" class="w-full flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-xs sm:text-sm">
                                         <i class="fas fa-comment-dots mr-1 sm:mr-2"></i>
-                                        <span>Feedback</span>
+                                        <span>Reviews</span>
                                         @php
                                             try {
                                                 $commentCount = method_exists($shop, 'comments') ? $shop->comments()->count() : 0;
@@ -136,7 +136,7 @@
                                 @else
                                     <button onclick="viewShopComments({{ $shop->id }}, '{{ addslashes($shop->businessProfile->business_name ?? $shop->name) }}')" class="w-full flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-xs sm:text-sm">
                                         <i class="fas fa-comment-dots mr-1 sm:mr-2"></i>
-                                        <span>View Feedback</span>
+                                        <span>View Reviews</span>
                                         @php
                                             try {
                                                 $commentCount = method_exists($shop, 'comments') ? $shop->comments()->count() : 0;
@@ -261,11 +261,11 @@ function createShopCommentsModal(shopId, shopName, canComment = true) {
     modal.id = `shop-comments-modal-${shopId}`;
     
     const commentFormHtml = canComment ? `
-        <!-- Add Comment Form -->
+        <!-- Add Review Form -->
         <form id="shop-comment-form-${shopId}" onsubmit="submitShopComment(event, ${shopId})" class="border-t pt-4">
             <div class="flex space-x-3">
                 <textarea name="comment" rows="2" class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none" 
-                          placeholder="Write a comment..." required></textarea>
+                          placeholder="Write a review..." required></textarea>
                 <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -273,10 +273,10 @@ function createShopCommentsModal(shopId, shopName, canComment = true) {
         </form>
     ` : `
         <div class="border-t pt-4 text-center">
-            <p class="text-gray-500 text-sm mb-3">Want to leave a comment?</p>
+            <p class="text-gray-500 text-sm mb-3">Want to leave a review?</p>
             <button onclick="closeShopCommentsModal(${shopId}); handleComment('shop', '${shopName}');" 
                     class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
-                Login to Comment
+                Login to Review
             </button>
         </div>
     `;
@@ -284,15 +284,15 @@ function createShopCommentsModal(shopId, shopName, canComment = true) {
     modal.innerHTML = `
         <div class="bg-white rounded-lg p-6 max-w-lg w-full mx-4 max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold">Comments - ${shopName}</h3>
+                <h3 class="text-lg font-semibold">Reviews - ${shopName}</h3>
                 <button onclick="closeShopCommentsModal(${shopId})" class="text-gray-400 hover:text-gray-600">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <!-- Comments List -->
+            <!-- Reviews List -->
             <div class="flex-1 overflow-y-auto mb-4" id="shop-comments-list-${shopId}">
-                <div class="text-center py-4 text-gray-500">Loading comments...</div>
+                <div class="text-center py-4 text-gray-500">Loading reviews...</div>
             </div>
             
             ${commentFormHtml}

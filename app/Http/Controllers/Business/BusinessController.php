@@ -610,23 +610,35 @@ class BusinessController extends Controller
                 ->with('error', 'Please create a business profile first.');
         }
 
-        // Submits the business for admin approval; do not make it visible yet
-        $business->update([
-            'status' => 'pending',
-            'is_published' => false,
-        ]);
+        // Check if business is already approved
+        if ($business->status === 'approved') {
+            // If already approved, just toggle visibility without requiring re-approval
+            $business->update([
+                'is_published' => true,
+            ]);
+
+            $successMessage = 'Your business is now published and visible to customers.';
+        } else {
+            // First time publish - submit for admin approval
+            $business->update([
+                'status' => 'pending',
+                'is_published' => false,
+            ]);
+
+            $successMessage = 'Your business has been submitted for review. You will be visible to customers once approved by an admin.';
+        }
 
         // Redirect based on business type
         switch ($business->business_type) {
             case 'hotel':
                 return redirect()->route('business.my-hotel')
-                    ->with('success', 'Your hotel has been submitted for review. You will be visible to customers once approved by an admin.');
+                    ->with('success', $successMessage);
             case 'resort':
                 return redirect()->route('business.my-resort')
-                    ->with('success', 'Your resort has been submitted for review. You will be visible to customers once approved by an admin.');
+                    ->with('success', $successMessage);
             default:
                 return redirect()->route('business.my-shop')
-                    ->with('success', 'Your business has been submitted for review. You will be visible to customers once approved by an admin.');
+                    ->with('success', $successMessage);
         }
     }
 

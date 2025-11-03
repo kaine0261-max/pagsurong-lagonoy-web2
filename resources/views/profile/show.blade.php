@@ -1,9 +1,10 @@
-@extends('layouts.app')
+@extends(auth()->check() && auth()->user()->role === 'customer' ? 'layouts.customer' : 'layouts.app')
 
 @section('title', 'My Profile - Pagsurong Lagonoy')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-12">
+<div class="min-h-screen bg-gray-50">
+<div class="py-12">
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white rounded-lg shadow-lg p-8">
             <div class="text-center mb-8">
@@ -74,17 +75,23 @@
 
                 <!-- Actions -->
                 @if($profile)
-                    <div class="pt-6 flex justify-center">
+                    <div class="pt-6 flex justify-center gap-4">
                         <a href="{{ route('profile.edit') }}" 
                            class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200">
                             <i class="fas fa-edit mr-2"></i>
                             Edit Profile
                         </a>
+                        <button onclick="confirmDeleteAccount()" 
+                                class="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200">
+                            <i class="fas fa-trash-alt mr-2"></i>
+                            Delete My Account
+                        </button>
                     </div>
                 @endif
             </div>
         </div>
     </div>
+</div>
 </div>
 @endsection
 
@@ -96,4 +103,34 @@
         font-family: 'Playfair Display', serif;
     }
 </style>
+@endsection
+
+@section('scripts')
+<script>
+function confirmDeleteAccount() {
+    if (confirm('Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted.')) {
+        // Create and submit form
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("account.delete") }}';
+        
+        // Add CSRF token
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        form.appendChild(csrfInput);
+        
+        // Add DELETE method
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        form.appendChild(methodInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
 @endsection

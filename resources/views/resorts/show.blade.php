@@ -194,17 +194,17 @@
                 @endif
             </div>
 
-            <!-- Feedback Button -->
+            <!-- Reviews Button -->
             <div class="px-6 pb-6">
                 @auth
                     <button onclick="viewResortComments({{ $resort->id }}, '{{ addslashes($resort->business_name ?? $resort->name) }}', true)" class="w-full flex items-center justify-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
                         <i class="fas fa-comment-dots mr-2"></i>
-                        <span>Leave Feedback</span>
+                        <span>Leave Review</span>
                     </button>
                 @else
                     <button onclick="viewResortComments({{ $resort->id }}, '{{ addslashes($resort->business_name ?? $resort->name) }}', false)" class="w-full flex items-center justify-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
                         <i class="fas fa-comment-dots mr-2"></i>
-                        <span>View Feedback</span>
+                        <span>View Reviews</span>
                     </button>
                 @endauth
             </div>
@@ -250,14 +250,14 @@
 <div id="commentsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-lg max-w-lg w-full mx-4 max-h-[80vh] flex flex-col" onclick="event.stopPropagation()">
         <div class="flex justify-between items-center p-6 border-b">
-            <h3 class="text-lg font-semibold" id="commentsModalTitle">Comments</h3>
+            <h3 class="text-lg font-semibold" id="commentsModalTitle">Reviews</h3>
             <button onclick="closeCommentsModal()" class="text-gray-400 hover:text-gray-600">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         
         <div class="flex-1 overflow-y-auto p-6" id="commentsListContainer">
-            <div class="text-center py-4 text-gray-500">Loading comments...</div>
+            <div class="text-center py-4 text-gray-500">Loading reviews...</div>
         </div>
         
         <div id="commentFormContainer" class="border-t p-6"></div>
@@ -476,19 +476,19 @@ function viewResortComments(resortId, resortName, canComment = true) {
     const listContainer = document.getElementById('commentsListContainer');
     const formContainer = document.getElementById('commentFormContainer');
     
-    title.textContent = `Comments - ${resortName}`;
+    title.textContent = `Reviews - ${resortName}`;
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     
     // Show loading state
-    listContainer.innerHTML = '<div class="text-center py-4 text-gray-500">Loading comments...</div>';
+    listContainer.innerHTML = '<div class="text-center py-4 text-gray-500">Loading reviews...</div>';
     
     // Set up comment form
     if (canComment) {
         formContainer.innerHTML = `
             <form id="resort-comment-form" onsubmit="submitResortComment(event, ${resortId})" class="flex space-x-3">
                 <textarea name="comment" rows="2" class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none" 
-                          placeholder="Write a comment..." required></textarea>
+                          placeholder="Write a review..." required></textarea>
                 <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -497,10 +497,10 @@ function viewResortComments(resortId, resortName, canComment = true) {
     } else {
         formContainer.innerHTML = `
             <div class="text-center">
-                <p class="text-gray-500 text-sm mb-3">Want to leave a comment?</p>
+                <p class="text-gray-500 text-sm mb-3">Want to leave a review?</p>
                 <button onclick="closeCommentsModal(); window.location.href='/#login';" 
                         class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
-                    Login to Comment
+                    Login to Review
                 </button>
             </div>
         `;

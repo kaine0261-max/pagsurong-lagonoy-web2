@@ -123,14 +123,27 @@ use Illuminate\Support\Facades\Storage;
 
                         <!-- Publish/Unpublish Buttons -->
                         <div class="mt-6 flex flex-wrap gap-2 justify-center">
-                            @if($business && $business->is_published)
-                                <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">Published</span>
-                                <form action="{{ route('business.unpublish') }}" method="POST" class="inline">
-                                    @csrf
-                                    <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-600 transition-colors">
-                                        Unpublish
-                                    </button>
-                                </form>
+                            @if($business && $business->status === 'approved')
+                                @if($business->is_published)
+                                    <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">Published</span>
+                                    <form action="{{ route('business.unpublish') }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-600 transition-colors">
+                                            Unpublish
+                                        </button>
+                                    </form>
+                                @else
+                                    <span class="bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium">Unpublished</span>
+                                    <form action="{{ route('business.publish') }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">
+                                            Publish
+                                        </button>
+                                    </form>
+                                @endif
+                            @elseif($business && $business->status === 'pending')
+                                <span class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">Pending Approval</span>
+                                <p class="text-gray-500 text-xs mt-2 w-full text-center">Your shop is awaiting admin approval</p>
                             @else
                                 <form action="{{ route('business.publish') }}" method="POST" class="inline">
                                     @csrf
@@ -138,6 +151,7 @@ use Illuminate\Support\Facades\Storage;
                                         Publish Now
                                     </button>
                                 </form>
+                                <p class="text-gray-500 text-xs mt-2 w-full text-center">Submit your shop for admin approval</p>
                             @endif
                         </div>
                     </div>
@@ -163,30 +177,6 @@ use Illuminate\Support\Facades\Storage;
                             <span class="text-gray-600">Unread Messages</span>
                             <span class="font-semibold">{{ $unreadMessagesCount ?? 0 }}</span>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="bg-white rounded-2xl shadow-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
-                    <div class="space-y-3">
-                        <a href="{{ route('business.products.create') }}" class="flex items-center text-blue-600 hover:text-blue-800">
-                            <i class="fas fa-plus-circle mr-2"></i> Add New Product
-                        </a>
-                        <a href="{{ route('business.products') }}" class="flex items-center text-blue-600 hover:text-blue-800">
-                            <i class="fas fa-boxes mr-2"></i> Manage Products
-                        </a>
-                        <a href="{{ route('business.orders') }}" class="flex items-center text-blue-600 hover:text-blue-800">
-                            <i class="fas fa-shopping-bag mr-2"></i> View Orders
-                        </a>
-                        <a href="{{ route('business.messages') }}" class="flex items-center text-blue-600 hover:text-blue-800">
-                            <i class="fas fa-envelope mr-2"></i> Messages
-                            @if(($unreadMessagesCount ?? 0) > 0)
-                                <span class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1">
-                                    {{ $unreadMessagesCount }}
-                                </span>
-                            @endif
-                        </a>
                     </div>
                 </div>
             </div>

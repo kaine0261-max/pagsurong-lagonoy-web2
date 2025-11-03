@@ -15,6 +15,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
+    
     <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
@@ -57,7 +60,7 @@
         
         <!-- Center - Navigation -->
         <nav class="flex flex-wrap justify-center mb-4 md:mb-0">
-            <a href="#home" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Home</a>
+            <a href="#home" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('home') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Home</a>
             <a href="{{ route('public.products') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Products</a>
             <a href="{{ route('public.shops') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Shops</a>
             <a href="{{ route('public.hotels') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Hotels</a>
@@ -136,31 +139,7 @@
 
         <div class="max-w-6xl mx-auto px-5 fade-in">
             <h2 class="text-2xl font-bold mb-4 text-white">Our Platform</h2>
-            <p class="mb-8 text-green-100">Pagsurong Lagonoy is a comprehensive web platform designed to showcase and promote local products, resorts, and hotels in Lagonoy, Camarines Sur. We bridge the gap between local businesses and consumers by providing a centralized marketplace for unique local offerings.</p>
-            
-            <div class="bg-green-800 bg-opacity-50 rounded-lg p-6 mb-10 border-l-4 border-green-300">
-                <h2 class="text-2xl font-bold mb-4 text-white">Our Mission</h2>
-                <p class="text-green-100">To enhance the visibility of Lagonoy's local businesses, boost tourism, and support sustainable economic growth in our community while preserving our cultural heritage.</p>
-            </div>
-
-            <h2 class="text-2xl font-bold mb-6 text-white">Our Values</h2>
-            <div class="flex flex-wrap justify-between mb-12">
-                <div class="basis-full md:basis-[30%] bg-white p-6 rounded-lg shadow-md mb-6 md:mb-0 hover:translate-y-[-5px] transition-transform">
-                    <div class="text-4xl mb-4">🌱</div>
-                    <h3 class="text-xl font-bold mb-2">Sustainability</h3>
-                    <p class="text-gray-600">Promoting eco-friendly practices and supporting local sustainable businesses.</p>
-                </div>
-                <div class="basis-full md:basis-[30%] bg-white p-6 rounded-lg shadow-md mb-6 md:mb-0 hover:translate-y-[-5px] transition-transform">
-                    <div class="text-4xl mb-4">🤝</div>
-                    <h3 class="text-xl font-bold mb-2">Community</h3>
-                    <p class="text-gray-600">Strengthening local connections and fostering economic growth for all residents.</p>
-                </div>
-                <div class="basis-full md:basis-[30%] bg-white p-6 rounded-lg shadow-md hover:translate-y-[-5px] transition-transform">
-                    <div class="text-4xl mb-4">🎯</div>
-                    <h3 class="text-xl font-bold mb-2">Excellence</h3>
-                    <p class="text-gray-600">Delivering high-quality services and authentic local experiences.</p>
-                </div>
-            </div>
+            <p class="mb-12 text-green-100">Pagsurong Lagonoy is a comprehensive web platform designed to showcase and promote local products, resorts, and hotels in Lagonoy, Camarines Sur. We bridge the gap between local businesses and consumers by providing a centralized marketplace for unique local offerings.</p>
 
             <h2 class="text-2xl font-bold mb-6 text-white">The Development Team</h2>
             <div class="flex flex-wrap justify-around mb-12">
@@ -183,9 +162,6 @@
                     <p class="text-gray-600 text-sm">jpvillareal571.pbox@parsu.edu.ph</p>
                 </div>
             </div>
-            
-            <h2 class="text-2xl font-bold mb-4 text-white">Institutional Affiliation</h2>
-            <p class="mb-12 text-green-100">This project was developed by students from the <strong class="text-white">College of Engineering and Computational Sciences</strong> at <strong class="text-white">Partido State University</strong> as part of their capstone/thesis requirements in the Department of Computational Sciences.</p>
         </div>
     </section>
 
@@ -210,14 +186,6 @@
                     <h3 class="text-xl font-bold mb-3">Email</h3>
                     <p class="text-gray-600">info@pagsuronglagonoy.com</p>
                     <p class="text-gray-600">support@pagsuronglagonoy.com</p>
-                </div>
-                
-                <div class="flex-1 min-w-[250px] bg-white p-6 rounded-lg shadow-sm hover:translate-y-[-5px] transition-transform">
-                    <div class="text-4xl mb-4 text-green-600">📍</div>
-                    <h3 class="text-xl font-bold mb-3">Address</h3>
-                    <p class="text-gray-600">Municipal Building</p>
-                    <p class="text-gray-600">Lagonoy, Camarines Sur</p>
-                    <p class="text-gray-600">Philippines</p>
                 </div>
             </div>
             
@@ -305,15 +273,6 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="remember" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                                <span class="ml-2 text-sm text-gray-600">Remember me</span>
-                            </label>
-                            <a href="{{ route('password.request') }}" class="text-sm text-green-600 hover:text-green-500">
-                                Forgot password?
-                            </a>
-                        </div>
 
                         <button type="submit" 
                                 class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
@@ -484,7 +443,17 @@
     <script>
         function logoutUser(event) {
             event.preventDefault();
+            document.getElementById('logoutModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function confirmLogout() {
             document.getElementById('logout-form').submit();
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
         }
 
         // Modal Functions
@@ -552,6 +521,7 @@
             if (e.key === 'Escape') {
                 closeLoginModal();
                 closeRegisterModal();
+                closeLogoutModal();
             }
         });
 
@@ -848,6 +818,32 @@
             }, 5000);
         }
     </script>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-md w-full p-6 relative my-8">
+                <div class="text-center mb-6">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                        <i class="fas fa-sign-out-alt text-red-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Confirm Logout</h3>
+                    <p class="text-sm text-gray-600">Are you sure you want to logout?</p>
+                </div>
+
+                <div class="flex space-x-3">
+                    <button onclick="closeLogoutModal()" 
+                            class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                        Cancel
+                    </button>
+                    <button onclick="confirmLogout()" 
+                            class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

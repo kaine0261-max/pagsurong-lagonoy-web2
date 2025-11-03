@@ -18,6 +18,9 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
+    
     <style>
         html {
             scroll-behavior: smooth;
@@ -48,19 +51,10 @@
                 <img src="{{ asset('logo.png') }}" alt="Logo" class="w-5 h-5 sm:w-6 sm:h-6 mr-1 sm:mr-1.5 md:hidden">
                 <span>Products</span>
             </a>
-            <a href="{{ route('customer.shops') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('customer.shops') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Shops</a>
-            <a href="{{ route('customer.hotels') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('customer.hotels') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Hotels</a>
-            <a href="{{ route('customer.resorts') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('customer.resorts') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Resorts</a>
-            <a href="{{ route('customer.attractions') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('customer.attractions') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Attractions</a>
-            <a href="{{ route('customer.cart') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('customer.cart') ? 'text-green-200 border-b-2 border-green-200' : '' }} relative">
-                My Cart
-                @php
-                    $headerCartCount = auth()->check() && auth()->user()->cart ? auth()->user()->cart->sum('quantity') : 0;
-                @endphp
-                @if($headerCartCount > 0)
-                    <span class="cart-count-badge absolute -top-1 -right-1 bg-orange-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">{{ $headerCartCount }}</span>
-                @endif
-            </a>
+            <a href="{{ route('customer.shops') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('customer.shops*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Shops</a>
+            <a href="{{ route('customer.hotels') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('customer.hotels*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Hotels</a>
+            <a href="{{ route('customer.resorts') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('customer.resorts*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Resorts</a>
+            <a href="{{ route('customer.attractions') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('customer.attractions*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Attractions</a>
             
             <!-- User Profile Dropdown (Desktop Only) -->
             <div class="hidden md:block relative mx-2 md:mx-3 my-1 md:my-0">
@@ -86,16 +80,7 @@
                     <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-user mr-2"></i>My Profile
                     </a>
-                    <a href="{{ route('customer.orders') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-shopping-bag mr-2"></i>My Orders
-                    </a>
-                    <a href="{{ route('customer.messages') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <i class="fas fa-comments mr-2"></i>Messages
-                    </a>
                     <div class="border-t border-gray-100"></div>
-                    <button type="button" onclick="confirmDeleteAccount()" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                        <i class="fas fa-trash-alt mr-2"></i>Delete My Account
-                    </button>
                     <a href="#" onclick="logoutUser(event)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         <i class="fas fa-sign-out-alt mr-2"></i>Logout
                     </a>
@@ -106,43 +91,62 @@
                 @csrf
             </form>
         </nav>
-        
-        <!-- Right Side - Government Logos (Hidden on Mobile) -->
-        <div class="hidden md:flex items-center space-x-2">
-            <img src="{{ asset('Municipal Seal of Lagonoy.png') }}" alt="Municipal Seal of Lagonoy" class="w-10 h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
-            <img src="{{ asset('bagong-pilipinas-logo.png') }}" alt="Bagong Pilipinas Logo" class="w-10 h-10 object-contain drop-shadow-sm">
-            <img src="{{ asset('Provincial Logo of Camarines Sur.png') }}" alt="Provincial Logo of Camarines Sur" class="w-10 h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
-            <img src="{{ asset('Department of Tourism (DOT) Philippines Logo.png') }}" alt="Department of Tourism Philippines" class="w-10 h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
-        </div>
     </header>
 
     <!-- Main content wrapper with fixed navigation and three-column layout -->
     <div class="pt-20 md:pt-24 pb-20 md:pb-0 min-h-screen">
         <div class="flex min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)]">
-            <!-- Left Sidebar - Orders Panel (Desktop Only) -->
+            <!-- Left Sidebar - Switchable Panel (Desktop Only) -->
             @auth
                 @if(auth()->user()->role === 'customer' && auth()->user()->hasCompletedProfile())
-                    <div id="ordersPanel" class="hidden lg:block w-80 bg-white border-r border-gray-200 overflow-y-auto flex-shrink-0 transition-all duration-300">
-                        <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
-                            <div class="flex items-center justify-between">
-                                <h3 class="font-semibold text-gray-900 flex items-center">
-                                    <button onclick="toggleOrdersPanel()" class="flex items-center hover:text-green-700 transition-colors relative">
-                                        <i class="fas fa-shopping-bag text-green-600" id="ordersIcon"></i>
-                                        <span id="ordersText" class="ml-2">My Orders</span>
-                                        <i class="fas fa-chevron-right text-green-600 ml-1 hidden" id="ordersChevronRight"></i>
+                    <div id="sidebarPanel" class="hidden lg:block w-16 bg-white border-r border-gray-200 overflow-y-auto flex-shrink-0 transition-all duration-300">
+                        <!-- Minimized Icons View -->
+                        <div id="minimizedIcons" class="p-4 space-y-4">
+                            <button onclick="showOrdersPanel()" class="w-full flex flex-col items-center justify-center p-3 hover:bg-gray-50 rounded-lg transition-colors relative group">
+                                <i class="fas fa-shopping-bag text-green-600 text-2xl"></i>
+                                <span class="text-xs text-gray-600 mt-1">Orders</span>
+                            </button>
+                            <button onclick="showMessagesPanel()" class="w-full flex flex-col items-center justify-center p-3 hover:bg-gray-50 rounded-lg transition-colors relative group">
+                                <i class="fas fa-envelope text-green-600 text-2xl"></i>
+                                <span class="text-xs text-gray-600 mt-1">Messages</span>
+                                @php
+                                    $unreadCount = auth()->user()->unreadMessages()->count();
+                                @endphp
+                                @if($unreadCount > 0)
+                                    <span class="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">{{ $unreadCount }}</span>
+                                @endif
+                            </button>
+                            <button onclick="showCartPanel()" class="w-full flex flex-col items-center justify-center p-3 hover:bg-gray-50 rounded-lg transition-colors relative group">
+                                <i class="fas fa-shopping-cart text-green-600 text-2xl"></i>
+                                <span class="text-xs text-gray-600 mt-1 whitespace-nowrap">My Cart</span>
+                                @php
+                                    $cartCount = auth()->user()->cart ? auth()->user()->cart->sum('quantity') : 0;
+                                @endphp
+                                @if($cartCount > 0)
+                                    <span class="absolute top-2 right-2 bg-orange-500 text-white text-xs rounded-full px-2 py-1">{{ $cartCount }}</span>
+                                @endif
+                            </button>
+                        </div>
+
+                        <!-- Orders Panel Content -->
+                        <div id="ordersPanel" class="hidden">
+                            <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
+                                <div class="flex items-center justify-between">
+                                    <button onclick="minimizePanel()" class="font-semibold text-gray-900 flex items-center hover:text-green-700 transition-colors cursor-pointer">
+                                        <i class="fas fa-shopping-bag text-green-600"></i>
+                                        <span class="ml-2">My Orders</span>
                                     </button>
-                                </h3>
-                                <div class="flex items-center space-x-2" id="ordersActions">
-                                    <a href="{{ route('customer.orders') }}" class="text-xs text-green-600 hover:underline">
-                                        View All
-                                    </a>
-                                    <button onclick="toggleOrdersPanel()" class="text-green-600 hover:text-green-700 p-1">
-                                        <i id="ordersToggleIcon" class="fas fa-chevron-left text-sm"></i>
-                                    </button>
+                                    <div class="flex items-center space-x-2">
+                                        <a href="{{ route('customer.orders') }}" class="text-xs text-green-600 hover:underline">
+                                            View All
+                                        </a>
+                                        <button onclick="minimizePanel()" class="text-green-600 hover:text-green-700 p-1">
+                                            <i class="fas fa-chevron-left text-sm"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div id="ordersContent" class="p-4">
+                            <div class="p-4">
                             @php
                                 // Only show non-completed orders in the sidebar
                                 $orders = auth()->user()->orders()
@@ -183,42 +187,29 @@
                                     </a>
                                 </div>
                             @endif
+                            </div>
                         </div>
-                    </div>
-                @endif
-            @endauth
-            
-            <!-- Main Content - Feed -->
-            <main id="main-content" class="flex-1 overflow-y-auto bg-gray-50 pb-16 md:pb-0 min-w-0">
-                @yield('content')
-            </main>
-            
-            <!-- Right Sidebar - Messages Panel -->
-            @auth
-                @if(auth()->user()->role === 'customer' && auth()->user()->hasCompletedProfile())
-                    <div id="messagesPanel" class="hidden lg:block w-80 bg-white border-l border-gray-200 overflow-y-auto flex-shrink-0 relative z-10 transition-all duration-300">
-                        <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-20">
-                            <div class="flex items-center justify-between">
-                                <h3 class="font-semibold text-gray-900 flex items-center">
-                                    <button onclick="toggleMessagesPanel()" class="flex items-center hover:text-green-700 transition-colors relative">
-                                        <i class="fas fa-chevron-left text-green-600 hidden" id="messagesChevronLeft"></i>
-                                        <i class="fas fa-envelope text-green-600 ml-1" id="messagesIcon"></i>
-                                        <span id="messagesText" class="ml-2">Messages</span>
+
+                        <!-- Messages Panel Content -->
+                        <div id="messagesPanel" class="hidden">
+                            <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
+                                <div class="flex items-center justify-between">
+                                    <button onclick="minimizePanel()" class="font-semibold text-gray-900 flex items-center hover:text-green-700 transition-colors cursor-pointer">
+                                        <i class="fas fa-envelope text-green-600"></i>
+                                        <span class="ml-2">Messages</span>
                                         @php
                                             $unreadCount = auth()->user()->unreadMessages()->count();
                                         @endphp
                                         @if($unreadCount > 0)
-                                            <span id="messagesUnreadBadge" class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">{{ $unreadCount }}</span>
-                                            <span id="messagesUnreadDot" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+                                            <span class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">{{ $unreadCount }}</span>
                                         @endif
                                     </button>
-                                </h3>
-                                <button onclick="toggleMessagesPanel()" class="text-green-600 hover:text-green-700 p-1" id="messagesToggleBtn">
-                                    <i id="messagesToggleIcon" class="fas fa-chevron-right text-sm"></i>
-                                </button>
+                                    <button onclick="minimizePanel()" class="text-green-600 hover:text-green-700 p-1">
+                                        <i class="fas fa-chevron-left text-sm"></i>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div id="messagesContent" class="p-0">
+                            <div class="p-0">
                             @php
                                 $user = auth()->user();
                                 $threads = $user->threads()->take(10);
@@ -295,10 +286,92 @@
                                     </a>
                                 </div>
                             @endif
+                            </div>
+                        </div>
+
+                        <!-- Cart Panel Content -->
+                        <div id="cartPanel" class="hidden">
+                            <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
+                                <div class="flex items-center justify-between">
+                                    <button onclick="minimizePanel()" class="font-semibold text-gray-900 flex items-center hover:text-green-700 transition-colors cursor-pointer">
+                                        <i class="fas fa-shopping-cart text-green-600"></i>
+                                        <span class="ml-2">My Cart</span>
+                                        @php
+                                            $cartCount = auth()->user()->cart ? auth()->user()->cart->sum('quantity') : 0;
+                                        @endphp
+                                        @if($cartCount > 0)
+                                            <span class="ml-2 bg-orange-500 text-white text-xs rounded-full px-2 py-1">{{ $cartCount }}</span>
+                                        @endif
+                                    </button>
+                                    <div class="flex items-center space-x-2">
+                                        <a href="{{ route('customer.cart') }}" class="text-xs text-green-600 hover:underline">
+                                            View All
+                                        </a>
+                                        <button onclick="minimizePanel()" class="text-green-600 hover:text-green-700 p-1">
+                                            <i class="fas fa-chevron-left text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                            @php
+                                $cartItems = auth()->user()->cart()->with('product')->take(5)->get();
+                            @endphp
+                            
+                            @if($cartItems->count() > 0)
+                                <div class="space-y-3">
+                                    @foreach($cartItems as $item)
+                                        <div class="border rounded-lg p-3 hover:bg-gray-50 transition-colors">
+                                            <div class="flex items-start space-x-3">
+                                                @if($item->product && $item->product->image)
+                                                    <img src="{{ Storage::url($item->product->image) }}" 
+                                                         alt="{{ $item->product->name }}" 
+                                                         class="w-16 h-16 object-cover rounded">
+                                                @else
+                                                    <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                                                        <i class="fas fa-image text-gray-400"></i>
+                                                    </div>
+                                                @endif
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-medium text-gray-900 truncate">{{ $item->product->name ?? 'Product' }}</p>
+                                                    <p class="text-xs text-gray-500">Qty: {{ $item->quantity }}</p>
+                                                    <p class="text-sm font-semibold text-green-600">₱{{ number_format(($item->product->price ?? 0) * $item->quantity, 2) }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="mt-4 pt-4 border-t">
+                                    <div class="flex justify-between items-center mb-3">
+                                        <span class="text-sm font-medium text-gray-700">Total Items:</span>
+                                        <span class="text-sm font-bold text-gray-900">{{ $cartCount }}</span>
+                                    </div>
+                                    <a href="{{ route('customer.cart') }}" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors">
+                                        View Full Cart
+                                    </a>
+                                </div>
+                            @else
+                                <div class="text-center py-8">
+                                    <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-shopping-cart text-gray-400 text-xl"></i>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mb-3">Your cart is empty</p>
+                                    <a href="{{ route('customer.products') }}" class="inline-flex items-center px-3 py-2 border border-green-300 rounded-md text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 transition-colors">
+                                        <i class="fas fa-shopping-basket mr-2"></i>
+                                        Start Shopping
+                                    </a>
+                                </div>
+                            @endif
+                            </div>
                         </div>
                     </div>
                 @endif
             @endauth
+            
+            <!-- Main Content - Feed -->
+            <main id="main-content" class="flex-1 overflow-y-auto bg-gray-50 pb-16 md:pb-0 min-w-0">
+                @yield('content')
+            </main>
         </div>
     </div>
 
@@ -442,11 +515,6 @@
                     
                     <div class="border-t border-gray-200 my-2"></div>
                     
-                    <button type="button" onclick="confirmDeleteAccount()" class="w-full flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                        <i class="fas fa-trash-alt w-6"></i>
-                        <span class="ml-3 font-medium">Delete My Account</span>
-                    </button>
-                    
                     <a href="#" onclick="logoutUser(event)" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
                         <i class="fas fa-sign-out-alt w-6 text-green-600"></i>
                         <span class="ml-3 font-medium">Logout</span>
@@ -456,65 +524,22 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="text-white py-12 px-4 md:px-10" style="background-color: #064e3b;">
-        <div class="max-w-6xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- About Section -->
-                <div class="md:col-span-2">
-                    <h3 class="text-xl font-bold font-playfair mb-4">Pagsurong Lagonoy</h3>
-                    <p class="text-green-100 mb-4 leading-relaxed">
-                        Discover the beauty and culture of Lagonoy, Camarines Sur. From pristine beaches to rich heritage, 
-                        experience authentic Filipino hospitality and natural wonders.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-green-200 hover:text-white transition-colors">
-                            <i class="fab fa-facebook-f text-xl"></i>
-                        </a>
-                        <a href="#" class="text-green-200 hover:text-white transition-colors">
-                            <i class="fab fa-instagram text-xl"></i>
-                        </a>
-                        <a href="#" class="text-green-200 hover:text-white transition-colors">
-                            <i class="fab fa-twitter text-xl"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Quick Links -->
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('customer.dashboard') }}" class="text-green-100 hover:text-white transition-colors">Dashboard</a></li>
-                        <li><a href="{{ route('home') }}#about" class="text-green-100 hover:text-white transition-colors">About Us</a></li>
-                        <li><a href="{{ route('home') }}#contact" class="text-green-100 hover:text-white transition-colors">Contact Us</a></li>
-                    </ul>
-                </div>
-
-                <!-- Contact Info -->
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
-                    <div class="space-y-2 text-green-100">
-                        <p><i class="fas fa-map-marker-alt mr-2"></i>Lagonoy, Camarines Sur</p>
-                        <p><i class="fas fa-phone mr-2"></i>+63 XXX XXX XXXX</p>
-                        <p><i class="fas fa-envelope mr-2"></i>info@pagsuronglagonoy.gov.ph</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Copyright -->
-            <div class="border-t border-green-700 mt-8 pt-8 text-center">
-                <p class="text-green-100">&copy; {{ $currentYear }} Pagsurong Lagonoy. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
 
     <!-- Scripts -->
     <script>
         function logoutUser(event) {
             event.preventDefault();
-            if (confirm('Are you sure you want to logout?')) {
-                document.getElementById('logout-form').submit();
-            }
+            document.getElementById('logoutModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function confirmLogout() {
+            document.getElementById('logout-form').submit();
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
         }
 
         function toggleProfileDropdown() {
@@ -522,130 +547,121 @@
             dropdown.classList.toggle('hidden');
         }
 
-        // Panel toggle functions with localStorage persistence
-        function toggleOrdersPanel() {
-            const panel = document.getElementById('ordersPanel');
-            const content = document.getElementById('ordersContent');
-            const icon = document.getElementById('ordersToggleIcon');
-            const text = document.getElementById('ordersText');
-            const actions = document.getElementById('ordersActions');
-            const chevronRight = document.getElementById('ordersChevronRight');
+        // Switchable panel functions
+        function showOrdersPanel() {
+            const sidebarPanel = document.getElementById('sidebarPanel');
+            const minimizedIcons = document.getElementById('minimizedIcons');
+            const ordersPanel = document.getElementById('ordersPanel');
+            const messagesPanel = document.getElementById('messagesPanel');
+            const cartPanel = document.getElementById('cartPanel');
             
-            if (panel && content && icon && text && actions) {
-                if (panel.classList.contains('w-80')) {
-                    // Collapse
-                    panel.classList.remove('w-80');
-                    panel.classList.add('w-16');
-                    content.classList.add('hidden');
-                    text.classList.add('hidden');
-                    actions.classList.add('hidden');
-                    if (chevronRight) chevronRight.classList.remove('hidden');
-                    icon.classList.remove('fa-chevron-left');
-                    icon.classList.add('fa-chevron-right');
-                    localStorage.setItem('ordersPanel', 'collapsed');
+            if (sidebarPanel && minimizedIcons && ordersPanel && messagesPanel) {
+                // Expand panel
+                sidebarPanel.classList.remove('w-16');
+                sidebarPanel.classList.add('w-80');
+                
+                // Show orders, hide messages, cart and icons
+                minimizedIcons.classList.add('hidden');
+                ordersPanel.classList.remove('hidden');
+                messagesPanel.classList.add('hidden');
+                if (cartPanel) cartPanel.classList.add('hidden');
+                
+                // Adjust product grid to 3 columns
+                adjustProductGrid(true);
+            }
+        }
+
+        function showMessagesPanel() {
+            const sidebarPanel = document.getElementById('sidebarPanel');
+            const minimizedIcons = document.getElementById('minimizedIcons');
+            const ordersPanel = document.getElementById('ordersPanel');
+            const messagesPanel = document.getElementById('messagesPanel');
+            const cartPanel = document.getElementById('cartPanel');
+            
+            if (sidebarPanel && minimizedIcons && ordersPanel && messagesPanel) {
+                // Expand panel
+                sidebarPanel.classList.remove('w-16');
+                sidebarPanel.classList.add('w-80');
+                
+                // Show messages, hide orders, cart and icons
+                minimizedIcons.classList.add('hidden');
+                ordersPanel.classList.add('hidden');
+                messagesPanel.classList.remove('hidden');
+                if (cartPanel) cartPanel.classList.add('hidden');
+                
+                // Adjust product grid to 3 columns
+                adjustProductGrid(true);
+            }
+        }
+
+        function showCartPanel() {
+            const sidebarPanel = document.getElementById('sidebarPanel');
+            const minimizedIcons = document.getElementById('minimizedIcons');
+            const ordersPanel = document.getElementById('ordersPanel');
+            const messagesPanel = document.getElementById('messagesPanel');
+            const cartPanel = document.getElementById('cartPanel');
+            
+            if (sidebarPanel && minimizedIcons && ordersPanel && messagesPanel && cartPanel) {
+                // Expand panel
+                sidebarPanel.classList.remove('w-16');
+                sidebarPanel.classList.add('w-80');
+                
+                // Show cart, hide orders, messages and icons
+                minimizedIcons.classList.add('hidden');
+                ordersPanel.classList.add('hidden');
+                messagesPanel.classList.add('hidden');
+                cartPanel.classList.remove('hidden');
+                
+                // Adjust product grid to 3 columns
+                adjustProductGrid(true);
+            }
+        }
+
+        function minimizePanel() {
+            const sidebarPanel = document.getElementById('sidebarPanel');
+            const minimizedIcons = document.getElementById('minimizedIcons');
+            const ordersPanel = document.getElementById('ordersPanel');
+            const messagesPanel = document.getElementById('messagesPanel');
+            const cartPanel = document.getElementById('cartPanel');
+            
+            if (sidebarPanel && minimizedIcons && ordersPanel && messagesPanel) {
+                // Collapse panel
+                sidebarPanel.classList.remove('w-80');
+                sidebarPanel.classList.add('w-16');
+                
+                // Show icons, hide all panels
+                minimizedIcons.classList.remove('hidden');
+                ordersPanel.classList.add('hidden');
+                messagesPanel.classList.add('hidden');
+                if (cartPanel) cartPanel.classList.add('hidden');
+                
+                // Adjust product grid to 4 columns
+                adjustProductGrid(false);
+            }
+        }
+
+        // Function to adjust product grid columns based on panel state
+        function adjustProductGrid(isPanelExpanded) {
+            const productsGrid = document.getElementById('productsGrid');
+            if (productsGrid) {
+                if (isPanelExpanded) {
+                    // Panel expanded: show 3 columns on large screens
+                    productsGrid.classList.remove('lg:grid-cols-4');
+                    productsGrid.classList.add('lg:grid-cols-3');
                 } else {
-                    // Expand
-                    panel.classList.remove('w-16');
-                    panel.classList.add('w-80');
-                    content.classList.remove('hidden');
-                    text.classList.remove('hidden');
-                    actions.classList.remove('hidden');
-                    if (chevronRight) chevronRight.classList.add('hidden');
-                    icon.classList.remove('fa-chevron-right');
-                    icon.classList.add('fa-chevron-left');
-                    localStorage.setItem('ordersPanel', 'expanded');
+                    // Panel minimized: show 4 columns on large screens
+                    productsGrid.classList.remove('lg:grid-cols-3');
+                    productsGrid.classList.add('lg:grid-cols-4');
                 }
             }
         }
 
-        function toggleMessagesPanel() {
-            const panel = document.getElementById('messagesPanel');
-            const content = document.getElementById('messagesContent');
-            const icon = document.getElementById('messagesToggleIcon');
-            const text = document.getElementById('messagesText');
-            const badge = document.getElementById('messagesUnreadBadge');
-            const dot = document.getElementById('messagesUnreadDot');
-            const toggleBtn = document.getElementById('messagesToggleBtn');
-            const chevronLeft = document.getElementById('messagesChevronLeft');
-            
-            if (panel && content && icon && text) {
-                if (panel.classList.contains('w-80')) {
-                    // Collapse
-                    panel.classList.remove('w-80');
-                    panel.classList.add('w-16');
-                    content.classList.add('hidden');
-                    text.classList.add('hidden');
-                    if (badge) badge.classList.add('hidden');
-                    if (dot) dot.classList.remove('hidden');
-                    if (toggleBtn) toggleBtn.classList.add('hidden');
-                    if (chevronLeft) chevronLeft.classList.remove('hidden');
-                    icon.classList.remove('fa-chevron-right');
-                    icon.classList.add('fa-chevron-left');
-                    localStorage.setItem('messagesPanel', 'collapsed');
-                } else {
-                    // Expand
-                    panel.classList.remove('w-16');
-                    panel.classList.add('w-80');
-                    content.classList.remove('hidden');
-                    text.classList.remove('hidden');
-                    if (badge) badge.classList.remove('hidden');
-                    if (dot) dot.classList.add('hidden');
-                    if (toggleBtn) toggleBtn.classList.remove('hidden');
-                    if (chevronLeft) chevronLeft.classList.add('hidden');
-                    icon.classList.remove('fa-chevron-left');
-                    icon.classList.add('fa-chevron-right');
-                    localStorage.setItem('messagesPanel', 'expanded');
-                }
-            }
-        }
-
-        // Restore panel states on page load
+        // Auto-minimize panels on page load (when switching pages)
         document.addEventListener('DOMContentLoaded', function() {
-            // Restore Orders Panel state
-            const ordersState = localStorage.getItem('ordersPanel');
-            if (ordersState === 'collapsed') {
-                const panel = document.getElementById('ordersPanel');
-                const content = document.getElementById('ordersContent');
-                const icon = document.getElementById('ordersToggleIcon');
-                const text = document.getElementById('ordersText');
-                const actions = document.getElementById('ordersActions');
-                const chevronRight = document.getElementById('ordersChevronRight');
-                if (panel && content && icon && text && actions) {
-                    panel.classList.remove('w-80');
-                    panel.classList.add('w-16');
-                    content.classList.add('hidden');
-                    text.classList.add('hidden');
-                    actions.classList.add('hidden');
-                    if (chevronRight) chevronRight.classList.remove('hidden');
-                    icon.classList.remove('fa-chevron-left');
-                    icon.classList.add('fa-chevron-right');
-                }
-            }
-
-            // Restore Messages Panel state
-            const messagesState = localStorage.getItem('messagesPanel');
-            if (messagesState === 'collapsed') {
-                const panel = document.getElementById('messagesPanel');
-                const content = document.getElementById('messagesContent');
-                const icon = document.getElementById('messagesToggleIcon');
-                const text = document.getElementById('messagesText');
-                const badge = document.getElementById('messagesUnreadBadge');
-                const dot = document.getElementById('messagesUnreadDot');
-                const toggleBtn = document.getElementById('messagesToggleBtn');
-                const chevronLeft = document.getElementById('messagesChevronLeft');
-                if (panel && content && icon && text) {
-                    panel.classList.remove('w-80');
-                    panel.classList.add('w-16');
-                    content.classList.add('hidden');
-                    text.classList.add('hidden');
-                    if (badge) badge.classList.add('hidden');
-                    if (dot) dot.classList.remove('hidden');
-                    if (toggleBtn) toggleBtn.classList.add('hidden');
-                    if (chevronLeft) chevronLeft.classList.remove('hidden');
-                    icon.classList.remove('fa-chevron-right');
-                    icon.classList.add('fa-chevron-left');
-                }
-            }
+            // Always start minimized when page loads
+            minimizePanel();
+            // Clear any saved panel state
+            localStorage.removeItem('sidebarPanel');
         });
 
         function toggleMobileProfileSidebar() {
@@ -670,21 +686,6 @@
             }
         }
 
-        // Delete Account Confirmation
-        function confirmDeleteAccount() {
-            document.getElementById('deleteAccountModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeDeleteAccountModal() {
-            document.getElementById('deleteAccountModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        function deleteAccount() {
-            document.getElementById('delete-account-form').submit();
-        }
-
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('profileDropdown');
@@ -696,71 +697,31 @@
         });
     </script>
 
-    <!-- Delete Account Confirmation Modal -->
-    <div id="deleteAccountModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-lg bg-white">
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between pb-3 border-b">
-                <h3 class="text-xl font-bold text-gray-900">
-                    <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
-                    Delete Account
-                </h3>
-                <button type="button" onclick="closeDeleteAccountModal()" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            
-            <!-- Modal Body -->
-            <div class="mt-4">
-                <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-exclamation-circle text-red-500"></i>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-red-700">
-                                <strong>Warning:</strong> This action cannot be undone!
-                            </p>
-                        </div>
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-md w-full p-6 relative my-8">
+                <div class="text-center mb-6">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                        <i class="fas fa-sign-out-alt text-red-600 text-xl"></i>
                     </div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Confirm Logout</h3>
+                    <p class="text-sm text-gray-600">Are you sure you want to logout?</p>
                 </div>
-                
-                <p class="text-gray-700 mb-4">
-                    Are you sure you want to delete your account? This will permanently remove:
-                </p>
-                
-                <ul class="list-disc list-inside text-gray-600 mb-4 space-y-1">
-                    <li>Your profile information</li>
-                    <li>Your order history</li>
-                    <li>Your messages</li>
-                    <li>All your account data</li>
-                </ul>
-                
-                <p class="text-gray-700 font-semibold">
-                    Type your confirmation below to proceed.
-                </p>
-            </div>
-            
-            <!-- Modal Footer -->
-            <div class="flex items-center justify-end space-x-3 pt-4 border-t">
-                <button type="button" onclick="closeDeleteAccountModal()" 
-                        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors">
-                    Cancel
-                </button>
-                <button type="button" onclick="deleteAccount()" 
-                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
-                    <i class="fas fa-trash-alt mr-2"></i>
-                    Delete My Account
-                </button>
+
+                <div class="flex space-x-3">
+                    <button onclick="closeLogoutModal()" 
+                            class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                        Cancel
+                    </button>
+                    <button onclick="confirmLogout()" 
+                            class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                        Logout
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Hidden Delete Account Form -->
-    <form id="delete-account-form" action="{{ route('account.delete') }}" method="POST" class="hidden">
-        @csrf
-        @method('DELETE')
-    </form>
     
     @yield('scripts')
 </body>

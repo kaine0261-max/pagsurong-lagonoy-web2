@@ -39,7 +39,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
 
     @stack('styles')
 </head>
@@ -60,13 +60,6 @@
                 <div class="font-playfair text-lg font-bold">Pagsurong Lagonoy</div>
             </div>
             
-            <!-- Right Side - Government Logos -->
-            <div class="flex items-center space-x-1">
-                <img src="{{ asset('Municipal Seal of Lagonoy.png') }}" alt="Municipal Seal of Lagonoy" class="w-5 h-5 object-cover rounded-full border border-white">
-                <img src="{{ asset('bagong-pilipinas-logo.png') }}" alt="Bagong Pilipinas Logo" class="w-5 h-5 object-contain">
-                <img src="{{ asset('Provincial Logo of Camarines Sur.png') }}" alt="Provincial Logo of Camarines Sur" class="w-5 h-5 object-cover rounded-full border border-white">
-                <img src="{{ asset('Department of Tourism (DOT) Philippines Logo.png') }}" alt="Department of Tourism Philippines" class="w-5 h-5 object-cover rounded-full border border-white">
-            </div>
         </div>
         
         <!-- Mobile Category Navigation -->
@@ -80,21 +73,21 @@
                             Products
                             <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.products') ? 'w-full' : 'w-0' }}"></span>
                         </a>
-                        <a href="{{ route('customer.shops') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.shops') ? 'font-semibold' : '' }}">
+                        <a href="{{ route('customer.shops') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.shops*') ? 'font-semibold' : '' }}">
                             Shops
-                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.shops') ? 'w-full' : 'w-0' }}"></span>
+                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.shops*') ? 'w-full' : 'w-0' }}"></span>
                         </a>
-                        <a href="{{ route('customer.hotels') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.hotels') ? 'font-semibold' : '' }}">
+                        <a href="{{ route('customer.hotels') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.hotels*') ? 'font-semibold' : '' }}">
                             Hotels
-                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.hotels') ? 'w-full' : 'w-0' }}"></span>
+                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.hotels*') ? 'w-full' : 'w-0' }}"></span>
                         </a>
-                        <a href="{{ route('customer.resorts') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.resorts') ? 'font-semibold' : '' }}">
+                        <a href="{{ route('customer.resorts') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.resorts*') ? 'font-semibold' : '' }}">
                             Resorts
-                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.resorts') ? 'w-full' : 'w-0' }}"></span>
+                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.resorts*') ? 'w-full' : 'w-0' }}"></span>
                         </a>
-                        <a href="{{ route('customer.attractions') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.attractions') ? 'font-semibold' : '' }}">
+                        <a href="{{ route('customer.attractions') }}" class="text-white hover:text-green-200 transition-colors relative pb-1 {{ request()->routeIs('customer.attractions*') ? 'font-semibold' : '' }}">
                             Attractions
-                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.attractions') ? 'w-full' : 'w-0' }}"></span>
+                            <span class="absolute bottom-0 left-0 h-0.5 bg-green-400 {{ request()->routeIs('customer.attractions*') ? 'w-full' : 'w-0' }}"></span>
                         </a>
                     @elseif($user->role === 'customer' && !$user->hasCompletedProfile())
                         <span class="text-white text-xs opacity-75">Complete your profile to access all features</span>
@@ -227,6 +220,7 @@
                         </a>
                         @endif
                         
+                        @if($bizProfile && $bizProfile->business_type === 'shop')
                         <a href="{{ route('messages.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('messages.*') ? 'text-green-500' : '' }}">
                             <div class="relative">
                                 <i class="fas fa-envelope text-xl mb-1"></i>
@@ -238,6 +232,7 @@
                             </div>
                             <span class="text-[10px] leading-tight">Messages</span>
                         </a>
+                        @endif
                         
                         <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
                             @if($user->profile && $user->profile->profile_picture)
@@ -370,21 +365,21 @@
                         <!-- Business Owner Nav - When Business is Approved/Published -->
                         @if($bizProfile && $bizProfile->business_type === 'resort')
                             <a href="{{ route('business.my-resort') }}" 
-                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-resort') ? 'font-semibold' : '' }}">
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs(['business.my-resort', 'profile.show', 'profile.edit']) ? 'font-semibold' : '' }}">
                                 <i class="fas fa-umbrella-beach mr-1"></i> My Resort
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-resort') ? 'w-full' : '' }}"></span>
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs(['business.my-resort', 'profile.show', 'profile.edit']) ? 'w-full' : '' }}"></span>
                             </a>
                         @elseif($bizProfile && $bizProfile->business_type === 'hotel')
                             <a href="{{ route('business.my-hotel') }}" 
-                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-hotel') ? 'font-semibold' : '' }}">
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs(['business.my-hotel', 'profile.show', 'profile.edit']) ? 'font-semibold' : '' }}">
                                 <i class="fas fa-hotel mr-1"></i> My Hotel
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-hotel') ? 'w-full' : '' }}"></span>
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs(['business.my-hotel', 'profile.show', 'profile.edit']) ? 'w-full' : '' }}"></span>
                             </a>
                         @else
                             <a href="{{ route('business.my-shop') }}" 
-                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.my-shop') ? 'font-semibold' : '' }}">
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs(['business.my-shop', 'profile.show', 'profile.edit']) ? 'font-semibold' : '' }}">
                                 <i class="fas fa-store mr-1"></i> My Shop
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.my-shop') ? 'w-full' : '' }}"></span>
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs(['business.my-shop', 'profile.show', 'profile.edit']) ? 'w-full' : '' }}"></span>
                             </a>
                         @endif
                         
@@ -478,24 +473,24 @@
                                 <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.products') ? 'w-full' : '' }}"></span>
                             </a>
                             <a href="{{ route('customer.shops') }}"
-                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.shops') ? 'font-semibold' : '' }}">
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.shops*') ? 'font-semibold' : '' }}">
                                 Shops
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.shops') ? 'w-full' : '' }}"></span>
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.shops*') ? 'w-full' : '' }}"></span>
                             </a>
                             <a href="{{ route('customer.hotels') }}"
-                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.hotels') ? 'font-semibold' : '' }}">
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.hotels*') ? 'font-semibold' : '' }}">
                                 Hotels
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.hotels') ? 'w-full' : '' }}"></span>
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.hotels*') ? 'w-full' : '' }}"></span>
                             </a>
                             <a href="{{ route('customer.resorts') }}"
-                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.resorts') ? 'font-semibold' : '' }}">
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.resorts*') ? 'font-semibold' : '' }}">
                                 Resorts
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.resorts') ? 'w-full' : '' }}"></span>
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.resorts*') ? 'w-full' : '' }}"></span>
                             </a>
                             <a href="{{ route('customer.attractions') }}"
-                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.attractions') ? 'font-semibold' : '' }}">
+                               class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.attractions*') ? 'font-semibold' : '' }}">
                                 Attractions
-                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.attractions') ? 'w-full' : '' }}"></span>
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('customer.attractions*') ? 'w-full' : '' }}"></span>
                             </a>
                             <a href="{{ route('customer.cart') }}" class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('customer.cart') ? 'font-semibold' : '' }}">
                                 My Cart
@@ -536,14 +531,6 @@
                         <a href="{{ route('profile.show') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             <i class="fas fa-user mr-2"></i> My Profile
                         </a>
-                        <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            <i class="fas fa-edit mr-2"></i> Edit Profile
-                        </a>
-                        <hr class="my-1 border-gray-100">
-                        <button type="button" onclick="confirmDeleteAccount()" 
-                                class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
-                            <i class="fas fa-trash-alt mr-2"></i> Delete My Account
-                        </button>
                         <hr class="my-1 border-gray-100">
                         <form method="POST" action="{{ route('logout') }}" id="logout-form" class="hidden">
                             @csrf
@@ -563,44 +550,63 @@
                 <a href="{{ route('register') }}" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-all duration-200">Register</a>
             @endauth
         </nav>
-        
-        <!-- Right Side - Government Logos -->
-        <div class="flex items-center space-x-2">
-            <img src="{{ asset('Municipal Seal of Lagonoy.png') }}" alt="Municipal Seal of Lagonoy" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
-            <img src="{{ asset('bagong-pilipinas-logo.png') }}" alt="Bagong Pilipinas Logo" class="w-8 h-8 md:w-10 md:h-10 object-contain drop-shadow-sm">
-            <img src="{{ asset('Provincial Logo of Camarines Sur.png') }}" alt="Provincial Logo of Camarines Sur" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
-            <img src="{{ asset('Department of Tourism (DOT) Philippines Logo.png') }}" alt="Department of Tourism Philippines" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
-        </div>
         </div>
     </header>
 
     <!-- Main content wrapper with fixed navigation and three-column layout -->
     <div class="pt-20 md:pt-16 pb-20 md:pb-0 min-h-screen">
         <div class="flex min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)]">
-            <!-- Left Sidebar - Orders Panel (Desktop Only) -->
+            <!-- Left Sidebar - Switchable Panel (Desktop Only) -->
             @auth
                 @if(auth()->user()->role === 'customer' && auth()->user()->hasCompletedProfile())
-                    <div id="ordersPanel" class="hidden lg:block w-80 bg-white border-r border-gray-200 overflow-y-auto flex-shrink-0 transition-all duration-300">
-                        <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
-                            <div class="flex items-center justify-between">
-                                <h3 class="font-semibold text-gray-900 flex items-center">
-                                    <button onclick="toggleOrdersPanel()" class="flex items-center hover:text-green-700 transition-colors">
-                                        <i class="fas fa-shopping-bag text-green-600" id="ordersIcon"></i>
-                                        <i class="fas fa-chevron-right text-green-600 ml-1" id="ordersChevron" style="display: none;"></i>
-                                        <span id="ordersTitle" class="ml-2">My Orders</span>
+                    <div id="sidebarPanel" class="hidden lg:block w-16 bg-white border-r border-gray-200 overflow-y-auto flex-shrink-0 transition-all duration-300">
+                        <!-- Minimized Icons View -->
+                        <div id="minimizedIcons" class="p-4 space-y-4">
+                            <button onclick="showOrdersPanel()" class="w-full flex flex-col items-center justify-center p-3 hover:bg-gray-50 rounded-lg transition-colors relative group">
+                                <i class="fas fa-shopping-bag text-green-600 text-2xl"></i>
+                                <span class="text-xs text-gray-600 mt-1">Orders</span>
+                            </button>
+                            <button onclick="showMessagesPanel()" class="w-full flex flex-col items-center justify-center p-3 hover:bg-gray-50 rounded-lg transition-colors relative group">
+                                <i class="fas fa-envelope text-green-600 text-2xl"></i>
+                                <span class="text-xs text-gray-600 mt-1">Messages</span>
+                                @php
+                                    $unreadCount = auth()->user()->unreadMessages()->count();
+                                @endphp
+                                @if($unreadCount > 0)
+                                    <span class="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">{{ $unreadCount }}</span>
+                                @endif
+                            </button>
+                            <button onclick="showCartPanel()" class="w-full flex flex-col items-center justify-center p-3 hover:bg-gray-50 rounded-lg transition-colors relative group">
+                                <i class="fas fa-shopping-cart text-green-600 text-2xl"></i>
+                                <span class="text-xs text-gray-600 mt-1 whitespace-nowrap">My Cart</span>
+                                @php
+                                    $cartCount = auth()->user()->cart ? auth()->user()->cart->sum('quantity') : 0;
+                                @endphp
+                                @if($cartCount > 0)
+                                    <span class="absolute top-2 right-2 bg-orange-500 text-white text-xs rounded-full px-2 py-1">{{ $cartCount }}</span>
+                                @endif
+                            </button>
+                        </div>
+
+                        <!-- Orders Panel Content -->
+                        <div id="ordersPanel" class="hidden">
+                            <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
+                                <div class="flex items-center justify-between">
+                                    <button onclick="minimizePanel()" class="font-semibold text-gray-900 flex items-center hover:text-green-700 transition-colors cursor-pointer">
+                                        <i class="fas fa-shopping-bag text-green-600"></i>
+                                        <span class="ml-2">My Orders</span>
                                     </button>
-                                </h3>
-                                <div class="flex items-center space-x-2">
-                                    <a href="{{ route('customer.orders') }}" class="text-xs text-green-600 hover:underline">
-                                        View All
-                                    </a>
-                                    <button onclick="toggleOrdersPanel()" class="text-gray-400 hover:text-gray-600 p-1">
-                                        <i id="ordersToggleIcon" class="fas fa-chevron-left text-sm"></i>
-                                    </button>
+                                    <div class="flex items-center space-x-2">
+                                        <a href="{{ route('customer.orders') }}" class="text-xs text-green-600 hover:underline">
+                                            View All
+                                        </a>
+                                        <button onclick="minimizePanel()" class="text-green-600 hover:text-green-700 p-1">
+                                            <i class="fas fa-chevron-left text-sm"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div id="ordersContent" class="p-4">
+                            <div class="p-4">
                             @php
                                 $orders = auth()->user()->orders()->latest()->take(5)->get();
                             @endphp
@@ -636,42 +642,29 @@
                                     </a>
                                 </div>
                             @endif
+                            </div>
                         </div>
-                    </div>
-                @endif
-            @endauth
-            
-            <!-- Main Content - Feed -->
-            <main id="main-content" class="flex-1 overflow-y-auto bg-gray-50 pb-16 md:pb-0 min-w-0">
-                @yield('content')
-            </main>
-            
-            <!-- Right Sidebar - Messages Panel -->
-            @auth
-                @if((auth()->user()->role === 'customer' && auth()->user()->hasCompletedProfile()) || (auth()->user()->role === 'business_owner' && auth()->user()->businessProfile && request()->routeIs(['business.my-shop', 'business.orders', 'messages.*'])))
-                    <div id="messagesPanel" class="hidden lg:block w-80 bg-white border-l border-gray-200 overflow-y-auto flex-shrink-0 relative z-10 transition-all duration-300">
-                        <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-20">
-                            <div class="flex items-center justify-between">
-                                <h3 class="font-semibold text-gray-900 flex items-center">
-                                    <button onclick="toggleMessagesPanel()" class="flex items-center hover:text-green-700 transition-colors relative">
-                                        <i class="fas fa-chevron-left text-green-600 hidden" id="messagesChevronLeft"></i>
-                                        <i class="fas fa-envelope text-green-600 ml-1" id="messagesIcon"></i>
-                                        <span id="messagesText" class="ml-2">Messages</span>
+
+                        <!-- Messages Panel Content -->
+                        <div id="messagesPanel" class="hidden">
+                            <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
+                                <div class="flex items-center justify-between">
+                                    <button onclick="minimizePanel()" class="font-semibold text-gray-900 flex items-center hover:text-green-700 transition-colors cursor-pointer">
+                                        <i class="fas fa-envelope text-green-600"></i>
+                                        <span class="ml-2">Messages</span>
                                         @php
                                             $unreadCount = auth()->user()->unreadMessages()->count();
                                         @endphp
                                         @if($unreadCount > 0)
-                                            <span id="messagesUnreadBadge" class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">{{ $unreadCount }}</span>
-                                            <span id="messagesUnreadDot" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+                                            <span class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">{{ $unreadCount }}</span>
                                         @endif
                                     </button>
-                                </h3>
-                                <button onclick="toggleMessagesPanel()" class="text-green-600 hover:text-green-700 p-1" id="messagesToggleBtn">
-                                    <i id="messagesToggleIcon" class="fas fa-chevron-right text-sm"></i>
-                                </button>
+                                    <button onclick="minimizePanel()" class="text-green-600 hover:text-green-700 p-1">
+                                        <i class="fas fa-chevron-left text-sm"></i>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div id="messagesContent" class="p-0">
+                            <div class="p-0">
                             @php
                                 $user = auth()->user();
                                 $threads = $user->threads()->take(10);
@@ -749,48 +742,95 @@
                                 </div>
                             @endif
                         </div>
+                            </div>
+                        </div>
+
+                        <!-- Cart Panel Content -->
+                        <div id="cartPanel" class="hidden">
+                            <div class="p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
+                                <div class="flex items-center justify-between">
+                                    <button onclick="minimizePanel()" class="font-semibold text-gray-900 flex items-center hover:text-green-700 transition-colors cursor-pointer">
+                                        <i class="fas fa-shopping-cart text-green-600"></i>
+                                        <span class="ml-2">My Cart</span>
+                                        @php
+                                            $cartCount = auth()->user()->cart ? auth()->user()->cart->sum('quantity') : 0;
+                                        @endphp
+                                        @if($cartCount > 0)
+                                            <span class="ml-2 bg-orange-500 text-white text-xs rounded-full px-2 py-1">{{ $cartCount }}</span>
+                                        @endif
+                                    </button>
+                                    <div class="flex items-center space-x-2">
+                                        <a href="{{ route('customer.cart') }}" class="text-xs text-green-600 hover:underline">
+                                            View All
+                                        </a>
+                                        <button onclick="minimizePanel()" class="text-green-600 hover:text-green-700 p-1">
+                                            <i class="fas fa-chevron-left text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                            @php
+                                $cartItems = auth()->user()->cart()->with('product')->take(5)->get();
+                            @endphp
+                            
+                            @if($cartItems->count() > 0)
+                                <div class="space-y-3">
+                                    @foreach($cartItems as $item)
+                                        <div class="border rounded-lg p-3 hover:bg-gray-50 transition-colors">
+                                            <div class="flex items-start space-x-3">
+                                                @if($item->product && $item->product->image)
+                                                    <img src="{{ Storage::url($item->product->image) }}" 
+                                                         alt="{{ $item->product->name }}" 
+                                                         class="w-16 h-16 object-cover rounded">
+                                                @else
+                                                    <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
+                                                        <i class="fas fa-image text-gray-400"></i>
+                                                    </div>
+                                                @endif
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-medium text-gray-900 truncate">{{ $item->product->name ?? 'Product' }}</p>
+                                                    <p class="text-xs text-gray-500">Qty: {{ $item->quantity }}</p>
+                                                    <p class="text-sm font-semibold text-green-600">₱{{ number_format(($item->product->price ?? 0) * $item->quantity, 2) }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="mt-4 pt-4 border-t">
+                                    <div class="flex justify-between items-center mb-3">
+                                        <span class="text-sm font-medium text-gray-700">Total Items:</span>
+                                        <span class="text-sm font-bold text-gray-900">{{ $cartCount }}</span>
+                                    </div>
+                                    <a href="{{ route('customer.cart') }}" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors">
+                                        View Full Cart
+                                    </a>
+                                </div>
+                            @else
+                                <div class="text-center py-8">
+                                    <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-shopping-cart text-gray-400 text-xl"></i>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mb-3">Your cart is empty</p>
+                                    <a href="{{ route('customer.products') }}" class="inline-flex items-center px-3 py-2 border border-green-300 rounded-md text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 transition-colors">
+                                        <i class="fas fa-shopping-basket mr-2"></i>
+                                        Start Shopping
+                                    </a>
+                                </div>
+                            @endif
+                            </div>
+                        </div>
                     </div>
                 @endif
             @endauth
+            
+            <!-- Main Content - Feed -->
+            <main id="main-content" class="flex-1 overflow-y-auto bg-gray-50 pb-16 md:pb-0 min-w-0">
+                @yield('content')
+            </main>
         </div>
     </div>
 
-<!-- Divider -->
-<div class="border-t border-gray-200 my-10 hidden lg:block"></div>
-
-<!-- Footer -->
-<footer style="background-color: #064e3b;" class="text-white py-10">
-    <div class="max-w-6xl mx-auto px-5">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-                <h3 class="text-xl font-playfair font-bold mb-4">Pagsurong Lagonoy</h3>
-                <p class="text-gray-300">
-                    Showcasing the best of Lagonoy's local products, accommodations, and tourist destinations.
-                </p>
-            </div>
-            <div>
-                <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
-                <div class="flex space-x-4">
-                    <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                </div>
-                <p class="mt-4 text-gray-300">
-                    Email: info@pagsuronglagonoy.com
-                </p>
-            </div>
-        </div>
-            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400 text-sm">
-                <p>&copy; {{ $currentYear }} Pagsurong Lagonoy. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
 
     <!-- Scripts -->
     <script>
@@ -902,10 +942,6 @@
                                 <i class="fas fa-user mr-4 text-blue-600 w-5"></i>
                                 <span class="font-medium">My Profile</span>
                             </a>
-                            <a href="{{ route('profile.edit') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-edit mr-4 text-blue-600 w-5"></i>
-                                <span class="font-medium">Edit Profile</span>
-                            </a>
                             <a href="{{ route('customer.orders') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
                                 <i class="fas fa-shopping-bag mr-4 text-blue-600 w-5"></i>
                                 <span class="font-medium">My Orders</span>
@@ -914,20 +950,11 @@
                                 <i class="fas fa-envelope mr-4 text-blue-600 w-5"></i>
                                 <span class="font-medium">Messages</span>
                             </a>
-                            <hr class="my-2 border-gray-200">
-                            <button type="button" onclick="confirmDeleteAccount()" class="w-full flex items-center px-6 py-4 text-red-600 hover:bg-red-50 transition-colors">
-                                <i class="fas fa-trash-alt mr-4 w-5"></i>
-                                <span class="font-medium">Delete My Account</span>
-                            </button>
                         @else
                             <!-- Business Owner Menu Items -->
                             <a href="{{ route('profile.show') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
                                 <i class="fas fa-user mr-4 text-blue-600 w-5"></i>
                                 <span class="font-medium">My Profile</span>
-                            </a>
-                            <a href="{{ route('profile.edit') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-edit mr-4 text-blue-600 w-5"></i>
-                                <span class="font-medium">Edit Profile</span>
                             </a>
 
                             @if($user->businessProfile && $user->businessProfile->business_type === 'resort')
@@ -948,10 +975,6 @@
                             @endif
 
                             <hr class="my-2 border-gray-200">
-                            <button type="button" onclick="confirmDeleteAccount()" class="w-full flex items-center px-6 py-4 text-red-600 hover:bg-red-50 transition-colors">
-                                <i class="fas fa-trash-alt mr-4 w-5"></i>
-                                <span class="font-medium">Delete My Account</span>
-                            </button>
 
                             @if($user->businessProfile && $user->businessProfile->business_type === 'shop')
                             <a href="{{ route('business.orders') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
@@ -1033,112 +1056,140 @@
             });
         });
 
-        // Panel minimize/maximize functionality
-        function toggleOrdersPanel() {
-            const panel = document.getElementById('ordersPanel');
-            const content = document.getElementById('ordersContent');
-            const icon = document.getElementById('ordersToggleIcon');
-            const mainIcon = document.getElementById('ordersIcon');
-            const chevron = document.getElementById('ordersChevron');
-            const title = document.getElementById('ordersTitle');
-            const viewAllLink = document.querySelector('#ordersPanel .text-xs.text-green-600');
-            const toggleBtn = document.querySelector('#ordersPanel button[onclick="toggleOrdersPanel()"]:last-of-type');
+        // Switchable panel functions
+        function showOrdersPanel() {
+            const sidebarPanel = document.getElementById('sidebarPanel');
+            const minimizedIcons = document.getElementById('minimizedIcons');
+            const ordersPanel = document.getElementById('ordersPanel');
+            const messagesPanel = document.getElementById('messagesPanel');
+            const cartPanel = document.getElementById('cartPanel');
             
-            if (panel && content && icon && mainIcon && title && chevron) {
-                const isMinimized = content.style.display === 'none';
+            if (sidebarPanel && minimizedIcons && ordersPanel && messagesPanel) {
+                // Expand panel
+                sidebarPanel.classList.remove('w-16');
+                sidebarPanel.classList.add('w-80');
                 
-                if (isMinimized) {
-                    // Maximize
-                    content.style.display = 'block';
-                    title.style.display = 'inline';
-                    chevron.style.display = 'none';
-                    if (viewAllLink) viewAllLink.style.display = 'inline';
-                    if (toggleBtn) toggleBtn.style.display = 'block';
-                    panel.classList.remove('w-12');
-                    panel.classList.add('w-80');
-                    icon.classList.remove('fa-chevron-right');
-                    icon.classList.add('fa-chevron-left');
-                } else {
-                    // Minimize - Show shopping bag icon and chevron
-                    content.style.display = 'none';
-                    title.style.display = 'none';
-                    chevron.style.display = 'inline';
-                    if (viewAllLink) viewAllLink.style.display = 'none';
-                    if (toggleBtn) toggleBtn.style.display = 'none';
-                    panel.classList.remove('w-80');
-                    panel.classList.add('w-12');
-                    icon.classList.remove('fa-chevron-left');
-                    icon.classList.add('fa-chevron-right');
-                }
+                // Show orders, hide messages, cart and icons
+                minimizedIcons.classList.add('hidden');
+                ordersPanel.classList.remove('hidden');
+                messagesPanel.classList.add('hidden');
+                if (cartPanel) cartPanel.classList.add('hidden');
+                
+                // Adjust product grid to 3 columns
+                adjustProductGrid(true);
+                
+                // Save state
+                localStorage.setItem('sidebarPanel', 'orders');
             }
         }
 
-        function toggleMessagesPanel() {
-            const panel = document.getElementById('messagesPanel');
-            const content = document.getElementById('messagesContent');
-            const icon = document.getElementById('messagesToggleIcon');
-            const text = document.getElementById('messagesText');
-            const badge = document.getElementById('messagesUnreadBadge');
-            const dot = document.getElementById('messagesUnreadDot');
-            const toggleBtn = document.getElementById('messagesToggleBtn');
-            const chevronLeft = document.getElementById('messagesChevronLeft');
+        function showMessagesPanel() {
+            const sidebarPanel = document.getElementById('sidebarPanel');
+            const minimizedIcons = document.getElementById('minimizedIcons');
+            const ordersPanel = document.getElementById('ordersPanel');
+            const messagesPanel = document.getElementById('messagesPanel');
+            const cartPanel = document.getElementById('cartPanel');
             
-            if (panel && content && icon && text) {
-                if (panel.classList.contains('w-80')) {
-                    // Collapse
-                    panel.classList.remove('w-80');
-                    panel.classList.add('w-16');
-                    content.classList.add('hidden');
-                    text.classList.add('hidden');
-                    if (badge) badge.classList.add('hidden');
-                    if (dot) dot.classList.remove('hidden');
-                    if (toggleBtn) toggleBtn.classList.add('hidden');
-                    if (chevronLeft) chevronLeft.classList.remove('hidden');
-                    icon.classList.remove('fa-chevron-right');
-                    icon.classList.add('fa-chevron-left');
-                    localStorage.setItem('messagesPanel', 'collapsed');
+            if (sidebarPanel && minimizedIcons && ordersPanel && messagesPanel) {
+                // Expand panel
+                sidebarPanel.classList.remove('w-16');
+                sidebarPanel.classList.add('w-80');
+                
+                // Show messages, hide orders, cart and icons
+                minimizedIcons.classList.add('hidden');
+                ordersPanel.classList.add('hidden');
+                messagesPanel.classList.remove('hidden');
+                if (cartPanel) cartPanel.classList.add('hidden');
+                
+                // Adjust product grid to 3 columns
+                adjustProductGrid(true);
+                
+                // Save state
+                localStorage.setItem('sidebarPanel', 'messages');
+            }
+        }
+
+        function showCartPanel() {
+            const sidebarPanel = document.getElementById('sidebarPanel');
+            const minimizedIcons = document.getElementById('minimizedIcons');
+            const ordersPanel = document.getElementById('ordersPanel');
+            const messagesPanel = document.getElementById('messagesPanel');
+            const cartPanel = document.getElementById('cartPanel');
+            
+            if (sidebarPanel && minimizedIcons && ordersPanel && messagesPanel && cartPanel) {
+                // Expand panel
+                sidebarPanel.classList.remove('w-16');
+                sidebarPanel.classList.add('w-80');
+                
+                // Show cart, hide orders, messages and icons
+                minimizedIcons.classList.add('hidden');
+                ordersPanel.classList.add('hidden');
+                messagesPanel.classList.add('hidden');
+                cartPanel.classList.remove('hidden');
+                
+                // Adjust product grid to 3 columns
+                adjustProductGrid(true);
+                
+                // Save state
+                localStorage.setItem('sidebarPanel', 'cart');
+            }
+        }
+
+        function minimizePanel() {
+            const sidebarPanel = document.getElementById('sidebarPanel');
+            const minimizedIcons = document.getElementById('minimizedIcons');
+            const ordersPanel = document.getElementById('ordersPanel');
+            const messagesPanel = document.getElementById('messagesPanel');
+            const cartPanel = document.getElementById('cartPanel');
+            
+            if (sidebarPanel && minimizedIcons && ordersPanel && messagesPanel) {
+                // Collapse panel
+                sidebarPanel.classList.remove('w-80');
+                sidebarPanel.classList.add('w-16');
+                
+                // Show icons, hide all panels
+                minimizedIcons.classList.remove('hidden');
+                ordersPanel.classList.add('hidden');
+                messagesPanel.classList.add('hidden');
+                if (cartPanel) cartPanel.classList.add('hidden');
+                
+                // Adjust product grid to 4 columns
+                adjustProductGrid(false);
+                
+                // Save state
+                localStorage.setItem('sidebarPanel', 'minimized');
+            }
+        }
+
+        // Function to adjust product grid columns based on panel state
+        function adjustProductGrid(isPanelExpanded) {
+            const productsGrid = document.getElementById('productsGrid');
+            if (productsGrid) {
+                if (isPanelExpanded) {
+                    // Panel expanded: show 3 columns on large screens
+                    productsGrid.classList.remove('lg:grid-cols-4');
+                    productsGrid.classList.add('lg:grid-cols-3');
                 } else {
-                    // Expand
-                    panel.classList.remove('w-16');
-                    panel.classList.add('w-80');
-                    content.classList.remove('hidden');
-                    text.classList.remove('hidden');
-                    if (badge) badge.classList.remove('hidden');
-                    if (dot) dot.classList.add('hidden');
-                    if (toggleBtn) toggleBtn.classList.remove('hidden');
-                    if (chevronLeft) chevronLeft.classList.add('hidden');
-                    icon.classList.remove('fa-chevron-left');
-                    icon.classList.add('fa-chevron-right');
-                    localStorage.setItem('messagesPanel', 'expanded');
+                    // Panel minimized: show 4 columns on large screens
+                    productsGrid.classList.remove('lg:grid-cols-3');
+                    productsGrid.classList.add('lg:grid-cols-4');
                 }
             }
         }
 
-        // Restore message panel state on page load
+        // Restore panel state on page load
         document.addEventListener('DOMContentLoaded', function() {
-            const messagesState = localStorage.getItem('messagesPanel');
-            if (messagesState === 'collapsed') {
-                const panel = document.getElementById('messagesPanel');
-                const content = document.getElementById('messagesContent');
-                const icon = document.getElementById('messagesToggleIcon');
-                const text = document.getElementById('messagesText');
-                const badge = document.getElementById('messagesUnreadBadge');
-                const dot = document.getElementById('messagesUnreadDot');
-                const toggleBtn = document.getElementById('messagesToggleBtn');
-                const chevronLeft = document.getElementById('messagesChevronLeft');
-                
-                if (panel && content && icon && text) {
-                    panel.classList.remove('w-80');
-                    panel.classList.add('w-16');
-                    content.classList.add('hidden');
-                    text.classList.add('hidden');
-                    if (badge) badge.classList.add('hidden');
-                    if (dot) dot.classList.remove('hidden');
-                    if (toggleBtn) toggleBtn.classList.add('hidden');
-                    if (chevronLeft) chevronLeft.classList.remove('hidden');
-                    icon.classList.remove('fa-chevron-right');
-                    icon.classList.add('fa-chevron-left');
-                }
+            const panelState = localStorage.getItem('sidebarPanel');
+            
+            if (panelState === 'orders') {
+                showOrdersPanel();
+            } else if (panelState === 'messages') {
+                showMessagesPanel();
+            } else if (panelState === 'cart') {
+                showCartPanel();
+            } else {
+                // Default to minimized
+                minimizePanel();
             }
         });
 

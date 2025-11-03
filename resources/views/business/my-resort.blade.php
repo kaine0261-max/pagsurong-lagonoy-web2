@@ -119,22 +119,35 @@ use Illuminate\Support\Facades\Storage;
 
                         <!-- Publish/Unpublish Buttons -->
                         <div class="mt-6 flex flex-wrap gap-2 justify-center">
-                            @if($business && $business->is_published)
-                                <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">Published</span>
-                                <form action="{{ route('business.unpublish') }}" method="POST" class="inline">
-                                    @csrf
-                                    <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-600 transition-colors">
-                                        Unpublish
-                                    </button>
-                                </form>
+                            @if($business && $business->status === 'approved')
+                                @if($business->is_published)
+                                    <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">Published</span>
+                                    <form action="{{ route('business.unpublish') }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-yellow-600 transition-colors">
+                                            Unpublish
+                                        </button>
+                                    </form>
+                                @else
+                                    <span class="bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm font-medium">Unpublished</span>
+                                    <form action="{{ route('business.publish') }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">
+                                            Publish
+                                        </button>
+                                    </form>
+                                @endif
+                            @elseif($business && $business->status === 'pending')
+                                <span class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">Pending Approval</span>
+                                <p class="text-gray-500 text-xs mt-2 w-full text-center">Your resort is awaiting admin approval</p>
                             @else
                                 <form action="{{ route('business.publish') }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition-colors">
+                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
                                         Publish Now
                                     </button>
                                 </form>
-                                <span class="text-gray-500 text-sm mt-2">Your resort will be reviewed before going live</span>
+                                <p class="text-gray-500 text-xs mt-2 w-full text-center">Submit your resort for admin approval</p>
                             @endif
                         </div>
                     </div>

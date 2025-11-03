@@ -1,37 +1,38 @@
-@extends('layouts.app')
+@extends(auth()->check() && auth()->user()->role === 'customer' ? 'layouts.customer' : 'layouts.public')
 
 @section('title', $user->full_name . ' – Profile')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 py-8">
-    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-        <!-- Profile Header with Gradient Background -->
-        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-12 text-center">
-            <div class="flex justify-center mb-6">
-                <div class="relative">
-                    <img src="{{ !empty($user->avatar) ? asset('storage/' . $user->avatar) : asset('images/default-avatar.png') }}" 
-                         alt="{{ $user->full_name }}" 
-                         class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
-                    @if(Auth::id() === $user->id)
-                        <a href="{{ route('profile.edit') }}" class="absolute bottom-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors">
-                            <i class="fas fa-pencil-alt text-blue-500"></i>
-                        </a>
+<div class="min-h-screen bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <!-- Profile Header with Gradient Background -->
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-12 text-center">
+                <div class="flex justify-center mb-6">
+                    <div class="relative">
+                        <img src="{{ !empty($user->avatar) ? asset('storage/' . $user->avatar) : asset('images/default-avatar.png') }}" 
+                             alt="{{ $user->full_name }}" 
+                             class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
+                        @if(Auth::id() === $user->id)
+                            <a href="{{ route('profile.edit') }}" class="absolute bottom-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-pencil-alt text-blue-500"></i>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+                <h1 class="text-3xl font-bold text-white mb-2">{{ $user->full_name }}</h1>
+                <p class="text-blue-100">{{ $user->email }}</p>
+                <div class="mt-4 flex justify-center space-x-4">
+                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">
+                        {{ ucfirst($user->role) }}
+                    </span>
+                    @if($user->is_business_owner)
+                        <span class="bg-amber-500 bg-opacity-90 px-3 py-1 rounded-full text-sm">
+                            Business Owner
+                        </span>
                     @endif
                 </div>
             </div>
-            <h1 class="text-3xl font-bold text-white mb-2">{{ $user->full_name }}</h1>
-            <p class="text-blue-100">{{ $user->email }}</p>
-            <div class="mt-4 flex justify-center space-x-4">
-                <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">
-                    {{ ucfirst($user->role) }}
-                </span>
-                @if($user->is_business_owner)
-                    <span class="bg-amber-500 bg-opacity-90 px-3 py-1 rounded-full text-sm">
-                        Business Owner
-                    </span>
-                @endif
-            </div>
-        </div>
         
         <!-- Profile Information -->
         <div class="p-6">
@@ -141,10 +142,7 @@
         </div>
     </div>
 </div>
-
-<footer class="text-center py-8 text-gray-500 text-sm bg-gray-50 mt-8">
-    &copy; {{ date('Y') }} Pagsurong Lagonoy. All rights reserved.
-</footer>
+</div>
 @endsection
 
 @section('styles')

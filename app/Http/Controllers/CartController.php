@@ -132,4 +132,16 @@ class CartController extends Controller
 
         return redirect()->back()->with('success', 'Cart cleared!');
     }
+
+    /**
+     * Clear cart items for a specific business
+     */
+    public function clearByBusiness($businessId)
+    {
+        Cart::where('user_id', Auth::id())
+            ->where('business_id', $businessId)
+            ->delete();
+
+        return redirect()->back()->with('success', 'Cart items cleared for this business!');
+    }
 }

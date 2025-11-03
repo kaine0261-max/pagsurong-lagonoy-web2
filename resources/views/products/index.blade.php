@@ -20,11 +20,11 @@
     <!-- Products Grid -->
     <div class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
         @if($products->count() > 0)
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+            <div id="productsGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 transition-all duration-300">
                 @foreach($products as $product)
-                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col h-full">
                         <!-- Product Image -->
-                        <div class="aspect-w-16 aspect-h-12 bg-gray-200">
+                        <div class="aspect-w-16 aspect-h-12 bg-gray-200 flex-shrink-0">
                             @if($product->image)
                                 <img src="{{ Storage::url($product->image) }}" 
                                      alt="{{ $product->name }}" 
@@ -37,20 +37,14 @@
                         </div>
 
                         <!-- Product Info -->
-                        <div class="p-2 sm:p-3 md:p-4">
-                            <h3 class="font-semibold text-sm sm:text-base md:text-lg text-gray-900 mb-1 sm:mb-2 line-clamp-2">
+                        <div class="p-2 sm:p-3 md:p-4 flex flex-col flex-grow">
+                            <h3 class="font-semibold text-sm sm:text-base md:text-lg text-gray-900 mb-1 sm:mb-2 line-clamp-1">
                                 {{ $product->name }}
                             </h3>
                             
-                            @if($product->description)
-                                <p class="hidden sm:block text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">
-                                    {{ $product->description }}
-                                </p>
-                            @endif
-
                             <!-- Business Info -->
                             @if($product->business)
-                                <div class="hidden sm:flex items-center text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3">
+                                <div class="flex items-center text-xs sm:text-sm text-gray-500 mb-2">
                                     <i class="fas fa-store mr-1 sm:mr-2 text-xs"></i>
                                     <span class="truncate">{{ $product->business->businessProfile->business_name ?? 'Local Shop' }}</span>
                                 </div>
@@ -65,19 +59,17 @@
                                 <!-- Stock Status -->
                                 @if($product->current_stock > 0)
                                     <span class="text-xs text-green-600 bg-green-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">
-                                        <span class="hidden sm:inline">{{ $product->current_stock }} in stock</span>
-                                        <span class="sm:hidden">{{ $product->current_stock }}</span>
+                                        {{ $product->current_stock }} in stock
                                     </span>
                                 @else
                                     <span class="text-xs text-red-600 bg-red-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">
-                                        <span class="hidden sm:inline">Out of stock</span>
-                                        <span class="sm:hidden">Out</span>
+                                        Out of stock
                                     </span>
                                 @endif
                             </div>
 
                             <!-- Actions -->
-                            <div class="mt-2 sm:mt-3 md:mt-4 space-y-2">
+                            <div class="mt-auto space-y-2">
                                 @auth
                                     @if($product->current_stock > 0)
                                         <button onclick="addToCart({{ $product->id }})" 
@@ -104,11 +96,11 @@
                                     @endif
                                 @endauth
 
-                                <!-- Feedback Button -->
+                                <!-- Reviews Button -->
                                 @auth
                                     <button onclick="showComments({{ $product->id }})" class="w-full flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
                                         <i class="fas fa-comment-dots mr-2"></i>
-                                        <span>Feedback</span>
+                                        <span>Reviews</span>
                                         @php
                                             try {
                                                 $commentCount = method_exists($product, 'comments') ? $product->comments()->count() : 0;
@@ -123,7 +115,7 @@
                                 @else
                                     <button onclick="viewComments({{ $product->id }}, '{{ addslashes($product->name) }}')" class="w-full flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
                                         <i class="fas fa-comment-dots mr-2"></i>
-                                        <span>View Feedback</span>
+                                        <span>View Reviews</span>
                                         @php
                                             try {
                                                 $commentCount = method_exists($product, 'comments') ? $product->comments()->count() : 0;
@@ -496,7 +488,7 @@ function createCommentsModal(productId, productName, canComment = true) {
         <form id="comment-form-${productId}" onsubmit="submitProductComment(event, ${productId})" class="border-t pt-4">
             <div class="flex space-x-3">
                 <textarea name="comment" rows="2" class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none" 
-                          placeholder="Write a comment..." required></textarea>
+                          placeholder="Write a review..." required></textarea>
                 <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -504,10 +496,10 @@ function createCommentsModal(productId, productName, canComment = true) {
         </form>
     ` : `
         <div class="border-t pt-4 text-center">
-            <p class="text-gray-500 text-sm mb-3">Want to leave a comment?</p>
+            <p class="text-gray-500 text-sm mb-3">Want to leave a review?</p>
             <button onclick="closeCommentsModal(${productId}); handleComment('product', '${productName}');" 
                     class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
-                Login to Comment
+                Login to Review
             </button>
         </div>
     `;
@@ -515,15 +507,15 @@ function createCommentsModal(productId, productName, canComment = true) {
     modal.innerHTML = `
         <div class="bg-white rounded-lg p-6 max-w-lg w-full mx-4 max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold">Comments - ${productName}</h3>
+                <h3 class="text-lg font-semibold">Reviews - ${productName}</h3>
                 <button onclick="closeCommentsModal(${productId})" class="text-gray-400 hover:text-gray-600">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <!-- Comments List -->
+            <!-- Reviews List -->
             <div class="flex-1 overflow-y-auto mb-4" id="comments-list-${productId}">
-                <div class="text-center py-4 text-gray-500">Loading comments...</div>
+                <div class="text-center py-4 text-gray-500">Loading reviews...</div>
             </div>
             
             ${commentFormHtml}

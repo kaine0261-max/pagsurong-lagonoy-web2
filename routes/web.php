@@ -163,6 +163,7 @@ Route::middleware(['auth'])->group(function () {
         // Use public views for consistent layout (no feeds, simple grid)
         Route::get('/customer/products', [ProductController::class, 'index'])->name('customer.products');
         Route::get('/customer/shops', [ProductController::class, 'shops'])->name('customer.shops');
+        Route::get('/customer/shops/{shop}', [ProductController::class, 'showShop'])->name('customer.shops.show');
         Route::get('/customer/hotels', [HotelController::class, 'index'])->name('customer.hotels');
         Route::get('/customer/hotels/{hotel}', [HotelController::class, 'show'])->name('customer.hotels.show');
         Route::get('/customer/resorts', [ResortController::class, 'index'])->name('customer.resorts');
@@ -192,6 +193,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/cart/{cart}', [CartController::class, 'update'])->name('customer.cart.update');
         Route::delete('/cart/{cart}', [CartController::class, 'remove'])->name('customer.cart.remove');
         Route::delete('/cart', [CartController::class, 'clear'])->name('customer.cart.clear');
+        Route::delete('/cart/clear/{business}', [CartController::class, 'clearByBusiness'])->name('customer.cart.clearByBusiness');
         Route::post('/cart/checkout/{business}', [OrderController::class, 'checkout'])->name('customer.cart.checkout');
     });
 

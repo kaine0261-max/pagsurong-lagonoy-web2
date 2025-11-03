@@ -137,8 +137,8 @@
                                         @endif
                                     @else
                                         <button onclick="showLoginPrompt()" 
-                                                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 rounded-lg transition-colors text-sm sm:text-base">
-                                            <i class="fas fa-sign-in-alt mr-1 sm:mr-2"></i><span class="hidden sm:inline">Login to Purchase</span><span class="sm:hidden">Login</span>
+                                                class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-3 sm:px-4 rounded-lg transition-colors text-sm sm:text-base">
+                                            <i class="fas fa-cart-plus mr-1 sm:mr-2"></i><span class="hidden sm:inline">Add to Cart</span><span class="sm:hidden">Add</span>
                                         </button>
                                     @endauth
                                 </div>

@@ -24,22 +24,22 @@
         @if($attractions->count() > 0)
             <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
                 @foreach($attractions as $attraction)
-                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col h-full">
                         <!-- Attraction Image -->
-                        <div class="aspect-w-16 aspect-h-12 bg-gray-200">
+                        <div class="aspect-w-16 aspect-h-12 bg-gray-200 flex-shrink-0">
                             @if($attraction->cover_image)
                                 <img src="{{ Storage::url($attraction->cover_image) }}" 
                                      alt="{{ $attraction->name }}" 
-                                     class="w-full h-40 sm:h-48 md:h-56 lg:h-64 object-cover">
+                                     class="w-full h-40 sm:h-48 md:h-56 object-cover">
                             @else
-                                <div class="w-full h-40 sm:h-48 md:h-56 lg:h-64 bg-gray-200 flex items-center justify-center">
+                                <div class="w-full h-40 sm:h-48 md:h-56 bg-gray-200 flex items-center justify-center">
                                     <i class="fas fa-map-marked-alt text-gray-400 text-3xl sm:text-4xl md:text-5xl"></i>
                                 </div>
                             @endif
                         </div>
 
                         <!-- Attraction Info -->
-                        <div class="p-2 sm:p-3 md:p-4 lg:p-6">
+                        <div class="p-2 sm:p-3 md:p-4 lg:p-6 flex flex-col flex-grow">
                             <h3 class="font-semibold text-sm sm:text-base md:text-lg text-gray-900 mb-1 sm:mb-2 line-clamp-2">
                                 {{ $attraction->name }}
                             </h3>
@@ -49,14 +49,14 @@
                             </p>
 
                             @if($attraction->description)
-                                <p class="hidden sm:block text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">
+                                <p class="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">
                                     {{ $attraction->description }}
                                 </p>
                             @endif
 
                             <!-- Actions -->
-                            <div class="mt-2 sm:mt-3 md:mt-4">
-                                <a href="{{ route('public.attractions.show', $attraction->id) }}" 
+                            <div class="mt-auto">
+                                <a href="{{ auth()->check() && auth()->user()->role === 'customer' ? route('customer.attractions.show', $attraction->id) : route('public.attractions.show', $attraction->id) }}" 
                                    class="w-full bg-green-600 hover:bg-green-700 text-white py-2 sm:py-2.5 md:py-3 px-3 sm:px-4 rounded-lg transition-colors duration-200 flex items-center justify-center text-sm sm:text-base md:text-lg font-medium">
                                     <i class="fas fa-eye mr-1 sm:mr-2 text-sm sm:text-base"></i><span class="hidden sm:inline">Read More</span><span class="sm:hidden">View</span>
                                 </a>

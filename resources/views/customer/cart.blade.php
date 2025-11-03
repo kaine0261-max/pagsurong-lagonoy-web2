@@ -95,11 +95,11 @@
                                     </div>
 
                                     <!-- Remove Button -->
-                                    <form action="{{ route('customer.cart.remove', $item) }}" method="POST" class="inline">
+                                    <form action="{{ route('customer.cart.remove', $item) }}" method="POST" class="inline remove-item-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-500 hover:text-red-700 transition-colors duration-200 text-sm sm:text-base" 
-                                                onclick="return confirm('Remove this item from cart?')">
+                                        <button type="button" class="text-red-500 hover:text-red-700 transition-colors duration-200 text-sm sm:text-base" 
+                                                onclick="openDeleteModal(this.closest('form'))">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </form>
@@ -120,11 +120,7 @@
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="flex justify-between items-center">
-                            <button onclick="clearCartForBusiness({{ $businessId }})" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition-colors duration-200 text-sm">
-                                Clear {{ $business->name }} Items
-                            </button>
-                            
+                        <div class="flex justify-end items-center">
                             <button type="button" 
                                     onclick="openCheckoutModal({{ $businessId }}, '{{ addslashes($business->name) }}')" 
                                     class="bg-orange-500 text-white px-8 py-3 rounded-md hover:bg-orange-600 transition-colors duration-200 font-semibold">
@@ -134,6 +130,56 @@
                     </div>
                 @endforeach
             @endif
+        </div>
+    </div>
+</div>
+
+<!-- Delete Item Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg max-w-md w-full p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Confirm Delete</h3>
+                <button onclick="closeDeleteModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <p class="text-gray-600 mb-6">Are you sure you want to remove this item from your cart?</p>
+
+            <div class="flex space-x-3">
+                <button onclick="closeDeleteModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors duration-200">
+                    Cancel
+                </button>
+                <button onclick="confirmDelete()" class="flex-1 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors duration-200">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Clear Cart Confirmation Modal -->
+<div id="clearCartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg max-w-md w-full p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">Confirm Clear Cart</h3>
+                <button onclick="closeClearCartModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <p class="text-gray-600 mb-6">Are you sure you want to clear all items from <span id="clearBusinessName" class="font-semibold"></span>?</p>
+
+            <div class="flex space-x-3">
+                <button onclick="closeClearCartModal()" class="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors duration-200">
+                    Cancel
+                </button>
+                <button onclick="confirmClearCart()" class="flex-1 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-colors duration-200">
+                    Clear All
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -180,6 +226,63 @@
 </div>
 
 <script>
+let deleteFormToSubmit = null;
+let clearBusinessId = null;
+
+function openDeleteModal(form) {
+    deleteFormToSubmit = form;
+    document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+    deleteFormToSubmit = null;
+}
+
+function confirmDelete() {
+    if (deleteFormToSubmit) {
+        deleteFormToSubmit.submit();
+    }
+    closeDeleteModal();
+}
+
+function openClearCartModal(businessId, businessName) {
+    clearBusinessId = businessId;
+    document.getElementById('clearBusinessName').textContent = businessName;
+    document.getElementById('clearCartModal').classList.remove('hidden');
+}
+
+function closeClearCartModal() {
+    document.getElementById('clearCartModal').classList.add('hidden');
+    clearBusinessId = null;
+}
+
+function confirmClearCart() {
+    if (clearBusinessId) {
+        // Create a form and submit it
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/cart/clear/${clearBusinessId}`;
+        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = csrfToken;
+        
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        
+        form.appendChild(csrfInput);
+        form.appendChild(methodInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+    closeClearCartModal();
+}
+
 function openCheckoutModal(businessId, businessName) {
     const modal = document.getElementById('checkoutModal');
     const businessIdInput = document.getElementById('modal-business-id');

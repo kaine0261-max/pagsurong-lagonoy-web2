@@ -14,6 +14,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
+    
     <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
@@ -124,10 +127,7 @@
                 </div>
 
                 <div class="mb-4 sm:mb-6">
-                    <div class="flex justify-between items-center mb-2">
-                        <label for="password" class="block text-gray-700 font-medium text-sm sm:text-base">Password</label>
-                        <a href="{{ route('password.request') }}" class="text-xs sm:text-sm text-green-600 hover:underline">Forgot Password?</a>
-                    </div>
+                    <label for="password" class="block text-gray-700 font-medium mb-2 text-left text-sm sm:text-base">Password</label>
                     <div class="relative">
                         <input
                             id="password"
@@ -150,20 +150,6 @@
                 </div>
 
 
-                <div class="flex items-center justify-between mb-4 sm:mb-6">
-                    <div class="flex items-center">
-                        <input
-                            id="remember"
-                            type="checkbox"
-                            class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                            name="remember"
-                            {{ old('remember') ? 'checked' : '' }}
-                        >
-                        <label for="remember" class="ml-2 block text-sm text-gray-700">
-                            {{ __('Remember me') }}
-                        </label>
-                    </div>
-                </div>
 
                 <button
                     type="submit"

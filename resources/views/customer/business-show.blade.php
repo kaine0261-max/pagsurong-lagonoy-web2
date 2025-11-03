@@ -181,11 +181,11 @@
                                 </button>
                             @endif
                             
-                            <!-- Feedback Button -->
+                            <!-- Reviews Button -->
                             @auth
                                 <button onclick="showComments({{ $product->id }})" class="w-full flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm">
                                     <i class="fas fa-comment-dots mr-2"></i>
-                                    <span>Feedback</span>
+                                    <span>Reviews</span>
                                     @php
                                         try {
                                             $commentCount = method_exists($product, 'comments') ? $product->comments()->count() : 0;
@@ -200,7 +200,7 @@
                             @else
                                 <button onclick="viewComments({{ $product->id }}, '{{ addslashes($product->name) }}')" class="w-full flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm">
                                     <i class="fas fa-comment-dots mr-2"></i>
-                                    <span>View Feedback</span>
+                                    <span>View Reviews</span>
                                     @php
                                         try {
                                             $commentCount = method_exists($product, 'comments') ? $product->comments()->count() : 0;
@@ -545,7 +545,7 @@ function createCommentsModal(productId, productName, canComment = true) {
         <form id="comment-form-${productId}" onsubmit="submitProductComment(event, ${productId})" class="border-t pt-4">
             <div class="flex space-x-3">
                 <textarea name="comment" rows="2" class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none" 
-                          placeholder="Write a comment..." required></textarea>
+                          placeholder="Write a review..." required></textarea>
                 <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -553,9 +553,9 @@ function createCommentsModal(productId, productName, canComment = true) {
         </form>
     ` : `
         <div class="border-t pt-4 text-center">
-            <p class="text-gray-500 text-sm mb-3">Want to leave a comment?</p>
+            <p class="text-gray-500 text-sm mb-3">Want to leave a review?</p>
             <a href="{{ route('login') }}" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors inline-block">
-                Login to Comment
+                Login to Review
             </a>
         </div>
     `;
@@ -563,15 +563,15 @@ function createCommentsModal(productId, productName, canComment = true) {
     modal.innerHTML = `
         <div class="bg-white rounded-lg p-6 max-w-lg w-full mx-4 max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold">Comments - ${productName}</h3>
+                <h3 class="text-lg font-semibold">Reviews - ${productName}</h3>
                 <button onclick="closeCommentsModal(${productId})" class="text-gray-400 hover:text-gray-600">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <!-- Comments List -->
+            <!-- Reviews List -->
             <div class="flex-1 overflow-y-auto mb-4" id="comments-list-${productId}">
-                <div class="text-center py-4 text-gray-500">Loading comments...</div>
+                <div class="text-center py-4 text-gray-500">Loading reviews...</div>
             </div>
             
             ${commentFormHtml}

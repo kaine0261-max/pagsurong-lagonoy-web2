@@ -1,61 +1,182 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Pagsurong Lagonoy Tourism & Business Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive web-based platform for promoting tourism and managing businesses in Lagonoy, Camarines Sur. This system connects tourists with local businesses including hotels, resorts, shops, and tourist attractions.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### For Visitors (Public)
+- Browse hotels, resorts, shops, and tourist attractions
+- View business profiles, galleries, and promotions
+- Read and view ratings and reviews
+- Explore tourist spots with detailed information
+- Search and filter businesses by category
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### For Customers (Registered Users)
+- Create and manage user profiles
+- Add items to cart and place orders
+- Rate and review businesses, products, and attractions
+- Like and comment on businesses and tourist spots
+- Track order history and status
+- Direct messaging with business owners
+- Submit feedback
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### For Business Owners
+- Register and set up business profiles (Shop, Hotel, or Resort)
+- Upload business documents for verification
+- Manage product inventory and pricing
+- Add and manage rooms/cottages
+- Upload gallery images and promotions
+- Process customer orders
+- Update order status
+- Communicate with customers
+- View business analytics
 
-## Learning Laravel
+### For Administrators
+- Approve/decline business registrations
+- Manage user accounts
+- Upload and manage tourist spots
+- Moderate content
+- Archive/restore users
+- View system-wide analytics
+- Manage hotels, resorts, and attractions
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Technology Stack
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Framework:** Laravel 11
+- **PHP:** ^8.1
+- **Database:** SQLite (configurable to MySQL/PostgreSQL)
+- **Frontend:** Blade Templates, Vite
+- **Authentication:** Laravel built-in authentication
+- **Additional Packages:**
+  - doctrine/dbal - Database abstraction layer
+  - laravel/tinker - REPL for Laravel
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Requirements
 
-## Laravel Sponsors
+- PHP >= 8.1
+- Composer
+- Node.js & NPM
+- SQLite (or MySQL/PostgreSQL)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Installation
 
-### Premium Partners
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/pagsuronglag.git
+   cd pagsuronglag
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
+
+3. **Install Node dependencies**
+   ```bash
+   npm install
+   ```
+
+4. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+5. **Configure your database**
+   - Edit `.env` file with your database credentials
+   - Default is SQLite (no additional configuration needed)
+
+6. **Run migrations**
+   ```bash
+   php artisan migrate
+   ```
+
+7. **Create storage link**
+   ```bash
+   php artisan storage:link
+   ```
+
+8. **Build assets**
+   ```bash
+   npm run build
+   ```
+
+9. **Start the development server**
+   ```bash
+   php artisan serve
+   ```
+
+   Visit `http://localhost:8000` in your browser.
+
+## Development
+
+For development with hot module replacement:
+
+```bash
+npm run dev
+```
+
+In a separate terminal:
+```bash
+php artisan serve
+```
+
+## User Roles
+
+The system supports three user roles:
+
+1. **Customer** - Regular users who can browse and purchase
+2. **Business Owner** - Manage business profiles and products
+3. **Admin** - Full system administration access
+
+## Key Modules
+
+- **Authentication & Authorization** - Role-based access control
+- **Business Management** - Profile setup, product/room management
+- **Order Management** - Cart, checkout, order tracking
+- **Rating & Review System** - Unified rating system for all entities
+- **Messaging System** - Direct communication between users
+- **Admin Panel** - Business approvals, user management, content moderation
+- **Tourism Module** - Hotels, resorts, tourist spots showcase
+
+## Database Schema
+
+The system uses the following main tables:
+- `users` - User accounts
+- `businesses` - Business profiles
+- `products` - Shop products
+- `hotel_rooms` - Hotel room listings
+- `resort_rooms` - Resort room listings
+- `cottages` - Resort cottages
+- `orders` - Customer orders
+- `tourist_spots` - Tourist attractions
+- `ratings` - Unified rating system
+- `comments` - User comments and reviews
+
+## Security
+
+- CSRF protection on all forms
+- Password hashing with bcrypt
+- Role-based middleware protection
+- File upload validation
+- SQL injection prevention via Eloquent ORM
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Support
+
+For support and questions, please open an issue in the GitHub repository.
+
+---
+
+Built with ❤️ for Lagonoy, Camarines Sur

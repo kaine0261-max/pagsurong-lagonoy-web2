@@ -18,6 +18,9 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
+    
     <style>
         html {
             scroll-behavior: smooth;
@@ -49,7 +52,7 @@
                 <span>Home</span>
             </a>
             <a href="{{ route('public.products') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('public.products') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Products</a>
-            <a href="{{ route('public.shops') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('public.shops') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Shops</a>
+            <a href="{{ route('public.shops') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('public.shops*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Shops</a>
             <a href="{{ route('public.hotels') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('public.hotels*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Hotels</a>
             <a href="{{ route('public.resorts') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('public.resorts*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Resorts</a>
             <a href="{{ route('public.attractions') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('public.attractions*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Attractions</a>
@@ -177,15 +180,6 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="remember" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                                <span class="ml-2 text-sm text-gray-600">Remember me</span>
-                            </label>
-                            <a href="{{ route('password.request') }}" class="text-sm text-green-600 hover:text-green-500">
-                                Forgot password?
-                            </a>
-                        </div>
 
                         <button type="submit" 
                                 class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
@@ -567,7 +561,17 @@
 
         function logoutUser(event) {
             event.preventDefault();
+            document.getElementById('logoutModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function confirmLogout() {
             document.getElementById('logout-form').submit();
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
         }
 
         // Close modals when clicking outside
@@ -626,8 +630,36 @@
                 closeLoginModal();
                 closeRegisterModal();
                 closeAuthPrompt();
+                closeLogoutModal();
             }
         });
-    </script>
+</script>
+
+<!-- Logout Confirmation Modal -->
+<div id="logoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg max-w-md w-full p-6 relative my-8">
+            <div class="text-center mb-6">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                    <i class="fas fa-sign-out-alt text-red-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Confirm Logout</h3>
+                <p class="text-sm text-gray-600">Are you sure you want to logout?</p>
+            </div>
+
+            <div class="flex space-x-3">
+                <button onclick="closeLogoutModal()" 
+                        class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                    Cancel
+                </button>
+                <button onclick="confirmLogout()" 
+                        class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
