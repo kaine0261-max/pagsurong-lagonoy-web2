@@ -62,8 +62,8 @@ A comprehensive web-based platform for promoting tourism and managing businesses
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/pagsuronglag.git
-   cd pagsuronglag
+   git clone https://github.com/kaine0261-max/pagsurong-lagonoy-web2.git
+   cd pagsurong-lagonoy-web2
    ```
 
 2. **Install PHP dependencies**

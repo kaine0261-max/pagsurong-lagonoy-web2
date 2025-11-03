@@ -6,7 +6,7 @@ This guide will help you deploy the Pagsurong Lagonoy Tourism & Business Managem
 
 - Git installed on your system
 - GitHub account
-- Access to the repository: https://github.com/kaine0261-max/Pagsurong-Lagonoy-website
+- Access to the repository: https://github.com/kaine0261-max/pagsurong-lagonoy-web2
 
 ## Upload to GitHub
 
@@ -47,7 +47,7 @@ If this is your first push or you encounter authentication issues:
 ### Step 3: Verify Upload
 
 Visit your repository on GitHub:
-https://github.com/kaine0261-max/Pagsurong-Lagonoy-website
+https://github.com/kaine0261-max/pagsurong-lagonoy-web2
 
 You should see all your files uploaded.
 
@@ -119,8 +119,8 @@ The following files are intentionally excluded from version control (via `.gitig
 2. **Clone Repository**
    ```bash
    cd /var/www
-   git clone https://github.com/kaine0261-max/Pagsurong-Lagonoy-website.git
-   cd Pagsurong-Lagonoy-website
+   git clone https://github.com/kaine0261-max/pagsurong-lagonoy-web2.git
+   cd pagsurong-lagonoy-web2
    ```
 
 3. **Install Dependencies**
@@ -148,7 +148,7 @@ The following files are intentionally excluded from version control (via `.gitig
    server {
        listen 80;
        server_name yourdomain.com;
-       root /var/www/Pagsurong-Lagonoy-website/public;
+       root /var/www/pagsurong-lagonoy-web2/public;
 
        add_header X-Frame-Options "SAMEORIGIN";
        add_header X-Content-Type-Options "nosniff";
