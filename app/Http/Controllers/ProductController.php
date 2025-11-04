@@ -178,7 +178,7 @@ class ProductController extends Controller
             'stock_limit' => 'required|integer|min:0',
             'current_stock' => 'required|integer|min:0',
             'flavors' => 'nullable|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
         // Ensure current stock doesn't exceed stock limit
@@ -240,7 +240,7 @@ class ProductController extends Controller
             'stock_limit' => 'required|integer|min:0',
             'current_stock' => 'required|integer|min:0|max:' . $request->stock_limit,
             'flavors' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg',
         ]);
 
         // Ensure current stock doesn't exceed stock limit

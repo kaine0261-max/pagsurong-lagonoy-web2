@@ -1,10 +1,10 @@
 @extends(auth()->user()->role === 'business_owner' ? 'layouts.app' : 'layouts.customer')
 
 @section('content')
-<div class="container mx-auto max-w-3xl">
+<div class="flex flex-col h-screen md:h-auto md:container md:mx-auto md:max-w-3xl">
     <!-- Chat Header -->
-    <div class="bg-white shadow rounded-t-lg p-4 flex items-center">
-        <a href="{{ url()->previous() }}" class="text-green-600 hover:text-green-700 mr-3">
+    <div class="bg-white shadow md:rounded-t-lg p-4 flex items-center flex-shrink-0">
+        <a href="{{ auth()->user()->role === 'business_owner' ? route('messages.index') : route('customer.messages') }}" class="text-green-600 hover:text-green-700 mr-3">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div class="flex items-center">
@@ -30,8 +30,8 @@
         </div>
     </div>
 
-    <!-- Messages -->
-    <div class="bg-gray-100 p-4 h-[60vh] overflow-y-auto space-y-3" id="messages-container">
+    <!-- Messages Container - Flexible height with proper spacing for mobile -->
+    <div class="bg-gray-100 p-4 flex-1 overflow-y-auto space-y-3 pb-4 md:pb-0" id="messages-container" style="padding-bottom: 80px;">
         @forelse($messages as $msg)
             <div class="flex {{ $msg->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }}">
                 <div class="max-w-xs px-4 py-2 rounded-lg 
@@ -55,8 +55,8 @@
         @endforelse
     </div>
 
-    <!-- Send Form -->
-    <form action="{{ route('messages.send') }}" method="POST" class="bg-white p-3 flex items-center space-x-2 border-t">
+    <!-- Send Form - Fixed at bottom on mobile, normal on desktop -->
+    <form action="{{ route('messages.send') }}" method="POST" class="bg-white p-3 flex items-center space-x-2 border-t flex-shrink-0 fixed md:relative bottom-0 left-0 right-0 z-40 md:bottom-auto">
         @csrf
         <input type="hidden" name="receiver_id" value="{{ $user->id }}">
         <textarea 
@@ -66,7 +66,7 @@
             placeholder="Type a message..."
             required
             autofocus></textarea>
-        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full transition-colors">
+        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full transition-colors flex-shrink-0">
             <i class="fas fa-paper-plane mr-1"></i>Send
         </button>
     </form>
@@ -79,4 +79,16 @@ document.addEventListener('DOMContentLoaded', () => {
     container.scrollTop = container.scrollHeight;
 });
 </script>
+
+<style>
+    /* Ensure proper spacing on mobile to prevent bottom nav overlap */
+    @media (max-width: 768px) {
+        body {
+            padding-bottom: 0;
+        }
+        #messages-container {
+            margin-bottom: 70px; /* Space for fixed input form + bottom nav */
+        }
+    }
+</style>
 @endsection

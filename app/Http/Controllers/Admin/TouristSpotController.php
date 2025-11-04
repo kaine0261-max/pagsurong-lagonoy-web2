@@ -25,11 +25,11 @@ class TouristSpotController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'profile_avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'location' => 'nullable|string|max:255',
             'additional_info' => 'nullable|string',
-            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif'
         ]);
 
         $data = $request->all();
@@ -63,7 +63,7 @@ class TouristSpotController extends Controller
     public function uploadGallery(Request $request)
     {
         $request->validate([
-            'gallery_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+            'gallery_images.*' => 'image|mimes:jpeg,png,jpg,gif'
         ]);
 
         $uploadedFiles = [];
@@ -93,11 +93,11 @@ class TouristSpotController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'profile_avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'location' => 'nullable|string|max:255',
             'additional_info' => 'nullable|string',
-            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif'
         ]);
 
         $data = $request->all();

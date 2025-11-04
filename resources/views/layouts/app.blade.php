@@ -206,6 +206,7 @@
                             </a>
                         @endif
                         
+                        <!-- Orders - Show for all business types -->
                         @if($bizProfile && $bizProfile->business_type === 'shop')
                         <a href="{{ route('business.orders') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('business.orders') ? 'text-green-500' : '' }}">
                             <div class="relative">
@@ -220,7 +221,7 @@
                         </a>
                         @endif
                         
-                        @if($bizProfile && $bizProfile->business_type === 'shop')
+                        <!-- Messages - Show for all business types -->
                         <a href="{{ route('messages.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('messages.*') ? 'text-green-500' : '' }}">
                             <div class="relative">
                                 <i class="fas fa-envelope text-xl mb-1"></i>
@@ -232,7 +233,6 @@
                             </div>
                             <span class="text-[10px] leading-tight">Messages</span>
                         </a>
-                        @endif
                         
                         <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
                             @if($user->profile && $user->profile->profile_picture)

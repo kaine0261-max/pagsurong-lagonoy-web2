@@ -21,7 +21,7 @@ class RoomController extends Controller
             'price_per_night' => 'required|numeric|min:0',
             'capacity' => 'required|integer|min:1',
             'beds' => 'nullable|string',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:5120',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif',
         ]);
 
         $room = new Room();
@@ -89,7 +89,7 @@ class RoomController extends Controller
             'price_per_night' => 'required|numeric|min:0',
             'capacity' => 'required|integer|min:1',
             'is_available' => 'boolean',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:5120',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif',
         ]);
 
         $room->update([
