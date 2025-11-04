@@ -51,50 +51,51 @@
 <body class="font-roboto text-gray-800 leading-relaxed">
 
     <!-- Fixed Header -->
-    <header class="py-4 px-4 md:px-10 flex flex-col md:flex-row justify-between items-center shadow-sm fixed top-0 left-0 right-0 z-50 text-white" style="background-color: #064e3b;">
-        <!-- Left Side - Main Branding -->
-        <div class="flex items-center mb-4 md:mb-0">
+    <header class="py-2 md:py-4 px-2 sm:px-3 md:px-10 flex flex-col md:flex-row justify-between items-center shadow-sm fixed top-0 left-0 right-0 z-50 text-white" style="background-color: #064e3b;">
+        <!-- Left Side - Main Branding (Hidden on Mobile) -->
+        <div class="hidden md:flex items-center">
             <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3">
             <div class="font-playfair text-2xl font-bold text-white">Pagsurong Lagonoy</div>
         </div>
         
         <!-- Center - Navigation -->
-        <nav class="flex flex-wrap justify-center mb-4 md:mb-0">
-            <a href="#home" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('home') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Home</a>
-            <a href="{{ route('public.products') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Products</a>
-            <a href="{{ route('public.shops') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Shops</a>
-            <a href="{{ route('public.hotels') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Hotels</a>
-            <a href="{{ route('public.resorts') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Resorts</a>
-            <a href="{{ route('public.attractions') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Attractions</a>
+        <nav class="flex flex-wrap justify-center mb-0 gap-1 sm:gap-2">
+            <!-- Home with Logo (Mobile Only) -->
+            <a href="{{ route('home') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 flex items-center {{ request()->routeIs('home') ? 'text-green-200 border-b-2 border-green-200' : '' }}">
+                <img src="{{ asset('logo.png') }}" alt="Logo" class="w-5 h-5 sm:w-6 sm:h-6 mr-1 sm:mr-1.5 md:hidden">
+                <span>Home</span>
+            </a>
+            <a href="{{ route('public.products') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('public.products') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Products</a>
+            <a href="{{ route('public.shops') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('public.shops*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Shops</a>
+            <a href="{{ route('public.hotels') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('public.hotels*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Hotels</a>
+            <a href="{{ route('public.resorts') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('public.resorts*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Resorts</a>
+            <a href="{{ route('public.attractions') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('public.attractions*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Attractions</a>
             @auth
                 @php
                     $user = auth()->user();
                 @endphp
                 @if($user->role === 'customer')
-                    <a href="{{ route('customer.dashboard') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Dashboard</a>
+                    <a href="{{ route('customer.dashboard') }}" class="mx-2 md:mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Dashboard</a>
                 @elseif($user->role === 'business_owner')
-                    <a href="{{ route('dashboard') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Business Dashboard</a>
+                    <a href="{{ route('dashboard') }}" class="mx-2 md:mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Business Dashboard</a>
                 @elseif($user->role === 'admin')
-                    <a href="{{ route('admin.dashboard') }}" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Admin Dashboard</a>
+                    <a href="{{ route('admin.dashboard') }}" class="mx-2 md:mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200 transition-colors duration-200">Admin Dashboard</a>
                 @endif
-                <a href="#" onclick="logoutUser(event)" class="mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200">Logout</a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                    @csrf
-                </form>
+                <a href="#" onclick="logoutUser(event)" class="mx-2 md:mx-3 my-1 md:my-0 text-white font-medium text-sm md:text-base hover:text-green-200">Logout</a>
             @endauth
         </nav>
         
-        <!-- Right Side - Government Logos -->
-        <div class="flex items-center space-x-2">
-            <img src="{{ asset('Municipal Seal of Lagonoy.png') }}" alt="Municipal Seal of Lagonoy" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
-            <img src="{{ asset('bagong-pilipinas-logo.png') }}" alt="Bagong Pilipinas Logo" class="w-8 h-8 md:w-10 md:h-10 object-contain drop-shadow-sm">
-            <img src="{{ asset('Provincial Logo of Camarines Sur.png') }}" alt="Provincial Logo of Camarines Sur" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
-            <img src="{{ asset('Department of Tourism (DOT) Philippines Logo.png') }}" alt="Department of Tourism Philippines" class="w-8 h-8 md:w-10 md:h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
+        <!-- Right Side - Government Logos (Hidden on Mobile) -->
+        <div class="hidden md:flex items-center space-x-2">
+            <img src="{{ asset('Municipal Seal of Lagonoy.png') }}" alt="Municipal Seal of Lagonoy" class="w-10 h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
+            <img src="{{ asset('bagong-pilipinas-logo.png') }}" alt="Bagong Pilipinas Logo" class="w-10 h-10 object-contain drop-shadow-sm">
+            <img src="{{ asset('Provincial Logo of Camarines Sur.png') }}" alt="Provincial Logo of Camarines Sur" class="w-10 h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
+            <img src="{{ asset('Department of Tourism (DOT) Philippines Logo.png') }}" alt="Department of Tourism Philippines" class="w-10 h-10 object-cover rounded-full border-2 border-white drop-shadow-sm">
         </div>
     </header>
 
     <!-- HOME SECTION -->
-    <section id="home" class="pt-20">
+    <section id="home" class="pt-12 md:pt-16">
         <!-- Hero Banner with Split Layout -->
         <div class="relative h-[70vh] min-h-[500px] flex">
             <!-- Combined Background with Seamless Green to Plaza Transition -->
@@ -199,29 +200,38 @@
     <!-- Footer -->
     <footer style="background-color: #064e3b;" class="text-white py-10">
         <div class="max-w-6xl mx-auto px-5">
+            <!-- Logo and Description -->
+            <div class="flex items-center mb-6">
+                <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3">
+                <h3 class="text-xl font-playfair font-bold">Pagsurong Lagonoy</h3>
+            </div>
+            <p class="text-gray-300 mb-6">
+                Discover the beauty and culture of Lagonoy through our local businesses, attractions, and warm hospitality.
+            </p>
+            
+            <!-- Government Logos -->
+            <div class="flex items-center space-x-4 mb-8">
+                <img src="{{ asset('Municipal Seal of Lagonoy.png') }}" alt="Municipal Seal of Lagonoy" class="w-12 h-12 object-cover rounded-full border-2 border-white">
+                <img src="{{ asset('bagong-pilipinas-logo.png') }}" alt="Bagong Pilipinas Logo" class="w-12 h-12 object-contain">
+                <img src="{{ asset('Provincial Logo of Camarines Sur.png') }}" alt="Provincial Logo of Camarines Sur" class="w-12 h-12 object-cover rounded-full border-2 border-white">
+                <img src="{{ asset('Department of Tourism (DOT) Philippines Logo.png') }}" alt="Department of Tourism Philippines" class="w-12 h-12 object-cover rounded-full border-2 border-white">
+            </div>
+            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="text-xl font-playfair font-bold mb-4">Pagsurong Lagonoy</h3>
-                    <p class="text-gray-300">
-                        Showcasing the best of Lagonoy's local products, accommodations, and tourist destinations.
-                    </p>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <div class="space-y-2">
+                        <a href="#" class="block text-gray-300 hover:text-white transition-colors">About Us</a>
+                        <a href="#" class="block text-gray-300 hover:text-white transition-colors">Contact Us</a>
+                    </div>
                 </div>
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors duration-200">
-                            <i class="fab fa-instagram"></i>
-                        </a>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <div class="space-y-2 text-gray-300">
+                        <p><i class="fas fa-phone mr-2"></i>+63 123 456 7890</p>
+                        <p><i class="fas fa-envelope mr-2"></i>info@pagsuronglagonoy.com</p>
+                        <p><i class="fas fa-map-marker-alt mr-2"></i>Lagonoy, Camarines Sur</p>
                     </div>
-                    <p class="mt-4 text-gray-300">
-                        Email: info@pagsuronglagonoy.com
-                    </p>
                 </div>
             </div>
             <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400 text-sm">

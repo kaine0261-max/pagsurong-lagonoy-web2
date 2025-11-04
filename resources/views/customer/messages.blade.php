@@ -3,16 +3,16 @@
 @section('title', 'Messages')
 
 @section('content')
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-gray-50 messages-page">
     <!-- Header -->
-    <div class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white shadow-sm messages-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
             <div class="text-center">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                    <i class="fas fa-envelope mr-3 text-green-600"></i>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-envelope mr-2 md:mr-3 text-green-600"></i>
                     Messages
                 </h1>
-                <p class="text-gray-600 max-w-2xl mx-auto">
+                <p class="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
                     Chat with business owners about your orders
                 </p>
             </div>
@@ -79,4 +79,45 @@
         @endif
     </div>
 </div>
+
+<style>
+    /* Mobile-specific styles for messages page */
+    @media (max-width: 768px) {
+        /* Hide top header on mobile */
+        .messages-page header {
+            display: none !important;
+        }
+        
+        /* Adjust page layout for mobile */
+        .messages-page {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+        
+        /* Adjust messages header positioning */
+        .messages-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+        }
+        
+        .messages-header h1,
+        .messages-header p {
+            color: white;
+        }
+        
+        .messages-header i {
+            color: #d1fae5;
+        }
+        
+        /* Add padding to content to account for fixed header */
+        .messages-page > div:last-child {
+            padding-top: 140px;
+            padding-bottom: 80px;
+        }
+    }
+</style>
 @endsection

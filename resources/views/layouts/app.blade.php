@@ -180,6 +180,12 @@
                         $bizProfile = $user->businessProfile;
                         $isApproved = $bizProfile && ($bizProfile->status === 'approved');
                         $isPublished = $bizProfile && ($bizProfile->is_published ?? false);
+                        // Check if on messages page - use multiple methods to be sure
+                        $isOnMessagesPage = request()->routeIs('messages.*') 
+                            || request()->routeIs('business.messages')
+                            || request()->is('business/messages')
+                            || request()->is('business/messages/*')
+                            || str_contains(request()->path(), 'messages');
                         // Fix: Get pending orders count from the business relationship, not businessProfile
                         $pendingOrdersCount = 0;
                         if ($user->business) {
@@ -187,8 +193,8 @@
                         }
                     @endphp
                     
-                    @if($isApproved || $isPublished)
-                        <!-- Business Owner Mobile Navigation - When Business is Approved/Published -->
+                    @if($isApproved || $isPublished || $isOnMessagesPage)
+                        <!-- Business Owner Mobile Navigation - When Business is Approved/Published OR on Messages Page -->
                         @if($bizProfile && $bizProfile->business_type === 'resort')
                             <a href="{{ route('business.my-resort') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs('business.my-resort') ? 'text-green-500' : '' }}">
                                 <i class="fas fa-umbrella-beach text-xl mb-1"></i>
@@ -207,7 +213,7 @@
                         @endif
                         
                         <!-- Orders - Show for shops (not hotels/resorts) -->
-                        @if($bizProfile && !in_array($bizProfile->business_type, ['hotel', 'resort']))
+                        @if(!$bizProfile || !in_array($bizProfile->business_type, ['hotel', 'resort']))
                         <a href="{{ route('business.orders') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('business.orders') ? 'text-green-500' : '' }}">
                             <div class="relative">
                                 <i class="fas fa-shopping-bag text-xl mb-1"></i>
@@ -222,7 +228,7 @@
                         @endif
                         
                         <!-- Messages - Show for all business types -->
-                        <a href="{{ route('messages.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('messages.*') ? 'text-green-500' : '' }}">
+                        <a href="{{ route('business.messages') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('business.messages') || request()->is('business/messages*') ? 'text-green-500' : '' }}">
                             <div class="relative">
                                 <i class="fas fa-envelope text-xl mb-1"></i>
                                 @if($unreadMessages)
@@ -396,15 +402,15 @@
                         </a>
                         @endif
                         
-                        <a href="{{ route('messages.index') }}" 
-                           class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('messages.*') ? 'font-semibold' : '' }}">
+                        <a href="{{ route('business.messages') }}" 
+                           class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.messages') || request()->is('business/messages*') ? 'font-semibold' : '' }}">
                             <i class="fas fa-envelope mr-1"></i> Messages
                             @if($unreadMessages > 0)
                                 <span class="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
                                     {{ $unreadMessages }}
                                 </span>
                             @endif
-                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('messages.*') ? 'w-full' : '' }}"></span>
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.messages') || request()->is('business/messages*') ? 'w-full' : '' }}"></span>
                         </a>
                         
                     @else
@@ -844,7 +850,7 @@
 
 
     <!-- Logout Confirmation Modal -->
-    <div id="logoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 overflow-y-auto">
+    <div id="logoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-[80] overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="bg-white rounded-lg max-w-md w-full p-6 relative my-8">
                 <div class="text-center mb-6">
@@ -957,13 +963,13 @@
     @auth
         @if((auth()->user()->role === 'customer' && auth()->user()->hasCompletedProfile()) || (auth()->user()->role === 'business_owner' && auth()->user()->businessProfile))
             <!-- Overlay -->
-            <div id="mobileProfileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" onclick="closeMobileProfileSidebar()"></div>
+            <div id="mobileProfileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden md:hidden" onclick="closeMobileProfileSidebar()"></div>
             
             <!-- Sidebar -->
-            <div id="mobileProfileSidebar" class="fixed top-0 right-0 h-full w-80 bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 md:hidden">
+            <div id="mobileProfileSidebar" class="fixed top-0 right-0 h-full w-80 bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-[70] md:hidden">
                 <div class="flex flex-col h-full">
                     <!-- Header -->
-                    <div class="bg-green-700 text-white p-6">
+                    <div class="text-white p-6" style="background-color: #064e3b;">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="font-semibold text-lg">Profile</h3>
                             <button onclick="closeMobileProfileSidebar()" class="text-white hover:text-green-200 transition-colors">
@@ -998,18 +1004,15 @@
                                 <i class="fas fa-user mr-4 text-green-600 w-5"></i>
                                 <span class="font-medium">My Profile</span>
                             </a>
-                            <a href="{{ route('customer.orders') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-shopping-bag mr-4 text-green-600 w-5"></i>
-                                <span class="font-medium">My Orders</span>
-                            </a>
-                            <a href="{{ route('customer.messages') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-envelope mr-4 text-green-600 w-5"></i>
-                                <span class="font-medium">Messages</span>
-                            </a>
-                            <a href="{{ route('customer.cart') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-shopping-cart mr-4 text-green-600 w-5"></i>
-                                <span class="font-medium">My Cart</span>
-                            </a>
+
+                            <form method="POST" action="{{ route('logout') }}" id="logout-form-mobile-sidebar-customer" class="hidden">
+                                @csrf
+                            </form>
+                            <button type="button" onclick="confirmLogout('mobile-sidebar-customer')" 
+                                    class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors w-full text-left">
+                                <i class="fas fa-sign-out-alt mr-4 text-green-600 w-5"></i>
+                                <span class="font-medium">Logout</span>
+                            </button>
                         @else
                             <!-- Business Owner Menu Items -->
                             <a href="{{ route('profile.show') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
@@ -1017,48 +1020,20 @@
                                 <span class="font-medium">My Profile</span>
                             </a>
 
-                            @if($user->businessProfile && $user->businessProfile->business_type === 'resort')
-                                <a href="{{ route('business.my-resort') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                    <i class="fas fa-umbrella-beach mr-4 text-green-600 w-5"></i>
-                                    <span class="font-medium">My Resort</span>
-                                </a>
-                            @elseif($user->businessProfile && $user->businessProfile->business_type === 'hotel')
-                                <a href="{{ route('business.my-hotel') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                    <i class="fas fa-hotel mr-4 text-green-600 w-5"></i>
-                                    <span class="font-medium">My Hotel</span>
-                                </a>
-                            @else
-                                <a href="{{ route('business.my-shop') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                    <i class="fas fa-store mr-4 text-green-600 w-5"></i>
-                                    <span class="font-medium">My Shop</span>
-                                </a>
-                            @endif
-
-                            <a href="{{ route('messages.index') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-envelope mr-4 text-green-600 w-5"></i>
-                                <span class="font-medium">Messages</span>
-                            </a>
-
-                            @if($user->businessProfile && $user->businessProfile->business_type === 'shop')
-                            <a href="{{ route('business.orders') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-shopping-bag mr-4 text-green-600 w-5"></i>
-                                <span class="font-medium">Orders</span>
-                            </a>
-                            @endif
+                            <form method="POST" action="{{ route('logout') }}" id="logout-form-mobile-sidebar" class="hidden">
+                                @csrf
+                            </form>
+                            <button type="button" onclick="confirmLogout('mobile-sidebar')" 
+                                    class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors w-full text-left">
+                                <i class="fas fa-sign-out-alt mr-4 text-green-600 w-5"></i>
+                                <span class="font-medium">Logout</span>
+                            </button>
                         @endif
 
                     </div>
                     
-                    <!-- Logout Button -->
-                    <div class="border-t border-gray-200 p-4">
-                        <form method="POST" action="{{ route('logout') }}" id="logout-form-mobile-sidebar" class="hidden">
-                            @csrf
-                        </form>
-                        <button type="button" onclick="confirmLogout('mobile-sidebar')" 
-                                class="w-full flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                            <i class="fas fa-sign-out-alt mr-4 w-5"></i>
-                            <span class="font-medium">Logout</span>
-                        </button>
+                    <!-- Empty footer space -->
+                    <div class="p-4">
                     </div>
                 </div>
             </div>

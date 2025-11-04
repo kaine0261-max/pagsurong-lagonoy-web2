@@ -5,7 +5,7 @@
 <div class="message-layout">
     <!-- 1. Fixed Header - Top -->
     <div class="message-header">
-        <a href="{{ auth()->user()->role === 'business_owner' ? route('messages.index') : route('customer.messages') }}" class="text-white hover:text-green-200 mr-3">
+        <a href="javascript:history.back()" class="text-white hover:text-green-200 mr-3">
             <i class="fas fa-arrow-left text-xl"></i>
         </a>
         <div class="flex items-center flex-1">
@@ -34,23 +34,48 @@
     <!-- 2. Scrollable Messages - Middle -->
     <div class="message-content" id="messages-container">
         @forelse($messages as $msg)
-            <div class="flex {{ $msg->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }} mb-3">
-                <div class="max-w-[75%] px-4 py-2 rounded-2xl shadow-sm
-                    {{ $msg->sender_id == auth()->id() ? 'bg-green-600 text-white rounded-br-sm' : 'bg-white border border-gray-200 rounded-bl-sm' }}">
-                    <div class="break-words text-sm">{!! nl2br(e($msg->content)) !!}</div>
-
-                    @if($msg->order)
-                        <div class="mt-2 text-xs italic border-t pt-1 
-                            {{ $msg->sender_id == auth()->id() ? 'border-green-400 text-green-100' : 'border-gray-200 text-gray-600' }}">
-                            🔗 Refers to Order #{{ $msg->order->id }}
+            @if($msg->order)
+                <!-- Order Card Message -->
+                <div class="flex {{ $msg->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }} mb-4">
+                    <div class="max-w-[85%] bg-green-600 text-white rounded-lg shadow-md p-4">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-receipt mr-2"></i>
+                            <span class="font-semibold">New Order #{{ $msg->order->id }}</span>
                         </div>
-                    @endif
-
-                    <div class="text-xs opacity-70 mt-1">
-                        {{ $msg->created_at->format('g:i A') }}
+                        <div class="text-sm space-y-1">
+                            <p><strong>Customer:</strong> {{ $msg->order->customer->name ?? 'N/A' }}</p>
+                            <p><strong>Pickup Time:</strong> {{ $msg->order->pickup_time ?? 'N/A' }}</p>
+                            <div class="mt-2">
+                                <p class="font-semibold">Order Details:</p>
+                                @if($msg->order->orderItems && $msg->order->orderItems->count() > 0)
+                                    @foreach($msg->order->orderItems as $item)
+                                        <p>• {{ $item->product->name ?? 'Product' }} x {{ $item->quantity }} = ₱{{ number_format($item->price * $item->quantity, 2) }}</p>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <p class="mt-2"><strong>Total:</strong> ₱{{ number_format($msg->order->total_amount, 2) }}</p>
+                        </div>
+                        <div class="text-xs opacity-80 mt-2 pt-2 border-t border-green-400 flex items-center">
+                            <i class="fas fa-link mr-1"></i>
+                            Refers to Order #{{ $msg->order->id }}
+                        </div>
+                        <div class="text-xs opacity-70 mt-1">
+                            {{ $msg->created_at->format('g:i A') }}
+                        </div>
                     </div>
                 </div>
-            </div>
+            @else
+                <!-- Regular Text Message -->
+                <div class="flex {{ $msg->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }} mb-3">
+                    <div class="max-w-[75%] px-4 py-2 rounded-2xl shadow-sm
+                        {{ $msg->sender_id == auth()->id() ? 'bg-green-600 text-white rounded-br-sm' : 'bg-white border border-gray-200 rounded-bl-sm' }}">
+                        <div class="break-words text-sm">{!! nl2br(e($msg->content)) !!}</div>
+                        <div class="text-xs opacity-70 mt-1">
+                            {{ $msg->created_at->format('g:i A') }}
+                        </div>
+                    </div>
+                </div>
+            @endif
         @empty
             <div class="text-center py-12">
                 <i class="fas fa-comments text-gray-300 text-5xl mb-3"></i>
@@ -107,28 +132,43 @@ document.addEventListener('DOMContentLoaded', () => {
     
     /* Mobile Layout */
     @media (max-width: 768px) {
+        /* Hide top header on mobile for full-screen messaging */
+        header {
+            display: none !important;
+        }
+        
+        /* Hide bottom navigation bar on mobile */
+        nav[class*="bottom"],
+        .fixed.bottom-0,
+        [class*="mobile-nav"],
+        footer {
+            display: none !important;
+        }
+        
         body {
             overflow: hidden;
         }
         
         .message-layout {
             position: fixed;
-            top: 104px;
+            top: 0;
             left: 0;
             right: 0;
-            bottom: 70px;
+            bottom: 0;
             display: flex;
             flex-direction: column;
             background: white;
+            z-index: 50;
         }
         
         .message-header {
             background-color: #065f46;
-            padding: 12px;
+            padding: 16px 12px;
             display: flex;
             align-items: center;
             flex-shrink: 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 64px;
         }
         
         .message-content {
@@ -137,19 +177,37 @@ document.addEventListener('DOMContentLoaded', () => {
             overflow-x: hidden;
             background-color: #f9fafb;
             padding: 16px;
-            padding-bottom: 16px;
+            padding-bottom: 80px;
             -webkit-overflow-scrolling: touch;
         }
         
         .message-input {
-            background: white;
-            padding: 12px;
+            background: #ffffff !important;
+            background-color: #ffffff !important;
+            padding: 12px 16px;
+            padding-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             border-top: 1px solid #e5e7eb;
             flex-shrink: 0;
-            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            min-height: 60px;
+            opacity: 1 !important;
+        }
+        
+        .message-input textarea {
+            max-height: 100px;
+        }
+        
+        .message-input button {
+            width: 44px;
+            height: 44px;
         }
     }
     
@@ -162,7 +220,9 @@ document.addEventListener('DOMContentLoaded', () => {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            height: 600px;
+            height: calc(100vh - 200px);
+            min-height: 500px;
+            max-height: 700px;
             background: white;
             overflow: hidden;
         }
@@ -181,17 +241,19 @@ document.addEventListener('DOMContentLoaded', () => {
             overflow-y: auto;
             background-color: #f9fafb;
             padding: 20px;
+            padding-bottom: 20px;
         }
         
         .message-input {
             background: white;
             padding: 16px;
-            display: flex;
+            display: flex !important;
             align-items: center;
             gap: 12px;
             border-top: 1px solid #e5e7eb;
             flex-shrink: 0;
             border-radius: 0 0 0.5rem 0.5rem;
+            min-height: 70px;
         }
     }
     

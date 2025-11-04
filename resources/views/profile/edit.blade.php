@@ -1,11 +1,11 @@
-@extends('layouts.app')
+@extends(auth()->user()->role === 'business_owner' ? 'layouts.app' : 'layouts.customer')
 
 @section('title', 'Edit Profile - Pagsurong Lagonoy')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-4 md:py-12">
+<div class="min-h-screen bg-gray-50 pt-2 pb-20 md:py-8">
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-white rounded-lg shadow-lg p-8">
+        <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-serif font-bold text-gray-800 mb-2">Edit Profile</h1>
                 <p class="text-gray-600">Update your profile information</p>
@@ -215,7 +215,7 @@
                 <!-- Submit Button -->
                 <div class="pt-6 flex space-x-4">
                     <button type="submit" 
-                            class="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
+                            class="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200">
                         Update Profile
                     </button>
                     <a href="{{ route('profile.show') }}" 

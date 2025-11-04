@@ -3,10 +3,26 @@
 @section('title', 'Messages')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Messages</h1>
-        <p class="text-gray-600">Chat with business owners about your orders</p>
+@php
+    $user = auth()->user();
+    // Always hide nav for business owners on messages page
+    $shouldHideNav = $user->role === 'business_owner';
+@endphp
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 messages-page" data-hide-nav="{{ $shouldHideNav ? 'true' : 'false' }}">
+    <!-- Header -->
+    <div class="bg-white shadow-sm messages-header mb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+            <div class="text-center">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-envelope mr-2 md:mr-3 text-green-600"></i>
+                    Messages
+                </h1>
+                <p class="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
+                    Chat with your customers about their orders
+                </p>
+            </div>
+        </div>
     </div>
 
     @if($threads->count() > 0)
@@ -87,4 +103,35 @@
         </div>
     @endif
 </div>
+
+<style>
+    /* Mobile-specific styles for business messages page */
+    @media (max-width: 768px) {
+        /* Keep the top green bar visible, just hide the messages header */
+        .messages-page .messages-header {
+            display: none !important;
+        }
+        
+        /* Adjust page layout for mobile */
+        .messages-page {
+            padding: 0 !important;
+            margin: 0 !important;
+            padding-bottom: 80px !important;
+            max-width: 100% !important;
+        }
+        
+        /* Adjust message list container */
+        .messages-page > div {
+            margin: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+        
+        /* Style message items for better mobile appearance */
+        .messages-page ul li {
+            border-left: none !important;
+            border-right: none !important;
+        }
+    }
+</style>
 @endsection

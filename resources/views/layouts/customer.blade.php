@@ -498,23 +498,6 @@
                         <span class="ml-3 font-medium">My Profile</span>
                     </a>
                     
-                    <a href="{{ route('customer.orders') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors" onclick="closeMobileProfileSidebar()">
-                        <i class="fas fa-shopping-bag w-6 text-green-600"></i>
-                        <span class="ml-3 font-medium">My Orders</span>
-                    </a>
-                    
-                    <a href="{{ route('customer.messages') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors" onclick="closeMobileProfileSidebar()">
-                        <i class="fas fa-envelope w-6 text-green-600"></i>
-                        <span class="ml-3 font-medium">Messages</span>
-                    </a>
-                    
-                    <a href="{{ route('customer.cart') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors" onclick="closeMobileProfileSidebar()">
-                        <i class="fas fa-shopping-cart w-6 text-green-600"></i>
-                        <span class="ml-3 font-medium">My Cart</span>
-                    </a>
-                    
-                    <div class="border-t border-gray-200 my-2"></div>
-                    
                     <a href="#" onclick="logoutUser(event)" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
                         <i class="fas fa-sign-out-alt w-6 text-green-600"></i>
                         <span class="ml-3 font-medium">Logout</span>
