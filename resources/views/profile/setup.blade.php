@@ -57,7 +57,7 @@
                                 </div>
 
                                 <!-- Hidden File Input -->
-                                <input type="file" id="profile_picture" name="profile_picture" accept="image/jpeg,image/jpg,image/png" capture="environment" class="hidden" onchange="handleFileSelect(event)">
+                                <input type="file" id="profile_picture" name="profile_picture" accept="image/jpeg,image/jpg,image/png" class="hidden" onchange="handleFileSelect(event)">
                             </div>
 
                             <!-- Upload Instructions -->

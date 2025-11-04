@@ -83,7 +83,7 @@
                 <div class="rounded-md shadow-sm -space-y-px">
                     <div class="avatar-box flex flex-col items-center mb-6">
                         
-                        <input type="file" name="avatar" accept="image/jpeg,image/jpg,image/png" capture="environment" onchange="previewFile(this)" class="text-sm" />
+                        <input type="file" name="avatar" accept="image/jpeg,image/jpg,image/png" onchange="previewFile(this)" class="text-sm" />
                     </div>
 
                     <div class="py-2">

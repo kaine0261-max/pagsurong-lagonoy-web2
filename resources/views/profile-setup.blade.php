@@ -83,7 +83,7 @@
                 <div class="rounded-md shadow-sm -space-y-px">
                     <div class="avatar-box flex flex-col items-center mb-6">
                         <img id="preview" class="avatar-preview w-24 h-24 rounded-full object-cover border-2 border-green-500 mb-2" src="{{ asset('uploads/default.png') }}" alt="avatar" />
-                        <input type="file" name="avatar" accept="image/jpeg,image/jpg,image/png" capture="environment" onchange="previewFile(this)" class="text-sm" />
+                        <input type="file" name="avatar" accept="image/jpeg,image/jpg,image/png" onchange="previewFile(this)" class="text-sm" />
                     </div>
 
                     <div class="py-2">
