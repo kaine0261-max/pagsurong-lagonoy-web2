@@ -137,7 +137,7 @@
                         <!-- Upload Instructions -->
                         <div class="mt-4 text-center">
                             <p class="text-sm text-gray-600 mb-2">Click to upload or drag and drop</p>
-                            <p class="text-xs text-gray-500">PNG, JPG up to 2MB</p>
+                            <p class="text-xs text-gray-500">PNG, JPG up to 5MB</p>
                         </div>
 
                         <!-- Progress Bar -->
@@ -320,23 +320,36 @@
 
     // Validate and preview file
     function validateAndPreviewFile(file) {
-        const maxSize = 2 * 1024 * 1024; // 2MB
+        const maxSize = 5 * 1024 * 1024; // 5MB (increased for mobile photos)
         const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
         // Clear previous errors
         hideError();
 
-        // Validate file type
-        if (!allowedTypes.includes(file.type)) {
+        // Check if file exists
+        if (!file) {
+            showError('No file selected');
+            return;
+        }
+
+        // Validate file type (more lenient check for mobile)
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        const validExtensions = ['jpg', 'jpeg', 'png'];
+        
+        if (!allowedTypes.includes(file.type) && !validExtensions.includes(fileExtension)) {
             showError('Please select a valid image file (PNG, JPG, JPEG)');
+            console.log('Invalid file type:', file.type, 'Extension:', fileExtension);
             return;
         }
 
         // Validate file size
         if (file.size > maxSize) {
-            showError('File size must be less than 2MB');
+            showError('File size must be less than 5MB');
+            console.log('File too large:', (file.size / 1024 / 1024).toFixed(2) + 'MB');
             return;
         }
+
+        console.log('File validated successfully:', file.name, (file.size / 1024).toFixed(2) + 'KB');
 
         selectedFile = file;
         previewFile(file);
