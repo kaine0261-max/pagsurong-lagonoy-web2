@@ -952,26 +952,27 @@
             <div id="mobileProfileSidebar" class="fixed top-0 right-0 h-full w-80 bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-50 md:hidden">
                 <div class="flex flex-col h-full">
                     <!-- Header -->
-                    <div class="bg-green-600 text-white p-6">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                @if(auth()->user()->profile && auth()->user()->profile->profile_picture)
-                                    <img src="{{ Storage::url(auth()->user()->profile->profile_picture) }}" 
-                                         alt="Profile" 
-                                         class="w-12 h-12 rounded-full object-cover border-2 border-white">
-                                @else
-                                    <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-white text-lg font-semibold">
-                                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                                    </div>
-                                @endif
-                                <div>
-                                    <h3 class="font-semibold text-lg">{{ auth()->user()->name }}</h3>
-                                    <p class="text-blue-100 text-sm">{{ auth()->user()->email }}</p>
-                                </div>
-                            </div>
-                            <button onclick="closeMobileProfileSidebar()" class="text-white hover:text-blue-200 transition-colors">
-                                <i class="fas fa-times text-xl"></i>
+                    <div class="bg-green-700 text-white p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold text-lg">Profile</h3>
+                            <button onclick="closeMobileProfileSidebar()" class="text-white hover:text-green-200 transition-colors">
+                                <i class="fas fa-times text-2xl"></i>
                             </button>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            @if(auth()->user()->profile && auth()->user()->profile->profile_picture)
+                                <img src="{{ Storage::url(auth()->user()->profile->profile_picture) }}" 
+                                     alt="Profile" 
+                                     class="w-16 h-16 rounded-full object-cover border-2 border-white">
+                            @else
+                                <div class="w-16 h-16 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-white text-2xl font-semibold border-2 border-white">
+                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                </div>
+                            @endif
+                            <div>
+                                <h3 class="font-semibold text-lg">{{ auth()->user()->name }}</h3>
+                                <p class="text-green-100 text-sm">{{ auth()->user()->email }}</p>
+                            </div>
                         </div>
                     </div>
                     
@@ -983,54 +984,56 @@
 
                         @if($user->role === 'customer')
                             <a href="{{ route('profile.show') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-user mr-4 text-blue-600 w-5"></i>
+                                <i class="fas fa-user mr-4 text-green-600 w-5"></i>
                                 <span class="font-medium">My Profile</span>
                             </a>
                             <a href="{{ route('customer.orders') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-shopping-bag mr-4 text-blue-600 w-5"></i>
+                                <i class="fas fa-shopping-bag mr-4 text-green-600 w-5"></i>
                                 <span class="font-medium">My Orders</span>
                             </a>
                             <a href="{{ route('customer.messages') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-envelope mr-4 text-blue-600 w-5"></i>
+                                <i class="fas fa-envelope mr-4 text-green-600 w-5"></i>
                                 <span class="font-medium">Messages</span>
+                            </a>
+                            <a href="{{ route('customer.cart') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="fas fa-shopping-cart mr-4 text-green-600 w-5"></i>
+                                <span class="font-medium">My Cart</span>
                             </a>
                         @else
                             <!-- Business Owner Menu Items -->
                             <a href="{{ route('profile.show') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-user mr-4 text-blue-600 w-5"></i>
+                                <i class="fas fa-user mr-4 text-green-600 w-5"></i>
                                 <span class="font-medium">My Profile</span>
                             </a>
 
                             @if($user->businessProfile && $user->businessProfile->business_type === 'resort')
                                 <a href="{{ route('business.my-resort') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                    <i class="fas fa-umbrella-beach mr-4 text-blue-600 w-5"></i>
+                                    <i class="fas fa-umbrella-beach mr-4 text-green-600 w-5"></i>
                                     <span class="font-medium">My Resort</span>
                                 </a>
                             @elseif($user->businessProfile && $user->businessProfile->business_type === 'hotel')
                                 <a href="{{ route('business.my-hotel') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                    <i class="fas fa-hotel mr-4 text-blue-600 w-5"></i>
+                                    <i class="fas fa-hotel mr-4 text-green-600 w-5"></i>
                                     <span class="font-medium">My Hotel</span>
                                 </a>
                             @else
                                 <a href="{{ route('business.my-shop') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                    <i class="fas fa-store mr-4 text-blue-600 w-5"></i>
+                                    <i class="fas fa-store mr-4 text-green-600 w-5"></i>
                                     <span class="font-medium">My Shop</span>
                                 </a>
                             @endif
 
-                            <hr class="my-2 border-gray-200">
+                            <a href="{{ route('messages.index') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="fas fa-envelope mr-4 text-green-600 w-5"></i>
+                                <span class="font-medium">Messages</span>
+                            </a>
 
                             @if($user->businessProfile && $user->businessProfile->business_type === 'shop')
                             <a href="{{ route('business.orders') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-shopping-bag mr-4 text-blue-600 w-5"></i>
+                                <i class="fas fa-shopping-bag mr-4 text-green-600 w-5"></i>
                                 <span class="font-medium">Orders</span>
                             </a>
                             @endif
-
-                            <a href="{{ route('messages.index') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-envelope mr-4 text-blue-600 w-5"></i>
-                                <span class="font-medium">Messages</span>
-                            </a>
                         @endif
 
                     </div>

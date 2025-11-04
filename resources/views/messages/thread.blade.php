@@ -112,14 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         .message-layout {
             position: fixed;
-            top: 0;
+            top: 104px; /* Below nav */
             left: 0;
             right: 0;
-            bottom: 70px; /* Above bottom nav */
+            bottom: 0; /* Full height */
             display: flex;
             flex-direction: column;
             background: white;
-            padding-top: 104px; /* Space for nav */
         }
         
         /* 1. Fixed Header at top */
@@ -140,19 +139,24 @@ document.addEventListener('DOMContentLoaded', () => {
             overflow-x: hidden;
             background-color: #f9fafb; /* gray-50 */
             padding: 16px;
+            padding-bottom: 80px; /* Space for input */
             -webkit-overflow-scrolling: touch;
         }
         
-        /* 3. Fixed input at bottom */
+        /* 3. Fixed input at bottom - above bottom nav */
         .message-input {
+            position: fixed;
+            bottom: 70px; /* Above bottom nav */
+            left: 0;
+            right: 0;
             background: white;
             padding: 12px;
             display: flex;
             align-items: center;
             gap: 8px;
             border-top: 1px solid #e5e7eb;
-            flex-shrink: 0;
             box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+            z-index: 20;
         }
     }
     
