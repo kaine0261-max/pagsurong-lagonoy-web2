@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     @media (max-width: 768px) {
         .message-layout {
             position: fixed;
-            top: 56px; /* Below main nav */
+            top: 104px; /* Below main nav (2 rows: 48px + 56px) */
             left: 0;
             right: 0;
             bottom: 70px; /* Above bottom nav */
