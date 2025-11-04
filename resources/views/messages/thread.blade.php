@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         /* 3. Fixed input at bottom - above bottom nav */
         .message-input {
-            position: absolute;
+            position: fixed;
             bottom: 70px; /* Above bottom nav */
             left: 0;
             right: 0;
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gap: 8px;
             border-top: 1px solid #e5e7eb;
             box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
-            z-index: 20;
+            z-index: 30;
         }
     }
     

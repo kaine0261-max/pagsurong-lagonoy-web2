@@ -206,8 +206,8 @@
                             </a>
                         @endif
                         
-                        <!-- Orders - Show for shops only, positioned before Messages -->
-                        @if($bizProfile && $bizProfile->business_type === 'shop')
+                        <!-- Orders - Show for shops (not hotels/resorts) -->
+                        @if($bizProfile && !in_array($bizProfile->business_type, ['hotel', 'resort']))
                         <a href="{{ route('business.orders') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('business.orders') ? 'text-green-500' : '' }}">
                             <div class="relative">
                                 <i class="fas fa-shopping-bag text-xl mb-1"></i>
