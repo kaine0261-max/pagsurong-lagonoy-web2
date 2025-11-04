@@ -111,15 +111,21 @@ document.addEventListener('DOMContentLoaded', () => {
             padding-top: 0 !important;
         }
         
+        /* Remove any padding/margin from main content */
+        #main-content {
+            padding-top: 0 !important;
+        }
+        
         .message-layout {
             position: fixed;
-            top: 104px; /* Below nav (48px + 56px) */
+            top: 104px; /* Below nav (48px logo + 56px categories) */
             left: 0;
             right: 0;
-            bottom: 70px; /* Above bottom nav */
+            bottom: 0; /* Go to screen bottom */
             display: flex;
             flex-direction: column;
             background: white;
+            padding-bottom: 70px; /* Space for bottom nav */
         }
         
         /* 1. Fixed Header at top */
@@ -140,14 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
             overflow-x: hidden;
             background-color: #f9fafb; /* gray-50 */
             padding: 16px;
-            padding-bottom: 70px; /* Space for input form */
+            padding-bottom: 80px; /* Space for input form */
             -webkit-overflow-scrolling: touch;
         }
         
-        /* 3. Fixed input at bottom - inside layout container */
+        /* 3. Fixed input at bottom - above bottom nav */
         .message-input {
             position: absolute;
-            bottom: 0;
+            bottom: 70px; /* Above bottom nav */
             left: 0;
             right: 0;
             background: white;
@@ -172,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
             display: flex;
             flex-direction: column;
             height: 600px;
+            position: relative;
         }
         
         .message-header {
@@ -187,9 +194,14 @@ document.addEventListener('DOMContentLoaded', () => {
             overflow-y: auto;
             background-color: #f9fafb;
             padding: 16px;
+            padding-bottom: 80px; /* Space for input */
         }
         
         .message-input {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
             background: white;
             padding: 12px;
             display: flex;
@@ -197,6 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gap: 8px;
             border-top: 1px solid #e5e7eb;
             flex-shrink: 0;
+            border-radius: 0 0 0.5rem 0.5rem;
         }
     }
     
