@@ -1,10 +1,10 @@
 @extends(auth()->user()->role === 'business_owner' ? 'layouts.app' : 'layouts.customer')
 
 @section('content')
-<!-- Messenger-style messaging layout -->
-<div class="flex flex-col bg-white" style="height: calc(100vh - 56px - 70px); margin-top: -1rem;">
-    <!-- Fixed Chat Header - directly under nav bar -->
-    <div class="bg-green-800 shadow-sm p-3 flex items-center flex-shrink-0 sticky top-0 z-40">
+<!-- Messenger-style messaging layout - Fixed 3-part structure -->
+<div class="message-layout">
+    <!-- 1. Fixed Header - Top -->
+    <div class="message-header">
         <a href="{{ auth()->user()->role === 'business_owner' ? route('messages.index') : route('customer.messages') }}" class="text-white hover:text-green-200 mr-3">
             <i class="fas fa-arrow-left text-xl"></i>
         </a>
@@ -31,10 +31,10 @@
         </div>
     </div>
 
-    <!-- Messages Container - Scrollable area -->
-    <div class="flex-1 overflow-y-auto bg-gray-50 p-4 space-y-3 pb-20" id="messages-container">
+    <!-- 2. Scrollable Messages - Middle -->
+    <div class="message-content" id="messages-container">
         @forelse($messages as $msg)
-            <div class="flex {{ $msg->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }}">
+            <div class="flex {{ $msg->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }} mb-3">
                 <div class="max-w-[75%] px-4 py-2 rounded-2xl shadow-sm
                     {{ $msg->sender_id == auth()->id() ? 'bg-green-600 text-white rounded-br-sm' : 'bg-white border border-gray-200 rounded-bl-sm' }}">
                     <div class="break-words text-sm">{!! nl2br(e($msg->content)) !!}</div>
@@ -59,8 +59,8 @@
         @endforelse
     </div>
 
-    <!-- Fixed Send Form - stays at bottom above bottom nav -->
-    <form action="{{ route('messages.send') }}" method="POST" class="bg-white p-3 flex items-center space-x-2 border-t border-gray-200 flex-shrink-0 fixed bottom-0 left-0 right-0 z-50" style="bottom: 70px;">
+    <!-- 3. Fixed Input Form - Bottom -->
+    <form action="{{ route('messages.send') }}" method="POST" class="message-input">
         @csrf
         <input type="hidden" name="receiver_id" value="{{ $user->id }}">
         <textarea 
@@ -98,40 +98,95 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <style>
-    /* Mobile-specific styles */
+    /* Remove padding from main content container */
+    #main-content {
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+    
+    /* Mobile Layout - 3 fixed sections */
     @media (max-width: 768px) {
-        /* Remove any default margins/padding */
-        body {
-            margin: 0;
-            padding: 0;
+        .message-layout {
+            position: fixed;
+            top: 56px; /* Below main nav */
+            left: 0;
+            right: 0;
+            bottom: 70px; /* Above bottom nav */
+            display: flex;
+            flex-direction: column;
+            background: white;
         }
         
-        /* Messages container takes remaining space */
-        #messages-container {
+        /* 1. Fixed Header at top */
+        .message-header {
+            background-color: #065f46; /* green-800 */
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        
+        /* 2. Scrollable content in middle */
+        .message-content {
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
+            background-color: #f9fafb; /* gray-50 */
+            padding: 16px;
             -webkit-overflow-scrolling: touch;
+        }
+        
+        /* 3. Fixed input at bottom */
+        .message-input {
+            background: white;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-top: 1px solid #e5e7eb;
+            flex-shrink: 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
         }
     }
     
-    /* Desktop styles */
+    /* Desktop Layout */
     @media (min-width: 769px) {
-        .flex.flex-col {
-            height: auto !important;
-            margin-top: 1rem !important;
+        .message-layout {
+            max-width: 48rem;
+            margin: 1rem auto;
             border-radius: 0.5rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
         }
         
-        #messages-container {
-            min-height: 500px;
-            max-height: 600px;
+        .message-header {
+            background-color: #065f46;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
         }
         
-        form[action*="messages.send"] {
-            position: relative !important;
-            bottom: 0 !important;
-            border-radius: 0 0 0.5rem 0.5rem;
+        .message-content {
+            flex: 1;
+            overflow-y: auto;
+            background-color: #f9fafb;
+            padding: 16px;
+        }
+        
+        .message-input {
+            background: white;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-top: 1px solid #e5e7eb;
+            flex-shrink: 0;
         }
     }
     
@@ -147,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    #messages-container > div {
+    .message-content > div {
         animation: slideIn 0.3s ease-out;
     }
 </style>
