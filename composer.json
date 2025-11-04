@@ -6,7 +6,9 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.2",
+        "cloudinary-labs/cloudinary-laravel": "*",
+        "cloudinary/cloudinary_php": "*",
         "doctrine/dbal": "^4.3",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.10.1"
