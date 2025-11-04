@@ -2,9 +2,9 @@
 
 @section('content')
 <!-- Messenger-style messaging layout -->
-<div class="flex flex-col h-screen md:h-auto md:container md:mx-auto md:max-w-3xl md:mt-4 md:rounded-lg md:shadow-lg bg-white">
+<div class="flex flex-col bg-white" style="height: calc(100vh - 56px - 70px); margin-top: -1rem;">
     <!-- Fixed Chat Header - directly under nav bar -->
-    <div class="bg-green-800 shadow-sm p-4 flex items-center flex-shrink-0 sticky top-0 z-40 md:rounded-t-lg">
+    <div class="bg-green-800 shadow-sm p-3 flex items-center flex-shrink-0 sticky top-0 z-40">
         <a href="{{ auth()->user()->role === 'business_owner' ? route('messages.index') : route('customer.messages') }}" class="text-white hover:text-green-200 mr-3">
             <i class="fas fa-arrow-left text-xl"></i>
         </a>
@@ -32,7 +32,7 @@
     </div>
 
     <!-- Messages Container - Scrollable area -->
-    <div class="flex-1 overflow-y-auto bg-gray-50 p-4 space-y-3" id="messages-container">
+    <div class="flex-1 overflow-y-auto bg-gray-50 p-4 space-y-3 pb-20" id="messages-container">
         @forelse($messages as $msg)
             <div class="flex {{ $msg->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }}">
                 <div class="max-w-[75%] px-4 py-2 rounded-2xl shadow-sm
@@ -59,8 +59,8 @@
         @endforelse
     </div>
 
-    <!-- Fixed Send Form - stays at bottom -->
-    <form action="{{ route('messages.send') }}" method="POST" class="bg-white p-3 flex items-center space-x-2 border-t border-gray-200 flex-shrink-0 md:rounded-b-lg">
+    <!-- Fixed Send Form - stays at bottom above bottom nav -->
+    <form action="{{ route('messages.send') }}" method="POST" class="bg-white p-3 flex items-center space-x-2 border-t border-gray-200 flex-shrink-0 fixed bottom-0 left-0 right-0 z-50" style="bottom: 70px;">
         @csrf
         <input type="hidden" name="receiver_id" value="{{ $user->id }}">
         <textarea 
@@ -70,7 +70,7 @@
             class="flex-1 bg-gray-100 border-0 rounded-full px-4 py-2 resize-none focus:outline-none focus:bg-gray-200 text-sm"
             placeholder="Type a message..."
             required></textarea>
-        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white w-10 h-10 rounded-full transition-colors flex items-center justify-center flex-shrink-0">
+        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white w-10 h-10 rounded-full transition-colors flex items-center justify-center flex-shrink-0 shadow-md">
             <i class="fas fa-paper-plane text-sm"></i>
         </button>
     </form>
@@ -100,15 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
 <style>
     /* Mobile-specific styles */
     @media (max-width: 768px) {
-        /* Ensure full-screen messaging on mobile */
-        .flex.flex-col.h-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding-top: 56px; /* Space for main nav */
-            padding-bottom: 70px; /* Space for bottom nav */
+        /* Remove any default margins/padding */
+        body {
+            margin: 0;
+            padding: 0;
         }
         
         /* Messages container takes remaining space */
@@ -117,19 +112,15 @@ document.addEventListener('DOMContentLoaded', () => {
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
-        
-        /* Sticky header stays below main nav */
-        .sticky.top-0 {
-            top: 56px !important;
-        }
     }
     
     /* Desktop styles */
     @media (min-width: 769px) {
-        .flex.flex-col.h-screen {
-            position: relative !important;
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
+        .flex.flex-col {
+            height: auto !important;
+            margin-top: 1rem !important;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
         
         #messages-container {
@@ -137,8 +128,10 @@ document.addEventListener('DOMContentLoaded', () => {
             max-height: 600px;
         }
         
-        .sticky.top-0 {
-            top: 0 !important;
+        form[action*="messages.send"] {
+            position: relative !important;
+            bottom: 0 !important;
+            border-radius: 0 0 0.5rem 0.5rem;
         }
     }
     
