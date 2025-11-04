@@ -2,9 +2,9 @@
 
 @section('content')
 <!-- Mobile-optimized messaging layout -->
-<div class="fixed inset-0 md:relative md:container md:mx-auto md:max-w-3xl md:mt-4 flex flex-col bg-white" style="top: 0; z-index: 30;">
-    <!-- Fixed Chat Header - stays at top on mobile -->
-    <div class="bg-white shadow-md p-4 flex items-center flex-shrink-0 fixed md:relative top-0 left-0 right-0 z-50 md:rounded-t-lg border-b md:border-0" style="background-color: #064e3b;">
+<div class="fixed inset-0 md:relative md:container md:mx-auto md:max-w-3xl md:mt-4 flex flex-col bg-white md:rounded-lg md:shadow-lg">
+    <!-- Fixed Chat Header - stays at top on mobile, below main nav -->
+    <div class="bg-white shadow-md p-4 flex items-center flex-shrink-0 fixed md:relative left-0 right-0 z-40 md:rounded-t-lg border-b md:border-0" style="top: 120px; background-color: #064e3b;">
         <a href="{{ auth()->user()->role === 'business_owner' ? route('messages.index') : route('customer.messages') }}" class="text-white hover:text-green-200 mr-3">
             <i class="fas fa-arrow-left text-xl"></i>
         </a>
@@ -32,7 +32,7 @@
     </div>
 
     <!-- Messages Container - Scrollable area between fixed header and input -->
-    <div class="flex-1 overflow-y-auto bg-gray-100 p-4 space-y-3" id="messages-container" style="margin-top: 72px; margin-bottom: 140px;">
+    <div class="flex-1 overflow-y-auto bg-gray-100 p-4 space-y-3" id="messages-container">
         @forelse($messages as $msg)
             <div class="flex {{ $msg->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }}">
                 <div class="max-w-xs px-4 py-2 rounded-lg shadow-sm
@@ -60,7 +60,7 @@
     </div>
 
     <!-- Fixed Send Form - stays at bottom above bottom nav -->
-    <form action="{{ route('messages.send') }}" method="POST" class="bg-white p-3 flex items-center space-x-2 border-t shadow-lg flex-shrink-0 fixed md:relative bottom-0 left-0 right-0 z-40" style="bottom: 70px; md:bottom: 0;">
+    <form action="{{ route('messages.send') }}" method="POST" class="bg-white p-3 flex items-center space-x-2 border-t shadow-lg flex-shrink-0 fixed md:relative left-0 right-0 z-40 md:rounded-b-lg">
         @csrf
         <input type="hidden" name="receiver_id" value="{{ $user->id }}">
         <textarea 
@@ -105,22 +105,35 @@ document.addEventListener('DOMContentLoaded', () => {
             overflow: hidden;
         }
         
-        /* Ensure messages container takes full height */
+        /* Position messages container below header and above input */
         #messages-container {
-            height: calc(100vh - 72px - 140px); /* viewport - header - (input + bottom nav) */
+            position: fixed;
+            top: 192px; /* Below main nav (120px) + chat header (72px) */
+            bottom: 140px; /* Above input form (70px) + bottom nav (70px) */
+            left: 0;
+            right: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        
+        /* Position input form above bottom nav */
+        form[action*="messages.send"] {
+            bottom: 70px !important; /* Above bottom nav */
         }
     }
     
     /* Desktop styles */
     @media (min-width: 769px) {
         #messages-container {
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
+            position: relative !important;
+            top: auto !important;
+            bottom: auto !important;
             min-height: 500px;
             max-height: 600px;
         }
         
         form[action*="messages.send"] {
+            position: relative !important;
             bottom: 0 !important;
         }
     }
