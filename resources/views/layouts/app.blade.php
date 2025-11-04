@@ -383,7 +383,7 @@
                             </a>
                         @endif
                         
-                        @if($bizProfile && $bizProfile->business_type === 'shop')
+                        @if($bizProfile && !in_array($bizProfile->business_type, ['hotel', 'resort']))
                         <a href="{{ route('business.orders') }}" 
                            class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.orders') ? 'font-semibold' : '' }}">
                             <i class="fas fa-shopping-bag mr-1"></i> Orders
@@ -395,6 +395,17 @@
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.orders') ? 'w-full' : '' }}"></span>
                         </a>
                         @endif
+                        
+                        <a href="{{ route('messages.index') }}" 
+                           class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('messages.*') ? 'font-semibold' : '' }}">
+                            <i class="fas fa-envelope mr-1"></i> Messages
+                            @if($unreadMessages > 0)
+                                <span class="ml-1 bg-red-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
+                                    {{ $unreadMessages }}
+                                </span>
+                            @endif
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('messages.*') ? 'w-full' : '' }}"></span>
+                        </a>
                         
                     @else
                         <!-- Business Owner Nav - When Business Needs Setup/Approval -->

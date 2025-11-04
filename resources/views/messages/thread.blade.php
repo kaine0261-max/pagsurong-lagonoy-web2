@@ -98,87 +98,28 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <style>
-    /* Remove padding from main content container */
+    /* Reset main content padding */
     #main-content {
         padding: 0 !important;
         overflow: hidden !important;
-        margin-top: 0 !important;
+        margin: 0 !important;
     }
     
-    /* Mobile Layout - 3 fixed sections */
+    /* Mobile Layout */
     @media (max-width: 768px) {
         body {
-            padding-top: 0 !important;
-        }
-        
-        /* Remove any padding/margin from main content */
-        #main-content {
-            padding-top: 0 !important;
-        }
-        
-        .message-layout {
-            position: fixed;
-            top: 104px; /* Below nav (48px logo + 56px categories) */
-            left: 0;
-            right: 0;
-            bottom: 0; /* Go to screen bottom */
-            display: flex;
-            flex-direction: column;
-            background: white;
-            padding-bottom: 70px; /* Space for bottom nav */
-        }
-        
-        /* 1. Fixed Header at top */
-        .message-header {
-            background-color: #065f46; /* green-800 */
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 10;
-        }
-        
-        /* 2. Scrollable content in middle */
-        .message-content {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            background-color: #f9fafb; /* gray-50 */
-            padding: 16px;
-            padding-bottom: 80px; /* Space for input form */
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        /* 3. Fixed input at bottom - above bottom nav */
-        .message-input {
-            position: fixed;
-            bottom: 70px; /* Above bottom nav */
-            left: 0;
-            right: 0;
-            background: white;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-top: 1px solid #e5e7eb;
-            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
-            z-index: 30;
-        }
-    }
-    
-    /* Desktop Layout */
-    @media (min-width: 769px) {
-        .message-layout {
-            max-width: 48rem;
-            margin: 1rem auto;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+        }
+        
+        .message-layout {
+            position: fixed;
+            top: 104px;
+            left: 0;
+            right: 0;
+            bottom: 70px;
             display: flex;
             flex-direction: column;
-            height: 600px;
-            position: relative;
+            background: white;
         }
         
         .message-header {
@@ -187,26 +128,67 @@ document.addEventListener('DOMContentLoaded', () => {
             display: flex;
             align-items: center;
             flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .message-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background-color: #f9fafb;
+            padding: 16px;
+            padding-bottom: 16px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .message-input {
+            background: white;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-top: 1px solid #e5e7eb;
+            flex-shrink: 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+        }
+    }
+    
+    /* Desktop Layout */
+    @media (min-width: 769px) {
+        .message-layout {
+            max-width: 48rem;
+            margin: 2rem auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+            background: white;
+            overflow: hidden;
+        }
+        
+        .message-header {
+            background-color: #065f46;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            border-radius: 0.5rem 0.5rem 0 0;
         }
         
         .message-content {
             flex: 1;
             overflow-y: auto;
             background-color: #f9fafb;
-            padding: 16px;
-            padding-bottom: 80px; /* Space for input */
+            padding: 20px;
         }
         
         .message-input {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
             background: white;
-            padding: 12px;
+            padding: 16px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             border-top: 1px solid #e5e7eb;
             flex-shrink: 0;
             border-radius: 0 0 0.5rem 0.5rem;
