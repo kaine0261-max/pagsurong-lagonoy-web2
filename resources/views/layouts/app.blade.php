@@ -206,20 +206,7 @@
                             </a>
                         @endif
                         
-                        <!-- Messages - Show for all business types -->
-                        <a href="{{ route('messages.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('messages.*') ? 'text-green-500' : '' }}">
-                            <div class="relative">
-                                <i class="fas fa-envelope text-xl mb-1"></i>
-                                @if($unreadMessages)
-                                    <span class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                                        {{ $unreadMessages }}
-                                    </span>
-                                @endif
-                            </div>
-                            <span class="text-[10px] leading-tight">Messages</span>
-                        </a>
-                        
-                        <!-- Orders - Show for all business types -->
+                        <!-- Orders - Show for shops only, positioned before Messages -->
                         @if($bizProfile && $bizProfile->business_type === 'shop')
                         <a href="{{ route('business.orders') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('business.orders') ? 'text-green-500' : '' }}">
                             <div class="relative">
@@ -233,6 +220,19 @@
                             <span class="text-[10px] leading-tight">Orders</span>
                         </a>
                         @endif
+                        
+                        <!-- Messages - Show for all business types -->
+                        <a href="{{ route('messages.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('messages.*') ? 'text-green-500' : '' }}">
+                            <div class="relative">
+                                <i class="fas fa-envelope text-xl mb-1"></i>
+                                @if($unreadMessages)
+                                    <span class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                                        {{ $unreadMessages }}
+                                    </span>
+                                @endif
+                            </div>
+                            <span class="text-[10px] leading-tight">Messages</span>
+                        </a>
                         
                         <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
                             @if($user->profile && $user->profile->profile_picture)

@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     #main-content {
         padding: 0 !important;
         overflow: hidden !important;
+        margin-top: 0 !important;
     }
     
     /* Mobile Layout - 3 fixed sections */
@@ -112,10 +113,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         .message-layout {
             position: fixed;
-            top: 104px; /* Below nav */
+            top: 104px; /* Below nav (48px + 56px) */
             left: 0;
             right: 0;
-            bottom: 0; /* Full height */
+            bottom: 70px; /* Above bottom nav */
             display: flex;
             flex-direction: column;
             background: white;
@@ -139,14 +140,14 @@ document.addEventListener('DOMContentLoaded', () => {
             overflow-x: hidden;
             background-color: #f9fafb; /* gray-50 */
             padding: 16px;
-            padding-bottom: 80px; /* Space for input */
+            padding-bottom: 70px; /* Space for input form */
             -webkit-overflow-scrolling: touch;
         }
         
-        /* 3. Fixed input at bottom - above bottom nav */
+        /* 3. Fixed input at bottom - inside layout container */
         .message-input {
-            position: fixed;
-            bottom: 70px; /* Above bottom nav */
+            position: absolute;
+            bottom: 0;
             left: 0;
             right: 0;
             background: white;
