@@ -130,7 +130,8 @@
                         <input type="file" 
                                id="profile_avatar" 
                                name="profile_avatar" 
-                               accept="image/*"
+                               accept="image/jpeg,image/jpg,image/png"
+                               capture="environment"
                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                     </div>
 
@@ -140,7 +141,8 @@
                         <input type="file" 
                                id="cover_image" 
                                name="cover_image" 
-                               accept="image/*"
+                               accept="image/jpeg,image/jpg,image/png"
+                               capture="environment"
                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                     </div>
 
@@ -172,7 +174,8 @@
                                        id="gallery_images" 
                                        name="gallery_images[]" 
                                        multiple 
-                                       accept="image/*"
+                                       accept="image/jpeg,image/jpg,image/png"
+                               capture="environment"
                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                             </div>
                         </div>
@@ -239,13 +242,13 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Profile Avatar</label>
-                                    <input type="file" name="profile_avatar" accept="image/*"
+                                    <input type="file" name="profile_avatar" accept="image/jpeg,image/jpg,image/png" capture="environment"
                                            class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                                 </div>
                                 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Cover Image</label>
-                                    <input type="file" name="cover_image" accept="image/*"
+                                    <input type="file" name="cover_image" accept="image/jpeg,image/jpg,image/png" capture="environment"
                                            class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                                 </div>
                             </div>
@@ -254,7 +257,7 @@
                             <div class="border-t pt-4 mt-4 bg-gray-50 p-4 rounded-lg">
                                 <h4 class="text-md font-semibold text-gray-900 mb-3">📸 Gallery Images</h4>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Upload New Gallery Images</label>
-                                <input type="file" name="gallery_images[]" multiple accept="image/*"
+                                <input type="file" name="gallery_images[]" multiple accept="image/jpeg,image/jpg,image/png" capture="environment"
                                        class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                                 <p class="text-xs text-gray-500 mt-1">📌 Upload multiple images for the gallery. This will replace existing gallery images.</p>
                                 

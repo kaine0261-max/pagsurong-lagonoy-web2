@@ -30,7 +30,7 @@
         <!-- Cover Photo -->
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Cover Photo *</label>
-            <input type="file" name="cover_photo" accept="image/*" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            <input type="file" name="cover_photo" accept="image/jpeg,image/jpg,image/png" capture="environment" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
             <p class="text-xs text-gray-500 mt-1">This will be the main image shown in listings. Max: 2MB</p>
         </div>
 
@@ -72,7 +72,7 @@
         <!-- Additional Images -->
         <div>
             <label for="images" class="block text-sm font-medium text-gray-700">Additional Images (for gallery)</label>
-            <input type="file" name="gallery_images[]" id="images" multiple accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            <input type="file" name="gallery_images[]" id="images" multiple accept="image/jpeg,image/jpg,image/png" capture="environment" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
             <p class="text-xs text-gray-500 mt-1">You can upload multiple images. Max: 2MB per image.</p>
         </div>
 

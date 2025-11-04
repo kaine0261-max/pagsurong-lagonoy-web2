@@ -11,8 +11,8 @@
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 messages-page" data-hide-nav="{{ $shouldHideNav ? 'true' : 'false' }}">
     <!-- Header -->
-    <div class="bg-white shadow-sm messages-header mb-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+    <div class="bg-white shadow-sm messages-header mb-6 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                     <i class="fas fa-envelope mr-2 md:mr-3 text-green-600"></i>
@@ -107,9 +107,13 @@
 <style>
     /* Mobile-specific styles for business messages page */
     @media (max-width: 768px) {
-        /* Keep the top green bar visible, just hide the messages header */
+        /* Style the messages header for mobile */
         .messages-page .messages-header {
-            display: none !important;
+            background: white;
+            margin-bottom: 0 !important;
+            border-radius: 0 !important;
+            padding-top: 1.5rem !important;
+            padding-bottom: 1.5rem !important;
         }
         
         /* Adjust page layout for mobile */
@@ -121,7 +125,7 @@
         }
         
         /* Adjust message list container */
-        .messages-page > div {
+        .messages-page > div:not(.messages-header) {
             margin: 0 !important;
             border-radius: 0 !important;
             box-shadow: none !important;

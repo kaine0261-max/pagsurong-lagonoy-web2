@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Storage;
                 @csrf
                 <label class="bg-white bg-opacity-90 text-gray-700 px-4 py-2 rounded-lg hover:bg-opacity-100 transition-all duration-200 flex items-center text-sm font-medium cursor-pointer">
                     <i class="fas fa-camera mr-2"></i> Edit Cover Image
-                    <input type="file" name="cover_image" accept="image/*" class="hidden" onchange="this.form.submit()">
+                    <input type="file" name="cover_image" accept="image/jpeg,image/jpg,image/png" capture="environment" class="hidden" onchange="this.form.submit()">
                 </label>
             </form>
         </div>
@@ -59,7 +59,7 @@ use Illuminate\Support\Facades\Storage;
                                 <i class="fas fa-camera text-gray-600 text-sm"></i>
                             </div>
                         </div>
-                        <input type="file" id="profile-photo" class="hidden" accept="image/*" onchange="uploadBusinessProfilePhoto(this)">
+                        <input type="file" id="profile-photo" class="hidden" accept="image/jpeg,image/jpg,image/png" capture="environment" onchange="uploadBusinessProfilePhoto(this)">
 
                         <!-- Business Name -->
                         <h1 class="text-3xl font-bold text-gray-800 mt-4 mb-3">
@@ -409,7 +409,7 @@ use Illuminate\Support\Facades\Storage;
                                 <div class="flex text-sm text-gray-600 justify-center">
                                     <label for="image" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
                                         <span>Upload file</span>
-                                        <input id="image" name="image" type="file" class="sr-only" accept="image/*" onchange="previewProductImage(this)">
+                                        <input id="image" name="image" type="file" class="sr-only" accept="image/jpeg,image/jpg,image/png" capture="environment" onchange="previewProductImage(this)">
                                     </label>
                                     <p class="pl-1">or drag and drop</p>
                                 </div>
@@ -709,7 +709,8 @@ use Illuminate\Support\Facades\Storage;
                 <input type="file" 
                        name="images[]" 
                        multiple 
-                       accept="image/*"
+                       accept="image/jpeg,image/jpg,image/png"
+                       capture="environment"
                        onchange="previewGalleryImages(this)"
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                        required>

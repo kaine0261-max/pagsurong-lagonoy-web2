@@ -106,22 +106,6 @@
                     @enderror
                 </div>
 
-                <!-- Address -->
-                <div>
-                    <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
-                        Address <span class="text-red-500">*</span>
-                    </label>
-                    <textarea id="address" 
-                              name="address" 
-                              rows="3"
-                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              placeholder="Enter your complete address"
-                              required>{{ old('address', $profile->address) }}</textarea>
-                    @error('address')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
                 <!-- Bio -->
                 <div>
                     <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">
@@ -202,7 +186,8 @@
                             <input type="file" 
                                    id="profile_picture" 
                                    name="profile_picture"
-                                   accept="image/*"
+                                   accept="image/jpeg,image/jpg,image/png"
+                                   capture="environment"
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <p class="mt-1 text-sm text-gray-500">JPG, PNG or JPEG. Max 2MB.</p>
                         </div>

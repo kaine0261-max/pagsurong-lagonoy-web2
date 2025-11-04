@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Storage;
             @csrf
             <label class="bg-white bg-opacity-90 text-gray-700 px-4 py-2 rounded-lg hover:bg-opacity-100 transition-all duration-200 flex items-center text-sm font-medium cursor-pointer shadow-lg">
                 <i class="fas fa-camera mr-2"></i> Edit Cover Image
-                <input type="file" name="cover_image" accept="image/*" class="hidden" onchange="this.form.submit()">
+                <input type="file" name="cover_image" accept="image/jpeg,image/jpg,image/png" capture="environment" class="hidden" onchange="this.form.submit()">
             </label>
         </form>
     </div>
@@ -63,7 +63,7 @@ use Illuminate\Support\Facades\Storage;
                                 <i class="fas fa-camera text-green-600 text-sm"></i>
                             </div>
                         </div>
-                        <input type="file" id="profile-photo" class="hidden" accept="image/*" onchange="uploadProfilePhoto(this)">
+                        <input type="file" id="profile-photo" class="hidden" accept="image/jpeg,image/jpg,image/png" capture="environment" onchange="uploadProfilePhoto(this)">
 
                         <!-- Resort Name -->
                         <h1 class="text-3xl font-bold text-gray-800 mt-4 mb-3">
@@ -457,7 +457,7 @@ use Illuminate\Support\Facades\Storage;
                         
                         <div class="col-span-2">
                             <label for="images" class="block text-sm font-medium text-gray-700">Room Images</label>
-                            <input type="file" name="images[]" id="images" accept="image/*" multiple
+                            <input type="file" name="images[]" id="images" accept="image/jpeg,image/jpg,image/png" capture="environment" multiple
                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
                             <p class="mt-1 text-sm text-gray-500">Upload multiple images to showcase your room</p>
                             
@@ -552,7 +552,7 @@ use Illuminate\Support\Facades\Storage;
                         
                         <div class="col-span-2">
                             <label for="cottage_images" class="block text-sm font-medium text-gray-700">Cottage Images</label>
-                            <input type="file" name="images[]" id="cottage_images" accept="image/*" multiple
+                            <input type="file" name="image" id="promotion_image" accept="image/jpeg,image/jpg,image/png" capture="environment" multiple
                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
                             <p class="mt-1 text-sm text-gray-500">Upload multiple images to showcase your cottage</p>
                             
@@ -592,7 +592,7 @@ use Illuminate\Support\Facades\Storage;
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Upload Photos</label>
                     <div class="mt-2 flex items-center">
-                        <input type="file" name="images[]" id="galleryImages" multiple accept="image/*" class="hidden" onchange="previewGalleryImages(this)">
+                        <input type="file" name="images[]" id="galleryImages" multiple accept="image/jpeg,image/jpg,image/png" capture="environment" class="hidden" onchange="previewGalleryImages(this)">
                         <label for="galleryImages" class="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             <i class="fas fa-upload mr-2"></i> Select Files
                         </label>
