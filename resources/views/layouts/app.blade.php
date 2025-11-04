@@ -206,6 +206,19 @@
                             </a>
                         @endif
                         
+                        <!-- Messages - Show for all business types -->
+                        <a href="{{ route('messages.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('messages.*') ? 'text-green-500' : '' }}">
+                            <div class="relative">
+                                <i class="fas fa-envelope text-xl mb-1"></i>
+                                @if($unreadMessages)
+                                    <span class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                                        {{ $unreadMessages }}
+                                    </span>
+                                @endif
+                            </div>
+                            <span class="text-[10px] leading-tight">Messages</span>
+                        </a>
+                        
                         <!-- Orders - Show for all business types -->
                         @if($bizProfile && $bizProfile->business_type === 'shop')
                         <a href="{{ route('business.orders') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('business.orders') ? 'text-green-500' : '' }}">
@@ -220,19 +233,6 @@
                             <span class="text-[10px] leading-tight">Orders</span>
                         </a>
                         @endif
-                        
-                        <!-- Messages - Show for all business types -->
-                        <a href="{{ route('messages.index') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('messages.*') ? 'text-green-500' : '' }}">
-                            <div class="relative">
-                                <i class="fas fa-envelope text-xl mb-1"></i>
-                                @if($unreadMessages)
-                                    <span class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                                        {{ $unreadMessages }}
-                                    </span>
-                                @endif
-                            </div>
-                            <span class="text-[10px] leading-tight">Messages</span>
-                        </a>
                         
                         <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
                             @if($user->profile && $user->profile->profile_picture)
@@ -832,21 +832,65 @@
     </div>
 
 
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-md w-full p-6 relative my-8">
+                <div class="text-center mb-6">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                        <i class="fas fa-sign-out-alt text-red-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Confirm Logout</h3>
+                    <p class="text-sm text-gray-600">Are you sure you want to logout?</p>
+                </div>
+
+                <div class="flex space-x-3">
+                    <button onclick="closeLogoutModal()" 
+                            class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                        Cancel
+                    </button>
+                    <button onclick="confirmLogoutAction()" 
+                            class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script>
+        let currentLogoutType = 'desktop';
+        
         function confirmLogout(type = 'desktop') {
-            if (confirm('Are you sure you want to logout?')) {
-                let formId;
-                if (type === 'mobile') {
-                    formId = 'logout-form-mobile';
-                } else if (type === 'mobile-sidebar') {
-                    formId = 'logout-form-mobile-sidebar';
-                } else {
-                    formId = 'logout-form';
-                }
-                document.getElementById(formId).submit();
-            }
+            currentLogoutType = type;
+            document.getElementById('logoutModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
+        
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        
+        function confirmLogoutAction() {
+            let formId;
+            if (currentLogoutType === 'mobile') {
+                formId = 'logout-form-mobile';
+            } else if (currentLogoutType === 'mobile-sidebar') {
+                formId = 'logout-form-mobile-sidebar';
+            } else {
+                formId = 'logout-form';
+            }
+            document.getElementById(formId).submit();
+        }
+        
+        // Close modal on escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeLogoutModal();
+            }
+        });
     </script>
 
     @stack('scripts')

@@ -106,15 +106,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     /* Mobile Layout - 3 fixed sections */
     @media (max-width: 768px) {
+        body {
+            padding-top: 0 !important;
+        }
+        
         .message-layout {
             position: fixed;
-            top: 104px; /* Below main nav (2 rows: 48px + 56px) */
+            top: 0;
             left: 0;
             right: 0;
             bottom: 70px; /* Above bottom nav */
             display: flex;
             flex-direction: column;
             background: white;
+            padding-top: 104px; /* Space for nav */
         }
         
         /* 1. Fixed Header at top */
