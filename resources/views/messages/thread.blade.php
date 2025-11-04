@@ -1,20 +1,21 @@
 @extends(auth()->user()->role === 'business_owner' ? 'layouts.app' : 'layouts.customer')
 
 @section('content')
-<div class="flex flex-col h-screen md:h-auto md:container md:mx-auto md:max-w-3xl">
-    <!-- Chat Header -->
-    <div class="bg-white shadow md:rounded-t-lg p-4 flex items-center flex-shrink-0">
-        <a href="{{ auth()->user()->role === 'business_owner' ? route('messages.index') : route('customer.messages') }}" class="text-green-600 hover:text-green-700 mr-3">
-            <i class="fas fa-arrow-left"></i>
+<!-- Mobile-optimized messaging layout -->
+<div class="fixed inset-0 md:relative md:container md:mx-auto md:max-w-3xl md:mt-4 flex flex-col bg-white" style="top: 0; z-index: 30;">
+    <!-- Fixed Chat Header - stays at top on mobile -->
+    <div class="bg-white shadow-md p-4 flex items-center flex-shrink-0 fixed md:relative top-0 left-0 right-0 z-50 md:rounded-t-lg border-b md:border-0" style="background-color: #064e3b;">
+        <a href="{{ auth()->user()->role === 'business_owner' ? route('messages.index') : route('customer.messages') }}" class="text-white hover:text-green-200 mr-3">
+            <i class="fas fa-arrow-left text-xl"></i>
         </a>
         <div class="flex items-center">
-            <div class="w-10 h-10 rounded-full overflow-hidden">
+            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white">
                 @if($user->profile && $user->profile->profile_picture)
                     <img src="{{ asset('storage/' . $user->profile->profile_picture) }}"
                          alt="{{ $user->name }}"
                          class="h-full w-full object-cover">
                 @else
-                    <div class="h-full w-full bg-green-600 flex items-center justify-center">
+                    <div class="h-full w-full bg-green-400 flex items-center justify-center">
                         <span class="text-white font-bold">
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </span>
@@ -22,25 +23,25 @@
                 @endif
             </div>
             <div class="ml-3">
-                <h2 class="font-semibold text-lg">{{ $user->name }}</h2>
-                <p class="text-sm text-gray-500">
+                <h2 class="font-semibold text-lg text-white">{{ $user->name }}</h2>
+                <p class="text-xs text-green-200">
                     {{ ucfirst(str_replace('_', ' ', $user->role ?? '')) }}
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- Messages Container - Flexible height with proper spacing for mobile -->
-    <div class="bg-gray-100 p-4 flex-1 overflow-y-auto space-y-3 pb-4 md:pb-0" id="messages-container" style="padding-bottom: 80px;">
+    <!-- Messages Container - Scrollable area between fixed header and input -->
+    <div class="flex-1 overflow-y-auto bg-gray-100 p-4 space-y-3" id="messages-container" style="margin-top: 72px; margin-bottom: 140px;">
         @forelse($messages as $msg)
             <div class="flex {{ $msg->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }}">
-                <div class="max-w-xs px-4 py-2 rounded-lg 
+                <div class="max-w-xs px-4 py-2 rounded-lg shadow-sm
                     {{ $msg->sender_id == auth()->id() ? 'bg-green-600 text-white' : 'bg-white border' }}">
-                    <div>{!! nl2br(e($msg->content)) !!}</div>
+                    <div class="break-words">{!! nl2br(e($msg->content)) !!}</div>
 
                     @if($msg->order)
                         <div class="mt-2 text-xs italic border-t pt-1 
-                            {{ $msg->sender_id == auth()->id() ? 'text-green-100' : 'text-gray-600' }}">
+                            {{ $msg->sender_id == auth()->id() ? 'border-green-400 text-green-100' : 'text-gray-600' }}">
                             🔗 Refers to Order #{{ $msg->order->id }}
                         </div>
                     @endif
@@ -51,43 +52,76 @@
                 </div>
             </div>
         @empty
-            <p class="text-gray-500 text-center py-4">Start the conversation!</p>
+            <div class="text-center py-8">
+                <i class="fas fa-comments text-gray-300 text-4xl mb-3"></i>
+                <p class="text-gray-500">Start the conversation!</p>
+            </div>
         @endforelse
     </div>
 
-    <!-- Send Form - Fixed at bottom on mobile, normal on desktop -->
-    <form action="{{ route('messages.send') }}" method="POST" class="bg-white p-3 flex items-center space-x-2 border-t flex-shrink-0 fixed md:relative bottom-0 left-0 right-0 z-40 md:bottom-auto">
+    <!-- Fixed Send Form - stays at bottom above bottom nav -->
+    <form action="{{ route('messages.send') }}" method="POST" class="bg-white p-3 flex items-center space-x-2 border-t shadow-lg flex-shrink-0 fixed md:relative bottom-0 left-0 right-0 z-40" style="bottom: 70px; md:bottom: 0;">
         @csrf
         <input type="hidden" name="receiver_id" value="{{ $user->id }}">
         <textarea 
             name="content" 
             rows="1" 
-            class="flex-1 border rounded-full px-4 py-2 resize-none focus:outline-none focus:border-green-500"
+            id="message-input"
+            class="flex-1 border border-gray-300 rounded-full px-4 py-2 resize-none focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
             placeholder="Type a message..."
-            required
-            autofocus></textarea>
-        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full transition-colors flex-shrink-0">
-            <i class="fas fa-paper-plane mr-1"></i>Send
+            required></textarea>
+        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full transition-colors flex-shrink-0 shadow-md">
+            <i class="fas fa-paper-plane"></i>
         </button>
     </form>
 </div>
 
-<!-- Auto-scroll to bottom -->
+<!-- Auto-scroll to bottom and handle textarea auto-resize -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('messages-container');
-    container.scrollTop = container.scrollHeight;
+    const textarea = document.getElementById('message-input');
+    
+    // Scroll to bottom on load
+    if (container) {
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    // Auto-resize textarea
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+    }
 });
 </script>
 
 <style>
-    /* Ensure proper spacing on mobile to prevent bottom nav overlap */
+    /* Mobile-specific styles */
     @media (max-width: 768px) {
+        /* Remove default padding/margin from body on message page */
         body {
-            padding-bottom: 0;
+            overflow: hidden;
         }
+        
+        /* Ensure messages container takes full height */
         #messages-container {
-            margin-bottom: 70px; /* Space for fixed input form + bottom nav */
+            height: calc(100vh - 72px - 140px); /* viewport - header - (input + bottom nav) */
+        }
+    }
+    
+    /* Desktop styles */
+    @media (min-width: 769px) {
+        #messages-container {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            min-height: 500px;
+            max-height: 600px;
+        }
+        
+        form[action*="messages.send"] {
+            bottom: 0 !important;
         }
     }
 </style>
