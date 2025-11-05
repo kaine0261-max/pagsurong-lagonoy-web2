@@ -86,6 +86,19 @@ class OrderController extends Controller
                 return $item->product->price * $item->quantity;
             });
 
+            // Format pickup time from date and time inputs
+            $pickupTime = null;
+            $pickupDate = $request->input('pickup_date');
+            $pickupTimeInput = $request->input('pickup_time');
+            
+            if ($pickupDate && $pickupTimeInput) {
+                $pickupTime = $pickupDate . ' ' . $pickupTimeInput;
+            } elseif ($pickupDate) {
+                $pickupTime = $pickupDate;
+            } elseif ($pickupTimeInput) {
+                $pickupTime = date('Y-m-d') . ' ' . $pickupTimeInput;
+            }
+            
             // Create order
             $order = Order::create([
                 'order_number' => 'ORD-' . time() . '-' . $user->id,
@@ -97,6 +110,7 @@ class OrderController extends Controller
                 'total_amount' => $total, // Same as total for simple orders
                 'status' => 'pending',
                 'payment_status' => 'not_required', // No payment needed for pickup/reservation
+                'pickup_time' => $pickupTime,
                 'notes' => $request->input('notes', ''),
             ]);
 
@@ -132,21 +146,20 @@ class OrderController extends Controller
                 $messageContent = "🛒 New Order #" . $order->id . "\n\n";
                 $messageContent .= "Customer: {$user->name}\n";
                 
-                // Format pickup date and time
-                $pickupDate = $request->input('pickup_date');
-                $pickupTime = $request->input('pickup_time');
-                if ($pickupDate && $pickupTime) {
-                    $messageContent .= "Pickup: " . date('M d, Y', strtotime($pickupDate)) . " at " . date('g:i A', strtotime($pickupTime)) . "\n";
-                } elseif ($pickupDate) {
-                    $messageContent .= "Pickup Date: " . date('M d, Y', strtotime($pickupDate)) . "\n";
-                } elseif ($pickupTime) {
-                    $messageContent .= "Pickup Time: " . date('g:i A', strtotime($pickupTime)) . "\n";
+                // Format pickup time from order
+                if ($order->pickup_time) {
+                    try {
+                        $pickupDateTime = new \DateTime($order->pickup_time);
+                        $messageContent .= "Pickup: " . $pickupDateTime->format('M d, Y \a\t g:i A') . "\n";
+                    } catch (\Exception $e) {
+                        $messageContent .= "Pickup Time: " . $order->pickup_time . "\n";
+                    }
                 } else {
                     $messageContent .= "Pickup: ASAP\n";
                 }
                 
-                if ($request->input('notes')) {
-                    $messageContent .= "Notes: " . $request->input('notes') . "\n";
+                if ($order->notes) {
+                    $messageContent .= "Notes: " . $order->notes . "\n";
                 }
                 $messageContent .= "\nOrder Details:\n";
 
