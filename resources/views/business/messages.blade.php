@@ -3,9 +3,9 @@
 @section('title', 'Messages')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 messages-page">
+<div class="min-h-screen bg-gray-50">
     <!-- Header -->
-    <div class="bg-white shadow-sm messages-header">
+    <div class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
             <div class="text-center">
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
@@ -74,23 +74,4 @@
         @endif
     </div>
 </div>
-
-<style>
-    /* Mobile-specific styles for messages page */
-    @media (max-width: 768px) {
-        /* Messages header styling */
-        .messages-header {
-            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
-        }
-        
-        .messages-header h1,
-        .messages-header p {
-            color: white;
-        }
-        
-        .messages-header i {
-            color: #d1fae5;
-        }
-    }
-</style>
 @endsection
