@@ -76,7 +76,7 @@ class BusinessController extends Controller
             'address' => 'required|string|max:255',
             'website' => 'nullable|url|max:255',
             'business_permit' => 'required|array',
-            'business_permit.*' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240'
+            'business_permit.*' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx'
         ]);
 
         $user = auth()->user();
@@ -394,8 +394,8 @@ class BusinessController extends Controller
             'website' => 'nullable|url|max:255',
             'facebook_page' => 'nullable|url|max:255',
             'business_permit' => 'required|array',
-            'business_permit.*' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
-            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
+            'business_permit.*' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx',
+            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx',
         ]);
 
         return DB::transaction(function () use ($validated, $request) {
@@ -522,8 +522,8 @@ class BusinessController extends Controller
             'website' => 'nullable|url|max:255',
             'facebook_page' => 'nullable|url|max:255',
             'business_permit' => 'nullable|array',
-            'business_permit.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
-            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
+            'business_permit.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx',
+            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx',
         ]);
 
         return DB::transaction(function () use ($validated, $request, $business) {
@@ -676,7 +676,7 @@ class BusinessController extends Controller
     public function updateCover(Request $request)
     {
         $request->validate([
-            'cover_image' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
         $businessProfile = auth()->user()->businessProfile;
@@ -706,7 +706,7 @@ class BusinessController extends Controller
     {
         try {
             $request->validate([
-                'profile_avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+                'profile_avatar' => 'required|image|mimes:jpeg,png,jpg,gif',
             ]);
 
             $business = auth()->user()->businessProfile;
@@ -752,7 +752,7 @@ class BusinessController extends Controller
     public function storeGallery(Request $request)
     {
         $request->validate([
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         $business = auth()->user()->businessProfile;
@@ -815,7 +815,7 @@ class BusinessController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         $business = auth()->user()->businessProfile;
@@ -850,7 +850,7 @@ class BusinessController extends Controller
     public function updateProfilePicture(Request $request)
     {
         $request->validate([
-            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         $user = auth()->user();
@@ -897,7 +897,7 @@ class BusinessController extends Controller
             'description' => 'nullable|string',
             'stock_limit' => 'required|integer|min:0',
             'current_stock' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         $user = auth()->user();

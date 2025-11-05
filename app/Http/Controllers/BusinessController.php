@@ -42,7 +42,7 @@ class BusinessController extends Controller
             'description' => 'nullable|string',
             'address' => 'nullable|string|max:255',
             'contact_number' => 'nullable|string|max:50',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg',
             'delivery_available' => 'boolean',
             'delivery_fee' => 'nullable|numeric|min:0',
             'delivery_radius' => 'nullable|string|max:255',
@@ -123,7 +123,7 @@ class BusinessController extends Controller
     public function updateCover(Request $request)
     {
         $request->validate([
-            'cover_image' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
         $user = Auth::user();
