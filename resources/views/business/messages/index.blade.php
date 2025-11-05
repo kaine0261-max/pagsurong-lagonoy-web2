@@ -3,16 +3,10 @@
 @section('title', 'Messages')
 
 @section('content')
-@php
-    $user = auth()->user();
-    // Always hide nav for business owners on messages page
-    $shouldHideNav = $user->role === 'business_owner';
-@endphp
-
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 messages-page" data-hide-nav="{{ $shouldHideNav ? 'true' : 'false' }}">
+<div class="min-h-screen bg-gray-50 messages-page">
     <!-- Header -->
-    <div class="bg-white shadow-sm messages-header mb-6 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white shadow-sm messages-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
             <div class="text-center">
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                     <i class="fas fa-envelope mr-2 md:mr-3 text-green-600"></i>
@@ -25,8 +19,10 @@
         </div>
     </div>
 
-    @if($threads->count() > 0)
-        <div class="bg-white shadow overflow-hidden sm:rounded-md">
+    <!-- Messages List -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        @if($threads->count() > 0)
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
             <ul class="divide-y divide-gray-200">
                 @foreach($threads as $thread)
                     @php
@@ -41,7 +37,7 @@
                     @endphp
 
                     @if($otherUser)
-                        <li class="px-6 py-4 hover:bg-gray-50 transition">
+                        <li class="px-6 py-4 hover:bg-gray-50 transition-colors">
                             <a href="{{ route('messages.thread', $otherUser) }}" class="block">
                                 <div class="flex items-center space-x-3">
                                     <!-- Profile Picture -->
@@ -88,71 +84,61 @@
                     @endif
                 @endforeach
             </ul>
-        </div>
-    @else
-        <div class="text-center py-12">
-            <div class="text-gray-400 mb-4">
-                <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
             </div>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">No messages yet</h3>
-            <p class="text-gray-500 mb-4">Start a conversation when you place an order with a business!</p>
-            <a href="{{ route('business.dashboard') }}" 
-               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors">
-                <i class="fas fa-store mr-2"></i>
-                Go to Dashboard
-            </a>
-        </div>
-    @endif
+        @else
+            <div class="bg-white rounded-lg shadow-sm p-12 text-center">
+                <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-envelope text-gray-400 text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No messages yet</h3>
+                <p class="text-gray-500 mb-4">Your customers will be able to message you about their orders!</p>
+                <a href="{{ route('business.dashboard') }}" 
+                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors">
+                    <i class="fas fa-store mr-2"></i>
+                    Go to Dashboard
+                </a>
+            </div>
+        @endif
+    </div>
 </div>
 
 <style>
     /* Mobile-specific styles for business messages page */
     @media (max-width: 768px) {
-        /* Style the messages header for mobile */
-        .messages-page .messages-header {
+        /* Hide top header on mobile */
+        .messages-page header {
+            display: none !important;
+        }
+        
+        /* Adjust page layout for mobile */
+        .messages-page {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+        
+        /* Adjust messages header positioning */
+        .messages-header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 40;
             background: linear-gradient(135deg, #065f46 0%, #047857 100%);
-            margin-bottom: 0 !important;
-            border-radius: 0 !important;
-            padding-top: 1.5rem !important;
-            padding-bottom: 1.5rem !important;
         }
         
-        .messages-page .messages-header h1,
-        .messages-page .messages-header p {
+        .messages-header h1,
+        .messages-header p {
             color: white;
         }
         
-        .messages-page .messages-header i {
+        .messages-header i {
             color: #d1fae5;
         }
         
-        /* Adjust page layout for mobile */
-        .messages-page {
-            padding: 0 !important;
-            margin: 0 !important;
-            padding-top: 140px !important;
-            padding-bottom: 80px !important;
-            max-width: 100% !important;
-        }
-        
-        /* Adjust message list container */
-        .messages-page > div:not(.messages-header) {
-            margin: 0 !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-        }
-        
-        /* Style message items for better mobile appearance */
-        .messages-page ul li {
-            border-left: none !important;
-            border-right: none !important;
+        /* Add padding to content to account for fixed header */
+        .messages-page > div:last-child {
+            padding-top: 140px;
+            padding-bottom: 80px;
         }
     }
 </style>
