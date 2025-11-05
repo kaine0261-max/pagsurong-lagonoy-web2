@@ -3,15 +3,9 @@
 @section('title', 'Messages')
 
 @section('content')
-@php
-    $user = auth()->user();
-    // Always hide nav for business owners on messages page
-    $shouldHideNav = $user->role === 'business_owner';
-@endphp
-
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 messages-page" data-hide-nav="{{ $shouldHideNav ? 'true' : 'false' }}">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
-    <div class="bg-white shadow-sm messages-header mb-6 py-8">
+    <div class="bg-white shadow-sm mb-6 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
@@ -106,48 +100,4 @@
         </div>
     @endif
 </div>
-
-<style>
-    /* Mobile-specific styles for business messages page */
-    @media (max-width: 768px) {
-        /* Hide navigation bars on mobile */
-        header,
-        nav[class*="bg-green"],
-        .bg-green-800,
-        [class*="navigation"] {
-            display: none !important;
-        }
-        
-        /* Adjust page layout for mobile */
-        .messages-page {
-            padding-top: 0 !important;
-            margin-top: 0 !important;
-        }
-        
-        /* Adjust messages header positioning */
-        .messages-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 50;
-            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
-        }
-        
-        .messages-header h1,
-        .messages-header p {
-            color: white;
-        }
-        
-        .messages-header i {
-            color: #d1fae5;
-        }
-        
-        /* Add padding to content to account for fixed header */
-        .messages-page > div:last-child {
-            padding-top: 140px;
-            padding-bottom: 80px;
-        }
-    }
-</style>
 @endsection
