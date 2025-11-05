@@ -97,11 +97,11 @@
                 </svg>
             </div>
             <h3 class="text-lg font-medium text-gray-900 mb-2">No messages yet</h3>
-            <p class="text-gray-500 mb-4">Start a conversation when you place an order with a business!</p>
-            <a href="{{ route('business.dashboard') }}" 
+            <p class="text-gray-500 mb-4">Your customers will be able to message you about their orders!</p>
+            <a href="{{ route('business.my-shop') }}" 
                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors">
                 <i class="fas fa-store mr-2"></i>
-                Go to Dashboard
+                Go to My Shop
             </a>
         </div>
     @endif
@@ -110,49 +110,43 @@
 <style>
     /* Mobile-specific styles for business messages page */
     @media (max-width: 768px) {
-        /* Style the messages header for mobile */
-        .messages-page .messages-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 40;
-            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
-            margin-bottom: 0 !important;
-            border-radius: 0 !important;
-            padding-top: 1.5rem !important;
-            padding-bottom: 1.5rem !important;
-        }
-        
-        .messages-page .messages-header h1,
-        .messages-page .messages-header p {
-            color: white;
-        }
-        
-        .messages-page .messages-header i {
-            color: #d1fae5;
+        /* Hide navigation bars on mobile */
+        header,
+        nav[class*="bg-green"],
+        .bg-green-800,
+        [class*="navigation"] {
+            display: none !important;
         }
         
         /* Adjust page layout for mobile */
         .messages-page {
-            padding: 0 !important;
-            margin: 0 !important;
-            padding-top: 140px !important;
-            padding-bottom: 80px !important;
-            max-width: 100% !important;
+            padding-top: 0 !important;
+            margin-top: 0 !important;
         }
         
-        /* Adjust message list container */
-        .messages-page > div:not(.messages-header) {
-            margin: 0 !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
+        /* Adjust messages header positioning */
+        .messages-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
         }
         
-        /* Style message items for better mobile appearance */
-        .messages-page ul li {
-            border-left: none !important;
-            border-right: none !important;
+        .messages-header h1,
+        .messages-header p {
+            color: white;
+        }
+        
+        .messages-header i {
+            color: #d1fae5;
+        }
+        
+        /* Add padding to content to account for fixed header */
+        .messages-page > div:last-child {
+            padding-top: 140px;
+            padding-bottom: 80px;
         }
     }
 </style>
