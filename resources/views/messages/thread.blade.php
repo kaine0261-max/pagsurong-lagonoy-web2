@@ -106,6 +106,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('messages-container');
     const textarea = document.getElementById('message-input');
+    let lastMessageId = {{ $messages->last()->id ?? 0 }};
     
     // Scroll to bottom on load
     if (container) {
@@ -119,6 +120,41 @@ document.addEventListener('DOMContentLoaded', () => {
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
     }
+
+    // Simple polling - only fetch and display new messages
+    setInterval(async () => {
+        try {
+            const response = await fetch(`{{ route('messages.fetch', $user->id) }}?last_message_id=${lastMessageId}`);
+            const data = await response.json();
+
+            if (data.messages && data.messages.length > 0) {
+                data.messages.forEach(msg => {
+                    // Only add messages from the OTHER person (not mine)
+                    if (!msg.is_mine) {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = 'flex justify-start mb-3';
+
+                        const bubbleDiv = document.createElement('div');
+                        bubbleDiv.className = 'max-w-[75%] px-4 py-2 rounded-2xl shadow-sm bg-white border border-gray-200 rounded-bl-sm';
+                        bubbleDiv.innerHTML = `
+                            <div class="break-words text-sm">${msg.content.replace(/\n/g, '<br>')}</div>
+                            <div class="text-xs opacity-70 mt-1">${msg.created_at}</div>
+                        `;
+
+                        messageDiv.appendChild(bubbleDiv);
+                        container.appendChild(messageDiv);
+                    }
+
+                    lastMessageId = msg.id;
+                });
+
+                // Auto scroll to bottom
+                container.scrollTop = container.scrollHeight;
+            }
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
+    }, 3000); // Check every 3 seconds
 });
 </script>
 
