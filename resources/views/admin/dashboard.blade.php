@@ -6,15 +6,6 @@
 <div class="container mx-auto px-4 py-8 md:-mt-20 pb-24 md:pb-8">
     <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 space-y-4 md:space-y-0">
         <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Dashboard</h1>
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-            <div class="relative hidden sm:block">
-                <input type="text" placeholder="Search..." class="border border-gray-300 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
-                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-            </div>
-            <a href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center justify-center">
-                <i class="fas fa-plus mr-2"></i> New User
-            </a>
-        </div>
     </div>
 
     <p class="text-gray-600 mb-6 md:mb-8 text-sm md:text-base">Welcome, Admin. Manage users, businesses, products, and orders.</p>

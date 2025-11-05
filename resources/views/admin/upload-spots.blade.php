@@ -3,10 +3,10 @@
 @section('title', 'Upload Tourist Spots')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex gap-6">
-        <!-- Left Sidebar - Uploaded Tourist Spots -->
-        <div id="touristSpotsPanel" class="hidden lg:flex flex-col bg-white rounded-lg shadow-md sticky top-8 h-[calc(100vh-6rem)] w-80 transition-all duration-300">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8">
+    <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Uploaded Tourist Spots - Mobile Card / Desktop Sidebar -->
+        <div id="touristSpotsPanel" class="flex flex-col bg-white rounded-lg shadow-md lg:sticky lg:top-8 lg:h-[calc(100vh-6rem)] w-full lg:w-80 transition-all duration-300">
             <!-- Header with Toggle -->
             <div class="p-4 border-b border-gray-200">
                 <div class="flex items-center justify-between">
@@ -576,8 +576,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Toggle Tourist Spots Panel (Minimize/Maximize)
+// Toggle Tourist Spots Panel (Minimize/Maximize) - Desktop only
 function toggleTouristSpotsPanel() {
+    // Only work on desktop (lg breakpoint and above)
+    if (window.innerWidth < 1024) {
+        return; // Don't toggle on mobile
+    }
+    
     const panel = document.getElementById('touristSpotsPanel');
     const content = document.getElementById('touristSpotsContent');
     const icon = document.getElementById('touristSpotsToggleIcon');
@@ -592,8 +597,8 @@ function toggleTouristSpotsPanel() {
             content.style.display = 'block';
             title.style.display = 'inline';
             toggleBtn.style.display = 'block';
-            panel.classList.remove('w-12');
-            panel.classList.add('w-80');
+            panel.classList.remove('lg:w-12');
+            panel.classList.add('lg:w-80');
             icon.classList.remove('fa-chevron-right');
             icon.classList.add('fa-chevron-left');
         } else {
@@ -601,8 +606,8 @@ function toggleTouristSpotsPanel() {
             content.style.display = 'none';
             title.style.display = 'none';
             toggleBtn.style.display = 'none';
-            panel.classList.remove('w-80');
-            panel.classList.add('w-12');
+            panel.classList.remove('lg:w-80');
+            panel.classList.add('lg:w-12');
             icon.classList.remove('fa-chevron-left');
             icon.classList.add('fa-chevron-right');
         }
