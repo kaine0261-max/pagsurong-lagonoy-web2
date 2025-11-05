@@ -339,12 +339,9 @@ use Illuminate\Support\Facades\Storage;
                 <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">Products</h3>
-                        <div class="flex items-center gap-3">
-                            <button type="button" onclick="openModal('uploadModal')" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
-                                <i class="fas fa-plus-circle mr-2"></i> Upload New Product
-                            </button>
-                            <a href="{{ route('business.products') }}" class="text-sm text-blue-600 hover:text-blue-800">View All</a>
-                        </div>
+                        <button type="button" onclick="openModal('uploadModal')" class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
+                            <i class="fas fa-plus-circle mr-2"></i> Upload New Product
+                        </button>
                     </div>
                     @if(isset($topProducts) && $topProducts->count() > 0)
                         <div class="space-y-4">

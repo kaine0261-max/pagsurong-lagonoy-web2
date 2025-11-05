@@ -317,13 +317,12 @@ class BusinessController extends Controller
                 ->get();
         }
 
-        // Get top products
+        // Get all products
         $topProducts = [];
         if (Schema::hasTable('order_items')) {
             $topProducts = Product::where('business_id', $bizEntity->id)
                 ->withCount('orderItems')
                 ->orderBy('order_items_count', 'desc')
-                ->take(5)
                 ->get();
         }
 
