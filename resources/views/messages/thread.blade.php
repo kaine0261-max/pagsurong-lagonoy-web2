@@ -85,7 +85,7 @@
     </div>
 
     <!-- 3. Fixed Input Form - Bottom -->
-    <form action="{{ route('messages.send') }}" method="POST" class="message-input">
+    <form id="message-form" action="{{ route('messages.send') }}" method="POST" class="message-input">
         @csrf
         <input type="hidden" name="receiver_id" value="{{ $user->id }}">
         <textarea 
@@ -95,7 +95,7 @@
             class="flex-1 bg-gray-100 border-0 rounded-full px-4 py-2 resize-none focus:outline-none focus:bg-gray-200 text-sm"
             placeholder="Type a message..."
             required></textarea>
-        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white w-10 h-10 rounded-full transition-colors flex items-center justify-center flex-shrink-0 shadow-md">
+        <button type="submit" id="send-button" class="bg-green-600 hover:bg-green-700 text-white w-10 h-10 rounded-full transition-colors flex items-center justify-center flex-shrink-0 shadow-md">
             <i class="fas fa-paper-plane text-sm"></i>
         </button>
     </form>
@@ -106,9 +106,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('messages-container');
     const textarea = document.getElementById('message-input');
+    const messageForm = document.getElementById('message-form');
+    const sendButton = document.getElementById('send-button');
     let lastMessageId = {{ $messages->last()->id ?? 0 }};
     let isUserScrolling = false;
     let scrollTimeout;
+    let isSending = false;
     
     // Scroll to bottom on load
     function scrollToBottom() {
@@ -139,6 +142,77 @@ document.addEventListener('DOMContentLoaded', () => {
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
     }
+    
+    // Handle form submission via AJAX
+    messageForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (isSending) return;
+        
+        const content = textarea.value.trim();
+        if (!content) return;
+        
+        isSending = true;
+        sendButton.disabled = true;
+        
+        try {
+            const formData = new FormData(messageForm);
+            const response = await fetch(messageForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            if (response.ok) {
+                // Clear textarea
+                textarea.value = '';
+                textarea.style.height = 'auto';
+                
+                // Add message to UI immediately
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'flex justify-end mb-3';
+                messageDiv.style.animation = 'slideIn 0.3s ease-out';
+                
+                const bubbleDiv = document.createElement('div');
+                bubbleDiv.className = 'max-w-[75%] px-4 py-2 rounded-2xl shadow-sm bg-green-600 text-white rounded-br-sm';
+                
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                
+                bubbleDiv.innerHTML = `
+                    <div class="break-words text-sm">${content.replace(/\n/g, '<br>')}</div>
+                    <div class="text-xs opacity-70 mt-1">${timeStr}</div>
+                `;
+                
+                messageDiv.appendChild(bubbleDiv);
+                container.appendChild(messageDiv);
+                
+                scrollToBottom();
+                
+                // Wait a bit before fetching to get the actual message ID
+                setTimeout(async () => {
+                    try {
+                        const fetchResponse = await fetch(`{{ route('messages.fetch', $user->id) }}?last_message_id=${lastMessageId}`);
+                        const data = await fetchResponse.json();
+                        if (data.messages && data.messages.length > 0) {
+                            lastMessageId = Math.max(...data.messages.map(m => m.id));
+                        }
+                    } catch (err) {
+                        console.error('Error updating message ID:', err);
+                    }
+                }, 500);
+            }
+        } catch (error) {
+            console.error('Error sending message:', error);
+            alert('Failed to send message. Please try again.');
+        } finally {
+            isSending = false;
+            sendButton.disabled = false;
+            textarea.focus();
+        }
+    });
     
     // Fetch new messages every 2 seconds
     setInterval(async () => {
