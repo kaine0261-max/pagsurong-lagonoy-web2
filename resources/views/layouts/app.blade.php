@@ -961,7 +961,7 @@
     
     <!-- Mobile Profile Sidebar -->
     @auth
-        @if((auth()->user()->role === 'customer' && auth()->user()->hasCompletedProfile()) || (auth()->user()->role === 'business_owner' && auth()->user()->businessProfile))
+        @if((auth()->user()->role === 'customer' && auth()->user()->hasCompletedProfile()) || (auth()->user()->role === 'business_owner' && auth()->user()->businessProfile) || auth()->user()->role === 'admin')
             <!-- Overlay -->
             <div id="mobileProfileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden md:hidden" onclick="closeMobileProfileSidebar()"></div>
             
@@ -1009,6 +1009,36 @@
                                 @csrf
                             </form>
                             <button type="button" onclick="confirmLogout('mobile-sidebar-customer')" 
+                                    class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors w-full text-left">
+                                <i class="fas fa-sign-out-alt mr-4 text-green-600 w-5"></i>
+                                <span class="font-medium">Logout</span>
+                            </button>
+                        @elseif($user->role === 'admin')
+                            <!-- Admin Menu Items -->
+                            <a href="{{ route('profile.show') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="fas fa-user mr-4 text-green-600 w-5"></i>
+                                <span class="font-medium">My Profile</span>
+                            </a>
+
+                            <a href="{{ route('admin.dashboard') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="fas fa-tachometer-alt mr-4 text-green-600 w-5"></i>
+                                <span class="font-medium">Dashboard</span>
+                            </a>
+
+                            <a href="{{ route('admin.users') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="fas fa-users mr-4 text-green-600 w-5"></i>
+                                <span class="font-medium">Users</span>
+                            </a>
+
+                            <a href="{{ route('admin.business-approvals.index') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
+                                <i class="fas fa-clipboard-check mr-4 text-green-600 w-5"></i>
+                                <span class="font-medium">Business Approvals</span>
+                            </a>
+
+                            <form method="POST" action="{{ route('logout') }}" id="logout-form-mobile-sidebar-admin" class="hidden">
+                                @csrf
+                            </form>
+                            <button type="button" onclick="confirmLogout('mobile-sidebar-admin')" 
                                     class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors w-full text-left">
                                 <i class="fas fa-sign-out-alt mr-4 text-green-600 w-5"></i>
                                 <span class="font-medium">Logout</span>
