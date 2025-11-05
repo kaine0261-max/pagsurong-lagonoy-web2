@@ -104,6 +104,12 @@ class BusinessApprovalController extends Controller
     public function decline(Request $request, BusinessProfile $business)
     {
         try {
+            \Log::info('Attempting to decline business', [
+                'business_id' => $business->id,
+                'has_decline_reason' => $request->has('decline_reason'),
+                'decline_reason_length' => $request->has('decline_reason') ? strlen($request->decline_reason) : 0,
+            ]);
+            
             $request->validate([
                 'decline_reason' => 'required|string|max:1000',
             ], [
@@ -111,17 +117,25 @@ class BusinessApprovalController extends Controller
                 'decline_reason.max' => 'The decline reason must not exceed 1000 characters.',
             ]);
 
+            \Log::info('Validation passed, updating business status');
+            
             return $this->updateBusinessStatus($business, 'declined', $request->decline_reason);
         } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::warning('Validation failed for business decline', [
+                'business_id' => $business->id,
+                'errors' => $e->errors(),
+            ]);
             return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             \Log::error('Error declining business', [
                 'business_id' => $business->id,
-                'error' => $e->getMessage(),
+                'error_message' => $e->getMessage(),
+                'error_file' => $e->getFile(),
+                'error_line' => $e->getLine(),
                 'trace' => $e->getTraceAsString()
             ]);
             
-            return back()->with('error', 'Failed to decline business. Please try again.');
+            return back()->with('error', 'Failed to decline business: ' . $e->getMessage());
         }
     }
 
@@ -130,44 +144,71 @@ class BusinessApprovalController extends Controller
      */
     protected function updateBusinessStatus(BusinessProfile $business, string $status, ?string $notes = null)
     {
-        // Ensure the user relationship is loaded
-        if (!$business->relationLoaded('user')) {
-            $business->load('user');
-        }
-        
-        $payload = [
-            'status' => $status,
-            'decline_reason' => $status === 'declined' ? $notes : null,
-            'approved_at' => $status === 'approved' ? now() : $business->approved_at,
-            'approved_by' => $status === 'approved' ? auth()->id() : $business->approved_by,
-        ];
-
-        // Auto-publish when approved so it becomes visible to customers
-        if ($status === 'approved') {
-            $payload['is_published'] = true;
-        }
-
-        $business->update($payload);
-
-        // Mirror publish flag to Business entity used for product visibility
-        if ($status === 'approved') {
-            \App\Models\Business::where('owner_id', $business->user_id)->update(['is_published' => true]);
-        }
-
-        // Notify the business owner (do not fail the request if mail transport is unavailable)
         try {
-            $this->notifyBusinessOwner($business, $status, $notes);
-        } catch (\Throwable $e) {
-            \Log::warning('Failed to send business status email', [
+            \Log::info('Starting updateBusinessStatus', [
+                'business_id' => $business->id,
+                'status' => $status,
+                'has_notes' => !empty($notes),
+            ]);
+            
+            // Ensure the user relationship is loaded
+            if (!$business->relationLoaded('user')) {
+                $business->load('user');
+            }
+            
+            \Log::info('User relationship loaded', [
+                'has_user' => $business->user !== null,
+                'user_id' => $business->user_id,
+            ]);
+            
+            $payload = [
+                'status' => $status,
+                'decline_reason' => $status === 'declined' ? $notes : null,
+                'approved_at' => $status === 'approved' ? now() : $business->approved_at,
+                'approved_by' => $status === 'approved' ? auth()->id() : $business->approved_by,
+            ];
+
+            // Auto-publish when approved so it becomes visible to customers
+            if ($status === 'approved') {
+                $payload['is_published'] = true;
+            }
+
+            \Log::info('Attempting to update business', ['payload' => $payload]);
+            
+            $business->update($payload);
+            
+            \Log::info('Business updated successfully');
+
+            // Mirror publish flag to Business entity used for product visibility
+            if ($status === 'approved') {
+                \App\Models\Business::where('owner_id', $business->user_id)->update(['is_published' => true]);
+            }
+
+            // Notify the business owner (do not fail the request if mail transport is unavailable)
+            try {
+                $this->notifyBusinessOwner($business, $status, $notes);
+            } catch (\Throwable $e) {
+                \Log::warning('Failed to send business status email', [
+                    'business_id' => $business->id,
+                    'status' => $status,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+
+            \Log::info('Redirecting with success message');
+            
+            return redirect()
+                ->route('admin.business-approvals.index')
+                ->with('success', "Business has been {$status} successfully.");
+        } catch (\Exception $e) {
+            \Log::error('Error in updateBusinessStatus', [
                 'business_id' => $business->id,
                 'status' => $status,
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
+            throw $e; // Re-throw to be caught by the calling method
         }
-
-        return redirect()
-            ->route('admin.business-approvals.index')
-            ->with('success', "Business has been {$status} successfully.");
     }
 
     /**
