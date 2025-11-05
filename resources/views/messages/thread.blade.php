@@ -128,6 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             
             if (data.messages && data.messages.length > 0) {
+                let hasNewMessages = false;
+                
                 data.messages.forEach(msg => {
                     // Only add messages from the OTHER person (not mine)
                     if (!msg.is_mine) {
@@ -144,13 +146,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         messageDiv.appendChild(bubbleDiv);
                         container.appendChild(messageDiv);
+                        hasNewMessages = true;
                     }
-                    
-                    lastMessageId = msg.id;
                 });
                 
-                // Auto scroll to bottom
-                container.scrollTop = container.scrollHeight;
+                // Update lastMessageId to the highest ID received
+                const maxId = Math.max(...data.messages.map(m => m.id));
+                lastMessageId = maxId;
+                
+                // Auto scroll to bottom only if there were new messages
+                if (hasNewMessages) {
+                    container.scrollTop = container.scrollHeight;
+                }
             }
         } catch (error) {
             console.error('Error fetching messages:', error);
