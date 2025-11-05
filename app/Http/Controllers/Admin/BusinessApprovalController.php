@@ -103,11 +103,26 @@ class BusinessApprovalController extends Controller
      */
     public function decline(Request $request, BusinessProfile $business)
     {
-        $request->validate([
-            'decline_reason' => 'required|string|max:1000',
-        ]);
+        try {
+            $request->validate([
+                'decline_reason' => 'required|string|max:1000',
+            ], [
+                'decline_reason.required' => 'Please provide a reason for declining this business.',
+                'decline_reason.max' => 'The decline reason must not exceed 1000 characters.',
+            ]);
 
-        return $this->updateBusinessStatus($business, 'declined', $request->decline_reason);
+            return $this->updateBusinessStatus($business, 'declined', $request->decline_reason);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            \Log::error('Error declining business', [
+                'business_id' => $business->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return back()->with('error', 'Failed to decline business. Please try again.');
+        }
     }
 
     /**
@@ -115,6 +130,11 @@ class BusinessApprovalController extends Controller
      */
     protected function updateBusinessStatus(BusinessProfile $business, string $status, ?string $notes = null)
     {
+        // Ensure the user relationship is loaded
+        if (!$business->relationLoaded('user')) {
+            $business->load('user');
+        }
+        
         $payload = [
             'status' => $status,
             'decline_reason' => $status === 'declined' ? $notes : null,
