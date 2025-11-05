@@ -34,6 +34,14 @@ class Order extends Model
         'delivered_at',
     ];
 
+    protected $casts = [
+        'paid_at' => 'datetime',
+        'shipped_at' => 'datetime',
+        'delivered_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function business()
     {
         return $this->belongsTo(Business::class);

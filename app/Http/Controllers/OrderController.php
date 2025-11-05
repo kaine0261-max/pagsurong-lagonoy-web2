@@ -327,21 +327,60 @@ class OrderController extends Controller
             abort(403);
         }
 
+        $oldStatus = $order->status;
         $order->update(['status' => $request->status]);
 
-        // Notify the customer about status update
+        // Notify the customer about status update with detailed message
         try {
+            // Format status for display
+            $statusDisplay = match($request->status) {
+                'pending' => '⏳ PENDING',
+                'ready_for_pickup' => '✅ READY FOR PICKUP',
+                'completed' => '🎉 COMPLETED',
+                'cancelled' => '❌ CANCELLED',
+                default => strtoupper(str_replace('_', ' ', $request->status))
+            };
+
+            // Get current Philippine time
+            $currentTime = now()->timezone('Asia/Manila')->format('F j, Y g:i A');
+            
+            // Build detailed message
+            $messageContent = "📦 Order Status Update\n\n";
+            $messageContent .= "Order #: {$order->order_number}\n";
+            $messageContent .= "Status: {$statusDisplay}\n";
+            $messageContent .= "Updated: {$currentTime}\n\n";
+            
+            // Add status-specific message
+            switch($request->status) {
+                case 'ready_for_pickup':
+                    $messageContent .= "🎊 Great news! Your order is ready for pickup. Please visit our store at your convenience.\n";
+                    break;
+                case 'completed':
+                    $messageContent .= "✨ Thank you for your order! We hope to serve you again soon.\n";
+                    break;
+                case 'cancelled':
+                    $messageContent .= "We're sorry, but your order has been cancelled. Please contact us if you have any questions.\n";
+                    break;
+                case 'pending':
+                    $messageContent .= "Your order is being processed. We'll notify you once it's ready.\n";
+                    break;
+            }
+            
+            $messageContent .= "\nBusiness: " . ($order->business->name ?? 'N/A');
+
             Message::create([
                 'sender_id' => Auth::id(),
                 'receiver_id' => $order->user_id,
                 'order_id' => $order->id,
-                'content' => "📦 Your order #{$order->id} status has been updated to: " . strtoupper($request->status),
+                'content' => $messageContent,
             ]);
+            
+            \Log::info("Order #{$order->id} status updated from {$oldStatus} to {$request->status}. Customer notified at {$currentTime}");
         } catch (\Throwable $e) {
             \Log::warning('Failed to send status update message: ' . $e->getMessage());
         }
 
-        return back()->with('success', 'Order status updated.');
+        return back()->with('success', 'Order status updated and customer notified.');
     }
 
     /**

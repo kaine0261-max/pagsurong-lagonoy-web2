@@ -17,6 +17,12 @@ class Message extends Model
         'read_at',
     ];
 
+    protected $casts = [
+        'read_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function order()
     {
         return $this->belongsTo(Order::class);
