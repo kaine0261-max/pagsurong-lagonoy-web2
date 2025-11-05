@@ -462,7 +462,7 @@ use Illuminate\Support\Facades\Storage;
                         
                         <div class="col-span-2">
                             <label for="room_image" class="block text-sm font-medium text-gray-700">Room Image</label>
-                            <input type="file" name="image" id="room_image" accept="image/jpeg,image/jpg,image/png" capture="environment" onchange="previewRoomImages(this)"
+                            <input type="file" name="image" id="room_image" accept="image/jpeg,image/jpg,image/png" onchange="previewRoomImages(this)"
                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
                             <div id="imagePreviews" class="mt-2 grid grid-cols-4 gap-2"></div>
                             <p class="mt-1 text-sm text-gray-500">Upload an image to showcase your room</p>
@@ -500,7 +500,7 @@ use Illuminate\Support\Facades\Storage;
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Upload Photos</label>
                     <div class="mt-2 flex items-center">
-                        <input type="file" name="images[]" id="galleryImages" multiple accept="image/jpeg,image/jpg,image/png" capture="environment" class="hidden" onchange="previewGalleryImages(this)">
+                        <input type="file" name="images[]" id="galleryImages" multiple accept="image/jpeg,image/jpg,image/png" class="hidden" onchange="previewGalleryImages(this)">
                         <label for="galleryImages" class="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             <i class="fas fa-upload mr-2"></i> Select Files
                         </label>
@@ -598,9 +598,19 @@ use Illuminate\Support\Facades\Storage;
     
     function previewRoomImages(input) {
         const previewContainer = document.getElementById('imagePreviews');
+        const maxSize = 10 * 1024 * 1024; // 10MB
         previewContainer.innerHTML = '';
         
         if (input.files.length > 0) {
+            // Validate file sizes
+            for (let i = 0; i < input.files.length; i++) {
+                if (input.files[i].size > maxSize) {
+                    alert('One or more images exceed 10MB. Please select images smaller than 10MB.');
+                    input.value = ''; // Clear the input
+                    return;
+                }
+            }
+            
             for (let i = 0; i < input.files.length; i++) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -622,11 +632,32 @@ use Illuminate\Support\Facades\Storage;
     function previewGalleryImages(input) {
         const fileNames = [];
         const previewContainer = document.getElementById('galleryPreviews');
+        const maxSize = 10 * 1024 * 1024; // 10MB
         previewContainer.innerHTML = '';
         
         if (input.files.length > 0) {
-            for (let i = 0; i < Math.min(input.files.length, 10); i++) {
-                fileNames.push(input.files[i].name);
+            let validFiles = [];
+            let hasOversizedFile = false;
+            
+            // Validate file sizes
+            for (let i = 0; i < input.files.length; i++) {
+                if (input.files[i].size > maxSize) {
+                    hasOversizedFile = true;
+                } else {
+                    validFiles.push(input.files[i]);
+                }
+            }
+            
+            // Show alert if any file exceeds 10MB
+            if (hasOversizedFile) {
+                alert('One or more images exceed 10MB. Please select images smaller than 10MB.');
+                input.value = ''; // Clear the input
+                document.getElementById('fileNames').textContent = 'No files selected';
+                return;
+            }
+            
+            for (let i = 0; i < Math.min(validFiles.length, 10); i++) {
+                fileNames.push(validFiles[i].name);
                 
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -637,7 +668,7 @@ use Illuminate\Support\Facades\Storage;
                     `;
                     previewContainer.appendChild(preview);
                 };
-                reader.readAsDataURL(input.files[i]);
+                reader.readAsDataURL(validFiles[i]);
             }
             
             document.getElementById('fileNames').textContent = `${fileNames.length} file(s) selected`;

@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Storage;
             @csrf
             <label class="bg-white bg-opacity-90 text-gray-700 px-4 py-2 rounded-lg hover:bg-opacity-100 transition-all duration-200 flex items-center text-sm font-medium cursor-pointer shadow-lg">
                 <i class="fas fa-camera mr-2"></i> Edit Cover Image
-                <input type="file" name="cover_image" accept="image/jpeg,image/jpg,image/png" capture="environment" class="hidden" onchange="this.form.submit()">
+                <input type="file" name="cover_image" accept="image/jpeg,image/jpg,image/png" class="hidden" onchange="validateAndSubmitCoverImage(this)">
             </label>
         </form>
     </div>
@@ -63,7 +63,7 @@ use Illuminate\Support\Facades\Storage;
                                 <i class="fas fa-camera text-green-600 text-sm"></i>
                             </div>
                         </div>
-                        <input type="file" id="profile-photo" class="hidden" accept="image/jpeg,image/jpg,image/png" capture="environment" onchange="uploadProfilePhoto(this)">
+                        <input type="file" id="profile-photo" class="hidden" accept="image/jpeg,image/jpg,image/png" onchange="uploadProfilePhoto(this)">
 
                         <!-- Resort Name -->
                         <h1 class="text-3xl font-bold text-gray-800 mt-4 mb-3">
@@ -457,7 +457,7 @@ use Illuminate\Support\Facades\Storage;
                         
                         <div class="col-span-2">
                             <label for="images" class="block text-sm font-medium text-gray-700">Room Images</label>
-                            <input type="file" name="images[]" id="images" accept="image/jpeg,image/jpg,image/png" capture="environment" multiple
+                            <input type="file" name="images[]" id="images" accept="image/jpeg,image/jpg,image/png" multiple onchange="validateRoomImages(this)"
                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
                             <p class="mt-1 text-sm text-gray-500">Upload multiple images to showcase your room</p>
                             
@@ -552,7 +552,7 @@ use Illuminate\Support\Facades\Storage;
                         
                         <div class="col-span-2">
                             <label for="cottage_images" class="block text-sm font-medium text-gray-700">Cottage Images</label>
-                            <input type="file" name="image" id="promotion_image" accept="image/jpeg,image/jpg,image/png" capture="environment" multiple
+                            <input type="file" name="image" id="promotion_image" accept="image/jpeg,image/jpg,image/png" multiple onchange="validateCottageImages(this)"
                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
                             <p class="mt-1 text-sm text-gray-500">Upload multiple images to showcase your cottage</p>
                             
@@ -592,7 +592,7 @@ use Illuminate\Support\Facades\Storage;
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Upload Photos</label>
                     <div class="mt-2 flex items-center">
-                        <input type="file" name="images[]" id="galleryImages" multiple accept="image/jpeg,image/jpg,image/png" capture="environment" class="hidden" onchange="previewGalleryImages(this)">
+                        <input type="file" name="images[]" id="galleryImages" multiple accept="image/jpeg,image/jpg,image/png" class="hidden" onchange="previewGalleryImages(this)">
                         <label for="galleryImages" class="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             <i class="fas fa-upload mr-2"></i> Select Files
                         </label>
@@ -672,8 +672,29 @@ use Illuminate\Support\Facades\Storage;
         existingImages.value = imageIds.join(',');
     }
     
-    function uploadProfilePhoto(input) {
+    function validateAndSubmitCoverImage(input) {
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        
         if (input.files && input.files[0]) {
+            if (input.files[0].size > maxSize) {
+                alert('Image exceeds 10MB. Please select an image smaller than 10MB.');
+                input.value = '';
+                return false;
+            }
+            input.form.submit();
+        }
+    }
+    
+    function uploadProfilePhoto(input) {
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        
+        if (input.files && input.files[0]) {
+            if (input.files[0].size > maxSize) {
+                alert('Image exceeds 10MB. Please select an image smaller than 10MB.');
+                input.value = '';
+                return false;
+            }
+            
             const formData = new FormData();
             formData.append('profile_avatar', input.files[0]);
             formData.append('_token', '{{ csrf_token() }}');
@@ -697,16 +718,67 @@ use Illuminate\Support\Facades\Storage;
         }
     }
     
+    function validateRoomImages(input) {
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        
+        if (input.files && input.files.length > 0) {
+            for (let i = 0; i < input.files.length; i++) {
+                if (input.files[i].size > maxSize) {
+                    alert('One or more images exceed 10MB. Please select images smaller than 10MB.');
+                    input.value = '';
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    function validateCottageImages(input) {
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        
+        if (input.files && input.files.length > 0) {
+            for (let i = 0; i < input.files.length; i++) {
+                if (input.files[i].size > maxSize) {
+                    alert('One or more images exceed 10MB. Please select images smaller than 10MB.');
+                    input.value = '';
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     function previewGalleryImages(input) {
         const previewContainer = document.getElementById('galleryPreviews');
         const fileNames = document.getElementById('fileNames');
+        const maxSize = 10 * 1024 * 1024; // 10MB
         
         previewContainer.innerHTML = '';
         
         if (input.files && input.files.length > 0) {
-            fileNames.textContent = `${input.files.length} file(s) selected`;
+            let validFiles = [];
+            let hasOversizedFile = false;
             
-            Array.from(input.files).forEach((file, index) => {
+            // Validate file sizes
+            Array.from(input.files).forEach((file) => {
+                if (file.size > maxSize) {
+                    hasOversizedFile = true;
+                } else {
+                    validFiles.push(file);
+                }
+            });
+            
+            // Show alert if any file exceeds 10MB
+            if (hasOversizedFile) {
+                alert('One or more images exceed 10MB. Please select images smaller than 10MB.');
+                input.value = ''; // Clear the input
+                fileNames.textContent = 'No files selected';
+                return;
+            }
+            
+            fileNames.textContent = `${validFiles.length} file(s) selected`;
+            
+            validFiles.forEach((file, index) => {
                 if (index < 9) { // Limit preview to 9 images
                     const reader = new FileReader();
                     reader.onload = function(e) {

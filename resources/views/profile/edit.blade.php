@@ -187,9 +187,9 @@
                                    id="profile_picture" 
                                    name="profile_picture"
                                    accept="image/jpeg,image/jpg,image/png"
-                                   capture="environment"
+                                   onchange="validateProfileImage(this)"
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <p class="mt-1 text-sm text-gray-500">JPG, PNG or JPEG. Max 2MB.</p>
+                            <p class="mt-1 text-sm text-gray-500">JPG, PNG or JPEG. Max 10MB.</p>
                         </div>
                     </div>
                     @error('profile_picture')
@@ -223,3 +223,22 @@
     }
 </style>
 @endsection
+
+@push('scripts')
+<script>
+function validateProfileImage(input) {
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        
+        if (file.size > maxSize) {
+            alert('Image exceeds 10MB. Please select an image smaller than 10MB.');
+            input.value = ''; // Clear the input
+            return false;
+        }
+    }
+    return true;
+}
+</script>
+@endpush
