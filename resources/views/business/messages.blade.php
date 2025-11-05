@@ -13,7 +13,7 @@
                     Messages
                 </h1>
                 <p class="text-sm md:text-base text-gray-600 max-w-2xl mx-auto">
-                    Chat with customers about their orders
+                    Chat with your customers about their orders
                 </p>
             </div>
         </div>
@@ -78,24 +78,8 @@
 <style>
     /* Mobile-specific styles for messages page */
     @media (max-width: 768px) {
-        /* Hide top header on mobile */
-        .messages-page header {
-            display: none !important;
-        }
-        
-        /* Adjust page layout for mobile */
-        .messages-page {
-            padding-top: 0 !important;
-            margin-top: 0 !important;
-        }
-        
-        /* Adjust messages header positioning */
+        /* Messages header styling */
         .messages-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 40;
             background: linear-gradient(135deg, #065f46 0%, #047857 100%);
         }
         
@@ -106,12 +90,6 @@
         
         .messages-header i {
             color: #d1fae5;
-        }
-        
-        /* Add padding to content to account for fixed header */
-        .messages-page > div:last-child {
-            padding-top: 140px;
-            padding-bottom: 80px;
         }
     }
 </style>
