@@ -157,8 +157,24 @@ class BusinessApprovalController extends Controller
     {
         $user = $business->user;
         
+        if (!$user) {
+            \Log::warning('Business owner user not found', ['business_id' => $business->id]);
+            return;
+        }
+        
         // Send email notification
-        Mail::to($user->email)->send(new BusinessStatusUpdated($business, $status, $notes));
+        try {
+            Mail::to($user->email)->send(new BusinessStatusUpdated($business, $status, $notes));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send business status email', [
+                'business_id' => $business->id,
+                'user_email' => $user->email,
+                'status' => $status,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            // Don't throw - allow the status update to succeed even if email fails
+        }
         
         // You can also add in-app notifications here
         // $user->notify(new BusinessStatusUpdatedNotification($business, $status, $notes));

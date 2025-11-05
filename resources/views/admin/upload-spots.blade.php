@@ -10,11 +10,11 @@
             <!-- Header with Toggle -->
             <div class="p-4 border-b border-gray-200">
                 <div class="flex items-center justify-between">
-                    <button onclick="toggleTouristSpotsPanel()" class="flex items-center hover:text-blue-700 transition-colors">
+                    <div class="flex items-center">
                         <i class="fas fa-map-marked-alt text-blue-600 text-xl"></i>
                         <span id="touristSpotsTitle" class="ml-2 font-semibold text-gray-900">Uploaded Tourist Spots</span>
-                    </button>
-                    <button id="touristSpotsToggleBtn" onclick="toggleTouristSpotsPanel()" class="text-gray-400 hover:text-gray-600 p-1">
+                    </div>
+                    <button id="touristSpotsToggleBtn" onclick="toggleTouristSpotsPanel()" class="hidden lg:block text-gray-400 hover:text-gray-600 p-1">
                         <i id="touristSpotsToggleIcon" class="fas fa-chevron-left text-sm"></i>
                     </button>
                 </div>
