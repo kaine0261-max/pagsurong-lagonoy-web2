@@ -20,28 +20,28 @@ use Illuminate\Support\Facades\Storage;
 
 <!-- Declined Business Alert with Re-upload Section -->
 @if($businessProfile && $businessProfile->status === 'declined')
-    <div class="bg-red-50 border-l-4 border-red-500 p-6 mb-6 rounded-lg shadow-md mx-4">
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 sm:p-6 mb-4 sm:mb-6 rounded-lg shadow-md mx-2 sm:mx-4">
         <div class="flex items-start">
             <div class="flex-shrink-0">
-                <i class="fas fa-exclamation-circle text-red-500 text-2xl"></i>
+                <i class="fas fa-exclamation-circle text-red-500 text-xl sm:text-2xl"></i>
             </div>
-            <div class="ml-4 flex-1">
-                <h3 class="text-lg font-semibold text-red-800 mb-2">
+            <div class="ml-3 sm:ml-4 flex-1">
+                <h3 class="text-base sm:text-lg font-semibold text-red-800 mb-2">
                     Your Resort Application Was Declined
                 </h3>
                 @if($businessProfile->decline_reason)
-                    <div class="bg-white border border-red-200 rounded-md p-4 mb-4">
-                        <p class="text-sm font-medium text-red-700 mb-1">Reason for Decline:</p>
-                        <p class="text-sm text-gray-700">{{ $businessProfile->decline_reason }}</p>
+                    <div class="bg-white border border-red-200 rounded-md p-3 sm:p-4 mb-3 sm:mb-4">
+                        <p class="text-xs sm:text-sm font-medium text-red-700 mb-1">Reason for Decline:</p>
+                        <p class="text-xs sm:text-sm text-gray-700 break-words">{{ $businessProfile->decline_reason }}</p>
                     </div>
                 @endif
-                <p class="text-sm text-red-700 mb-4">
+                <p class="text-xs sm:text-sm text-red-700 mb-3 sm:mb-4">
                     Please review the reason above and update your business permit documents to resubmit for approval.
                 </p>
                 
                 <!-- Business Permit Re-upload Form -->
-                <div class="bg-white border border-red-200 rounded-lg p-4">
-                    <h4 class="text-sm font-semibold text-gray-800 mb-3">Update Business Permit</h4>
+                <div class="bg-white border border-red-200 rounded-lg p-3 sm:p-4">
+                    <h4 class="text-xs sm:text-sm font-semibold text-gray-800 mb-2 sm:mb-3">Update Business Permit</h4>
                     <form action="{{ route('business.updateProfile') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="space-y-3">
@@ -75,13 +75,13 @@ use Illuminate\Support\Facades\Storage;
                                 </div>
                             @endif
                             
-                            <div class="flex items-center gap-3 pt-2">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 pt-2">
                                 <button type="submit" 
-                                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-xs sm:text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                     <i class="fas fa-upload mr-2"></i>
                                     Resubmit for Approval
                                 </button>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 text-center sm:text-left">
                                     Your resort will be reviewed again after resubmission
                                 </p>
                             </div>
