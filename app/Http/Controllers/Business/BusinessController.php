@@ -511,35 +511,57 @@ class BusinessController extends Controller
             return redirect()->route('business.setup');
         }
 
-        $validated = $request->validate([
-            'business_name' => 'required|string|max:255',
-            'description' => 'required|string|max:1000',
-            'contact_number' => 'required|string|max:20',
-            'address' => 'required|string|max:255',
-            'city' => 'required|string|max:100',
-            'province' => 'required|string|max:100',
-            'postal_code' => 'required|string|max:20',
-            'website' => 'nullable|url|max:255',
-            'facebook_page' => 'nullable|url|max:255',
-            'business_permit' => 'nullable|array',
-            'business_permit.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
-            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
-        ]);
+        // Check if this is just a business permit re-upload (for declined businesses)
+        $isPermitOnlyUpdate = $request->hasFile('business_permit') && 
+                              !$request->has('business_name') && 
+                              !$request->has('description');
 
-        return DB::transaction(function () use ($validated, $request, $business) {
-            // Update basic info
-            $business->update([
-                'business_name' => $validated['business_name'],
-                'description' => $validated['description'],
-                'contact_number' => $validated['contact_number'],
-                'address' => $validated['address'],
-                'city' => $validated['city'],
-                'province' => $validated['province'],
-                'postal_code' => $validated['postal_code'],
-                'website' => $validated['website'] ?? null,
-                'facebook_page' => $validated['facebook_page'] ?? null,
-                'status' => 'pending', // Reset status to pending after update
+        if ($isPermitOnlyUpdate) {
+            // Simple validation for permit-only update
+            $validated = $request->validate([
+                'business_permit' => 'required|array',
+                'business_permit.*' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
             ]);
+        } else {
+            // Full profile update validation
+            $validated = $request->validate([
+                'business_name' => 'required|string|max:255',
+                'description' => 'required|string|max:1000',
+                'contact_number' => 'required|string|max:20',
+                'address' => 'required|string|max:255',
+                'city' => 'required|string|max:100',
+                'province' => 'required|string|max:100',
+                'postal_code' => 'required|string|max:20',
+                'website' => 'nullable|url|max:255',
+                'facebook_page' => 'nullable|url|max:255',
+                'business_permit' => 'nullable|array',
+                'business_permit.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
+                'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
+            ]);
+        }
+
+        return DB::transaction(function () use ($validated, $request, $business, $isPermitOnlyUpdate) {
+            // Update basic info only if it's a full profile update
+            if (!$isPermitOnlyUpdate) {
+                $business->update([
+                    'business_name' => $validated['business_name'],
+                    'description' => $validated['description'],
+                    'contact_number' => $validated['contact_number'],
+                    'address' => $validated['address'],
+                    'city' => $validated['city'],
+                    'province' => $validated['province'],
+                    'postal_code' => $validated['postal_code'],
+                    'website' => $validated['website'] ?? null,
+                    'facebook_page' => $validated['facebook_page'] ?? null,
+                    'status' => 'pending', // Reset status to pending after update
+                ]);
+            } else {
+                // For permit-only update, just reset status and clear decline reason
+                $business->update([
+                    'status' => 'pending',
+                    'decline_reason' => null,
+                ]);
+            }
 
             // Update business permits if provided
             if ($request->hasFile('business_permit')) {
@@ -583,17 +605,33 @@ class BusinessController extends Controller
             // Notify admin about the update
             // $this->notifyAdminAboutUpdate($business);
 
-            // Redirect based on business type
-            switch ($business->business_type) {
-                case 'hotel':
-                    return redirect()->route('terms', ['from' => 'business_profile_update'])
-                        ->with('success', 'Your hotel profile has been updated and is pending review.');
-                case 'resort':
-                    return redirect()->route('terms', ['from' => 'business_profile_update'])
-                        ->with('success', 'Your resort profile has been updated and is pending review.');
-                default:
-                    return redirect()->route('terms', ['from' => 'business_profile_update'])
-                        ->with('success', 'Your business profile has been updated and is pending review.');
+            // Redirect based on business type and update type
+            if ($isPermitOnlyUpdate) {
+                // For permit-only updates, redirect back to the dashboard
+                switch ($business->business_type) {
+                    case 'hotel':
+                        return redirect()->route('business.my-hotel')
+                            ->with('success', 'Your business permit has been resubmitted for approval. You will be notified once reviewed.');
+                    case 'resort':
+                        return redirect()->route('business.my-resort')
+                            ->with('success', 'Your business permit has been resubmitted for approval. You will be notified once reviewed.');
+                    default:
+                        return redirect()->route('business.my-shop')
+                            ->with('success', 'Your business permit has been resubmitted for approval. You will be notified once reviewed.');
+                }
+            } else {
+                // For full profile updates, redirect to terms page
+                switch ($business->business_type) {
+                    case 'hotel':
+                        return redirect()->route('terms', ['from' => 'business_profile_update'])
+                            ->with('success', 'Your hotel profile has been updated and is pending review.');
+                    case 'resort':
+                        return redirect()->route('terms', ['from' => 'business_profile_update'])
+                            ->with('success', 'Your resort profile has been updated and is pending review.');
+                    default:
+                        return redirect()->route('terms', ['from' => 'business_profile_update'])
+                            ->with('success', 'Your business profile has been updated and is pending review.');
+                }
             }
         });
     }

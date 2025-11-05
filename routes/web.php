@@ -223,6 +223,7 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
             
             // Profile routes
+            Route::post('/profile/update', [\App\Http\Controllers\Business\BusinessController::class, 'updateProfile'])->name('updateProfile');
             Route::post('/update-profile-avatar', [\App\Http\Controllers\Business\BusinessController::class, 'updateProfileAvatar'])->name('updateProfileAvatar');
             Route::post('/update-avatar', [\App\Http\Controllers\Business\BusinessController::class, 'updateProfileAvatar'])->name('updateAvatar');
             

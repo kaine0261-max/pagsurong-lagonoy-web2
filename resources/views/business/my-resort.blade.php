@@ -18,6 +18,81 @@ use Illuminate\Support\Facades\Storage;
     </div>
 @endif
 
+<!-- Declined Business Alert with Re-upload Section -->
+@if($businessProfile && $businessProfile->status === 'declined')
+    <div class="bg-red-50 border-l-4 border-red-500 p-6 mb-6 rounded-lg shadow-md mx-4">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <i class="fas fa-exclamation-circle text-red-500 text-2xl"></i>
+            </div>
+            <div class="ml-4 flex-1">
+                <h3 class="text-lg font-semibold text-red-800 mb-2">
+                    Your Resort Application Was Declined
+                </h3>
+                @if($businessProfile->decline_reason)
+                    <div class="bg-white border border-red-200 rounded-md p-4 mb-4">
+                        <p class="text-sm font-medium text-red-700 mb-1">Reason for Decline:</p>
+                        <p class="text-sm text-gray-700">{{ $businessProfile->decline_reason }}</p>
+                    </div>
+                @endif
+                <p class="text-sm text-red-700 mb-4">
+                    Please review the reason above and update your business permit documents to resubmit for approval.
+                </p>
+                
+                <!-- Business Permit Re-upload Form -->
+                <div class="bg-white border border-red-200 rounded-lg p-4">
+                    <h4 class="text-sm font-semibold text-gray-800 mb-3">Update Business Permit</h4>
+                    <form action="{{ route('business.updateProfile') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Upload New Business Permit(s) <span class="text-red-500">*</span>
+                                </label>
+                                <input type="file" 
+                                       name="business_permit[]" 
+                                       multiple 
+                                       accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                       class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                       required>
+                                <p class="mt-1 text-xs text-gray-500">
+                                    Accepted formats: PDF, JPG, PNG, DOC, DOCX (Max 5MB per file)
+                                </p>
+                            </div>
+                            
+                            <!-- Current Business Permit Display -->
+                            @if(!empty($businessProfile->business_permit_path))
+                                <div class="mt-3">
+                                    <p class="text-xs font-medium text-gray-700 mb-2">Current Business Permit(s):</p>
+                                    <div class="space-y-1">
+                                        @foreach($businessProfile->business_permit_path as $index => $permit)
+                                            <div class="flex items-center text-xs text-gray-600">
+                                                <i class="fas fa-file-alt mr-2 text-gray-400"></i>
+                                                <span>Permit {{ $index + 1 }}: {{ basename($permit) }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                            
+                            <div class="flex items-center gap-3 pt-2">
+                                <button type="submit" 
+                                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    <i class="fas fa-upload mr-2"></i>
+                                    Resubmit for Approval
+                                </button>
+                                <p class="text-xs text-gray-500">
+                                    Your resort will be reviewed again after resubmission
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
 <!-- Hero Banner Section with Dynamic Background -->
 <div class="w-full h-64 relative bg-gray-200"
      id="cover-banner"
