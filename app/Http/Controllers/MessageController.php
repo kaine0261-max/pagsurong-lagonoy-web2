@@ -124,13 +124,15 @@ class MessageController extends Controller
         $me = Auth::user();
         $lastMessageId = $request->input('last_message_id', 0);
 
-        $messages = Message::where(function ($q) use ($me, $user) {
-                $q->where('sender_id', $me->id)->where('receiver_id', $user->id);
+        $messages = Message::where('id', '>', $lastMessageId)
+            ->where(function ($q) use ($me, $user) {
+                $q->where(function ($q2) use ($me, $user) {
+                    $q2->where('sender_id', $me->id)->where('receiver_id', $user->id);
+                })
+                ->orWhere(function ($q2) use ($me, $user) {
+                    $q2->where('sender_id', $user->id)->where('receiver_id', $me->id);
+                });
             })
-            ->orWhere(function ($q) use ($me, $user) {
-                $q->where('sender_id', $user->id)->where('receiver_id', $me->id);
-            })
-            ->where('id', '>', $lastMessageId)
             ->with(['sender', 'receiver'])
             ->orderBy('created_at')
             ->get();
