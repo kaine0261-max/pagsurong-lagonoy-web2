@@ -112,6 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let isUserScrolling = false;
     let scrollTimeout;
     let isSending = false;
+    let justSentMessage = false;
+    let skipNextPoll = false;
     
     // Scroll to bottom on load
     function scrollToBottom() {
@@ -191,18 +193,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 scrollToBottom();
                 
-                // Wait a bit before fetching to get the actual message ID
+                // Skip next 2 polling cycles to avoid fetching our own message
+                skipNextPoll = true;
+                setTimeout(() => {
+                    skipNextPoll = false;
+                }, 5000); // Skip for 5 seconds
+                
+                // Fetch once to update the message ID
                 setTimeout(async () => {
                     try {
                         const fetchResponse = await fetch(`{{ route('messages.fetch', $user->id) }}?last_message_id=${lastMessageId}`);
                         const data = await fetchResponse.json();
                         if (data.messages && data.messages.length > 0) {
-                            lastMessageId = Math.max(...data.messages.map(m => m.id));
+                            // Update lastMessageId to the highest ID to prevent duplicates
+                            const maxId = Math.max(...data.messages.map(m => m.id));
+                            if (maxId > lastMessageId) {
+                                lastMessageId = maxId;
+                            }
                         }
                     } catch (err) {
                         console.error('Error updating message ID:', err);
                     }
-                }, 500);
+                }, 1000);
             }
         } catch (error) {
             console.error('Error sending message:', error);
@@ -216,6 +228,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Fetch new messages every 2 seconds
     setInterval(async () => {
+        // Skip polling if we just sent a message
+        if (skipNextPoll) {
+            return;
+        }
+        
         try {
             const response = await fetch(`{{ route('messages.fetch', $user->id) }}?last_message_id=${lastMessageId}`);
             const data = await response.json();
