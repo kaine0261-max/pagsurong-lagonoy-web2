@@ -3,18 +3,18 @@
 @section('title', 'Business Approvals')
 
 @section('content')
-<div class="container mx-auto px-4 py-8 -mt-20">
-    <div class="flex justify-between items-center mb-8">
-        <h1 class="text-2xl font-bold text-gray-900">Business Approvals</h1>
-        <div class="flex space-x-4">
-            <a href="#pending" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                Pending ({{ $pendingBusinesses->total() }})
+<div class="container mx-auto px-4 py-8 md:-mt-20 pb-24 md:pb-8">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-8 space-y-4 md:space-y-0">
+        <h1 class="text-2xl font-bold text-gray-900">Approvals</h1>
+        <div class="flex flex-wrap gap-2">
+            <a href="#pending" class="px-3 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-center flex-1 sm:flex-none">
+                <i class="fas fa-clock mr-1"></i> {{ $pendingBusinesses->total() }}
             </a>
-            <a href="#approved" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                Approved ({{ $approvedBusinesses->total() }})
+            <a href="#approved" class="px-3 py-2 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 text-center flex-1 sm:flex-none">
+                <i class="fas fa-check mr-1"></i> {{ $approvedBusinesses->total() }}
             </a>
-            <a href="#declined" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                Declined ({{ $declinedBusinesses->total() }})
+            <a href="#declined" class="px-3 py-2 text-sm bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 text-center flex-1 sm:flex-none">
+                <i class="fas fa-times mr-1"></i> {{ $declinedBusinesses->total() }}
             </a>
         </div>
     </div>

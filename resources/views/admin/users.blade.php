@@ -3,24 +3,24 @@
 @section('title', 'All Users')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-8">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">All Users</h1>
-        <div class="flex space-x-2">
-            <form method="GET" action="{{ route('admin.users') }}" class="flex space-x-2">
-                <select name="role" class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" onchange="this.form.submit()">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:mt-8 pb-24 md:pb-8">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
+        <h1 class="text-2xl font-bold text-gray-800">All Users</h1>
+        <div class="flex flex-col sm:flex-row w-full md:w-auto space-y-2 sm:space-y-0 sm:space-x-2">
+            <form method="GET" action="{{ route('admin.users') }}" class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto">
+                <select name="role" class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto" onchange="this.form.submit()">
                     <option value="">Filter by Role</option>
                     <option value="customer" {{ request('role') == 'customer' ? 'selected' : '' }}>Customer</option>
                     <option value="business_owner" {{ request('role') == 'business_owner' ? 'selected' : '' }}>Business Owner</option>
                     <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                 </select>
                 <input type="text" name="search" placeholder="Search users..." value="{{ request('search') }}" 
-                       class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                       class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm transition-colors">
                     Search
                 </button>
             </form>
-            <a href="{{ route('admin.users.archived') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm transition-colors">
+            <a href="{{ route('admin.users.archived') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm transition-colors text-center">
                 Archived Users
             </a>
         </div>

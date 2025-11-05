@@ -319,6 +319,11 @@
                         <span class="text-[10px] leading-tight">Users</span>
                     </a>
                     
+                    <a href="{{ route('admin.upload.spots') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs('admin.upload.spots') ? 'text-green-500' : '' }}">
+                        <i class="fas fa-bullhorn text-xl mb-1"></i>
+                        <span class="text-[10px] leading-tight">Promotions</span>
+                    </a>
+                    
                     <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
                         @if($user->profile && $user->profile->profile_picture)
                             <img src="{{ Storage::url($user->profile->profile_picture) }}"
@@ -1018,21 +1023,6 @@
                             <a href="{{ route('profile.show') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
                                 <i class="fas fa-user mr-4 text-green-600 w-5"></i>
                                 <span class="font-medium">My Profile</span>
-                            </a>
-
-                            <a href="{{ route('admin.dashboard') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-tachometer-alt mr-4 text-green-600 w-5"></i>
-                                <span class="font-medium">Dashboard</span>
-                            </a>
-
-                            <a href="{{ route('admin.users') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-users mr-4 text-green-600 w-5"></i>
-                                <span class="font-medium">Users</span>
-                            </a>
-
-                            <a href="{{ route('admin.business-approvals.index') }}" class="flex items-center px-6 py-4 text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-clipboard-check mr-4 text-green-600 w-5"></i>
-                                <span class="font-medium">Business Approvals</span>
                             </a>
 
                             <form method="POST" action="{{ route('logout') }}" id="logout-form-mobile-sidebar-admin" class="hidden">
