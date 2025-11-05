@@ -77,39 +77,6 @@
                                 </p>
                             @endif
 
-                            <!-- Rating Display -->
-                            <div class="flex items-center justify-center text-sm text-gray-600 mb-3">
-                                @auth
-                                    <button onclick="showShopRating({{ $shop->id }})" class="flex items-center hover:text-yellow-500 transition-colors">
-                                        <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                        @php
-                                            try {
-                                                $avgRating = method_exists($shop, 'ratings') ? $shop->ratings()->avg('rating') : 0;
-                                                $ratingCount = method_exists($shop, 'ratings') ? $shop->ratings()->count() : 0;
-                                            } catch (Exception $e) {
-                                                $avgRating = 0;
-                                                $ratingCount = 0;
-                                            }
-                                        @endphp
-                                        {{ number_format($avgRating ?? 0, 1) }} ({{ $ratingCount }})
-                                    </button>
-                                @else
-                                    <button onclick="handleRating('shop', '{{ addslashes($shop->businessProfile->business_name ?? $shop->name) }}')" class="flex items-center hover:text-yellow-500 transition-colors">
-                                        <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                        @php
-                                            try {
-                                                $avgRating = method_exists($shop, 'ratings') ? $shop->ratings()->avg('rating') : 0;
-                                                $ratingCount = method_exists($shop, 'ratings') ? $shop->ratings()->count() : 0;
-                                            } catch (Exception $e) {
-                                                $avgRating = 0;
-                                                $ratingCount = 0;
-                                            }
-                                        @endphp
-                                        {{ number_format($avgRating ?? 0, 1) }} ({{ $ratingCount }})
-                                    </button>
-                                @endauth
-                            </div>
-
                             <!-- Actions -->
                             <div class="mt-auto space-y-1.5 sm:space-y-2">
                                 <a href="{{ auth()->check() && auth()->user()->role === 'customer' ? route('customer.shops.show', $shop->businessProfile->id ?? $shop->id) : route('public.shops.show', $shop->businessProfile->id ?? $shop->id) }}" 

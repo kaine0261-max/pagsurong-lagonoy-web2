@@ -847,6 +847,41 @@ use Illuminate\Support\Facades\Storage;
     </div>
 </div>
 
+<!-- Delete Product Confirmation Modal -->
+<div id="deleteProductModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
+                Confirm Delete
+            </h3>
+            <button onclick="closeDeleteProductModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="mb-6">
+            <p class="text-gray-600 mb-2">Are you sure you want to delete this product?</p>
+            <p class="font-semibold text-gray-900" id="deleteProductName"></p>
+            <p class="text-sm text-red-600 mt-3">
+                <i class="fas fa-info-circle mr-1"></i>
+                This action cannot be undone.
+            </p>
+        </div>
+        
+        <div class="flex space-x-3">
+            <button type="button" onclick="closeDeleteProductModal()" 
+                    class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                Cancel
+            </button>
+            <button type="button" onclick="confirmDeleteProduct()" 
+                    class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                <i class="fas fa-trash mr-2"></i>Delete
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
 function editProductStock(productId, currentStock, stockLimit) {
     document.getElementById('edit_current_stock').value = currentStock;
@@ -893,34 +928,58 @@ function updateProductStock(event) {
     });
 }
 
+let productToDelete = null;
+
 function deleteProduct(productId, productName) {
-    if (confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) {
-        fetch(`{{ url('/business/products') }}/${productId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Show success message
-                showNotification('Product deleted successfully!', 'success');
-                // Reload the page to update the product list
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } else {
-                showNotification(data.message || 'Error deleting product', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Error deleting product', 'error');
-        });
-    }
+    // Store product info for deletion
+    productToDelete = { id: productId, name: productName };
+    
+    // Update modal content
+    document.getElementById('deleteProductName').textContent = productName;
+    
+    // Show modal
+    document.getElementById('deleteProductModal').classList.remove('hidden');
+}
+
+function closeDeleteProductModal() {
+    document.getElementById('deleteProductModal').classList.add('hidden');
+    productToDelete = null;
+}
+
+function confirmDeleteProduct() {
+    if (!productToDelete) return;
+    
+    const productId = productToDelete.id;
+    
+    // Close modal
+    closeDeleteProductModal();
+    
+    // Perform delete
+    fetch(`{{ url('/business/products') }}/${productId}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success message
+            showNotification('Product deleted successfully!', 'success');
+            // Reload the page to update the product list
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        } else {
+            showNotification(data.message || 'Error deleting product', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error deleting product', 'error');
+    });
 }
 
 function validateAndSubmitCoverImage(input) {

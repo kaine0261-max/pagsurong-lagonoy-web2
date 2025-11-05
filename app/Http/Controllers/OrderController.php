@@ -62,7 +62,8 @@ class OrderController extends Controller
         
         try {
             $request->validate([
-                'pickup_time' => 'nullable|string|max:255',
+                'pickup_date' => 'nullable|date|after_or_equal:today',
+                'pickup_time' => 'nullable|date_format:H:i',
                 'notes' => 'nullable|string|max:1000',
             ]);
 
@@ -130,7 +131,20 @@ class OrderController extends Controller
             if ($business && $business->owner) {
                 $messageContent = "🛒 New Order #" . $order->id . "\n\n";
                 $messageContent .= "Customer: {$user->name}\n";
-                $messageContent .= "Pickup Time: " . ($request->input('pickup_time') ?: 'ASAP') . "\n";
+                
+                // Format pickup date and time
+                $pickupDate = $request->input('pickup_date');
+                $pickupTime = $request->input('pickup_time');
+                if ($pickupDate && $pickupTime) {
+                    $messageContent .= "Pickup: " . date('M d, Y', strtotime($pickupDate)) . " at " . date('g:i A', strtotime($pickupTime)) . "\n";
+                } elseif ($pickupDate) {
+                    $messageContent .= "Pickup Date: " . date('M d, Y', strtotime($pickupDate)) . "\n";
+                } elseif ($pickupTime) {
+                    $messageContent .= "Pickup Time: " . date('g:i A', strtotime($pickupTime)) . "\n";
+                } else {
+                    $messageContent .= "Pickup: ASAP\n";
+                }
+                
                 if ($request->input('notes')) {
                     $messageContent .= "Notes: " . $request->input('notes') . "\n";
                 }

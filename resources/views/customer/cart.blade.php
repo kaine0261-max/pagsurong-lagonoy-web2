@@ -204,9 +204,28 @@
                 <input type="hidden" name="business_id" id="modal-business-id">
 
                 <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Pickup Time</label>
-                        <input type="text" name="pickup_time" placeholder="e.g., Tomorrow 2:00 PM, or leave blank for ASAP" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-calendar mr-1"></i>Pickup Date
+                            </label>
+                            <input type="date" 
+                                   name="pickup_date" 
+                                   id="pickup_date"
+                                   min="{{ date('Y-m-d') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            <p class="text-xs text-gray-500 mt-1">Leave blank for ASAP</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-clock mr-1"></i>Pickup Time
+                            </label>
+                            <input type="time" 
+                                   name="pickup_time" 
+                                   id="pickup_time"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            <p class="text-xs text-gray-500 mt-1">Leave blank for ASAP</p>
+                        </div>
                     </div>
 
                     <div>
