@@ -39,7 +39,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('pagsurongfaviconlogo.png') }}" type="image/png">
 
     @stack('styles')
 </head>
@@ -56,7 +56,7 @@
         <div class="md:hidden px-4 py-3 flex items-center justify-between">
             <!-- Left Side - Main Branding -->
             <div class="flex items-center space-x-2">
-                <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-8 h-auto">
+                <img src="{{ asset('pagsurongfaviconlogo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-8 h-auto">
                 <div class="font-playfair text-lg font-bold">Pagsurong Lagonoy</div>
             </div>
             
@@ -346,7 +346,7 @@
             <!-- Left Side - Main Branding -->
             <div class="flex items-center">
                 <a href="javascript:history.back()" class="flex items-center hover:opacity-80 transition-opacity">
-                    <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3 drop-shadow-sm">
+                    <img src="{{ asset('pagsurongfaviconlogo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3 drop-shadow-sm">
                     <div class="font-playfair text-2xl font-bold">Pagsurong Lagonoy</div>
                 </a>
             </div>

@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('pagsurongfaviconlogo.png') }}" type="image/png">
     
     <!-- Tailwind Configuration -->
     <script>
@@ -36,7 +36,7 @@
     <!-- Header -->
     <header class="bg-white py-4 px-4 md:px-10 flex flex-col md:flex-row justify-between items-center shadow-sm relative z-10">
         <div class="flex items-center mb-4 md:mb-0">
-            <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3">
+            <img src="{{ asset('pagsurongfaviconlogo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3">
             <div class="font-playfair text-2xl font-bold text-gray-800">Pagsurong Lagonoy</div>
         </div>
         <nav class="flex flex-wrap justify-center">
@@ -81,7 +81,7 @@
             </div>
 
             <div class="text-center">
-                <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="mx-auto h-12 w-auto">
+                <img src="{{ asset('pagsurongfaviconlogo.png') }}" alt="Pagsurong Lagonoy Logo" class="mx-auto h-12 w-auto">
                 <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Complete Your Business Profile</h2>
                 <p class="mt-2 text-sm text-gray-600">Just a few more details to get your {{ session('business_type') === 'hotel' ? 'hotel' : (session('business_type') === 'resort' ? 'resort' : 'business') }} up and running!</p>
             </div>

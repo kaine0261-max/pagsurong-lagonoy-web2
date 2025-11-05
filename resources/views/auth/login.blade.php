@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('pagsurongfaviconlogo.png') }}" type="image/png">
     
     <!-- Tailwind Configuration -->
     <script>
@@ -63,7 +63,7 @@
     <header style="background-color: #064e3b;" class="py-4 px-4 md:px-10 flex flex-col md:flex-row justify-between items-center shadow-sm relative z-10">
         <!-- Left Side - Main Branding -->
         <div class="flex items-center mb-4 md:mb-0">
-            <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3" />
+            <img src="{{ asset('pagsurongfaviconlogo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3" />
             <div class="font-playfair text-2xl font-bold text-white">Pagsurong Lagonoy</div>
         </div>
         

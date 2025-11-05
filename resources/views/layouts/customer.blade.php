@@ -19,7 +19,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('pagsurongfaviconlogo.png') }}" type="image/png">
     
     <style>
         html {
@@ -40,7 +40,7 @@
     <header class="py-2 md:py-4 px-2 sm:px-3 md:px-10 flex flex-col md:flex-row justify-between items-center shadow-sm fixed top-0 left-0 right-0 z-50 text-white" style="background-color: #064e3b;">
         <!-- Left Side - Main Branding (Hidden on Mobile) -->
         <div class="hidden md:flex items-center">
-            <img src="{{ asset('logo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3">
+            <img src="{{ asset('pagsurongfaviconlogo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3">
             <div class="font-playfair text-2xl font-bold text-white">Pagsurong Lagonoy</div>
         </div>
         
@@ -48,7 +48,7 @@
         <nav class="flex flex-wrap justify-center items-center mb-0 gap-1 sm:gap-2">
             <!-- Products with Logo (Mobile Only) -->
             <a href="{{ route('customer.products') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 flex items-center {{ request()->routeIs('customer.products') ? 'text-green-200 border-b-2 border-green-200' : '' }}">
-                <img src="{{ asset('logo.png') }}" alt="Logo" class="w-5 h-5 sm:w-6 sm:h-6 mr-1 sm:mr-1.5 md:hidden">
+                <img src="{{ asset('pagsurongfaviconlogo.png') }}" alt="Logo" class="w-5 h-5 sm:w-6 sm:h-6 mr-1 sm:mr-1.5 md:hidden">
                 <span>Products</span>
             </a>
             <a href="{{ route('customer.shops') }}" class="px-2 sm:px-3 md:px-3 py-1.5 md:py-2 text-white font-medium text-xs sm:text-sm md:text-base hover:text-green-200 transition-colors duration-200 {{ request()->routeIs('customer.shops*') ? 'text-green-200 border-b-2 border-green-200' : '' }}">Shops</a>
