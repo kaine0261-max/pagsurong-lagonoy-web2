@@ -23,7 +23,7 @@ class ProfileController extends Controller
     public function updateAvatar(Request $request)
     {
         $request->validate([
-            'profile_avatar' => 'required|image|mimes:jpeg,png,jpg,gif',
+            'profile_avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
         $user = $request->user();
@@ -97,7 +97,7 @@ class ProfileController extends Controller
             'phone_number' => 'required|string|max:20',
             'location' => 'required|string|max:255',
             'bio' => 'nullable|string|max:500',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
         ]);
 
         // Create profile
@@ -139,7 +139,7 @@ class ProfileController extends Controller
             'business_location' => 'required|string|max:255',
             'phone_number' => 'required|string|max:20',
             'email_address' => 'nullable|email|max:255',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'facebook' => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',
             'twitter' => 'nullable|url|max:255',
@@ -215,7 +215,7 @@ class ProfileController extends Controller
             'phone_number' => 'required|string|max:20',
             'address' => 'required|string|max:255',
             'bio' => 'nullable|string|max:500',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'facebook' => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',
             'twitter' => 'nullable|url|max:255',
@@ -246,7 +246,7 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif',
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
         // Ensure profile exists

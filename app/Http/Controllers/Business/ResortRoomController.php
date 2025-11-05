@@ -62,7 +62,7 @@ class ResortRoomController extends Controller
             'price_per_night' => 'required|numeric|min:0',
             'capacity' => 'required|integer|min:1|max:20',
             'description' => 'nullable|string',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'is_available' => 'nullable|boolean'
             // Removed amenities validation to match cottage functionality
         ]);
@@ -276,7 +276,7 @@ class ResortRoomController extends Controller
             'price_per_night' => 'required|numeric|min:0',
             'capacity' => 'required|integer|min:1|max:20',
             'description' => 'nullable|string',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
             'existing_images' => 'nullable|string',
             'is_available' => 'nullable|boolean'
             // Removed amenities validation to match cottage functionality
