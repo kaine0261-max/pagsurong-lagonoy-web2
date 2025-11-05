@@ -85,7 +85,7 @@
     </div>
 
     <!-- 3. Fixed Input Form - Bottom -->
-    <form id="message-form" action="{{ route('messages.send') }}" method="POST" class="message-input">
+    <form action="{{ route('messages.send') }}" method="POST" class="message-input">
         @csrf
         <input type="hidden" name="receiver_id" value="{{ $user->id }}">
         <textarea 
@@ -95,7 +95,7 @@
             class="flex-1 bg-gray-100 border-0 rounded-full px-4 py-2 resize-none focus:outline-none focus:bg-gray-200 text-sm"
             placeholder="Type a message..."
             required></textarea>
-        <button type="submit" id="send-button" class="bg-green-600 hover:bg-green-700 text-white w-10 h-10 rounded-full transition-colors flex items-center justify-center flex-shrink-0 shadow-md">
+        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white w-10 h-10 rounded-full transition-colors flex items-center justify-center flex-shrink-0 shadow-md">
             <i class="fas fa-paper-plane text-sm"></i>
         </button>
     </form>
@@ -106,36 +106,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('messages-container');
     const textarea = document.getElementById('message-input');
-    const messageForm = document.getElementById('message-form');
-    const sendButton = document.getElementById('send-button');
-    let lastMessageId = {{ $messages->last()->id ?? 0 }};
-    let isUserScrolling = false;
-    let scrollTimeout;
-    let isSending = false;
-    let justSentMessage = false;
-    let skipNextPoll = false;
     
     // Scroll to bottom on load
-    function scrollToBottom() {
-        if (container && !isUserScrolling) {
-            container.scrollTop = container.scrollHeight;
-        }
+    if (container) {
+        container.scrollTop = container.scrollHeight;
     }
-    
-    scrollToBottom();
-    
-    // Detect user scrolling
-    container.addEventListener('scroll', () => {
-        const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 50;
-        isUserScrolling = !isAtBottom;
-        
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-            if (isAtBottom) {
-                isUserScrolling = false;
-            }
-        }, 1000);
-    });
     
     // Auto-resize textarea
     if (textarea) {
@@ -144,137 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
     }
-    
-    // Handle form submission via AJAX
-    messageForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        if (isSending) return;
-        
-        const content = textarea.value.trim();
-        if (!content) return;
-        
-        isSending = true;
-        sendButton.disabled = true;
-        
-        try {
-            const formData = new FormData(messageForm);
-            const response = await fetch(messageForm.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
-            
-            if (response.ok) {
-                // Clear textarea
-                textarea.value = '';
-                textarea.style.height = 'auto';
-                
-                // Add message to UI immediately
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'flex justify-end mb-3';
-                messageDiv.style.animation = 'slideIn 0.3s ease-out';
-                
-                const bubbleDiv = document.createElement('div');
-                bubbleDiv.className = 'max-w-[75%] px-4 py-2 rounded-2xl shadow-sm bg-green-600 text-white rounded-br-sm';
-                
-                const now = new Date();
-                const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-                
-                bubbleDiv.innerHTML = `
-                    <div class="break-words text-sm">${content.replace(/\n/g, '<br>')}</div>
-                    <div class="text-xs opacity-70 mt-1">${timeStr}</div>
-                `;
-                
-                messageDiv.appendChild(bubbleDiv);
-                container.appendChild(messageDiv);
-                
-                scrollToBottom();
-                
-                // Skip next 2 polling cycles to avoid fetching our own message
-                skipNextPoll = true;
-                setTimeout(() => {
-                    skipNextPoll = false;
-                }, 5000); // Skip for 5 seconds
-                
-                // Fetch once to update the message ID
-                setTimeout(async () => {
-                    try {
-                        const fetchResponse = await fetch(`{{ route('messages.fetch', $user->id) }}?last_message_id=${lastMessageId}`);
-                        const data = await fetchResponse.json();
-                        if (data.messages && data.messages.length > 0) {
-                            // Update lastMessageId to the highest ID to prevent duplicates
-                            const maxId = Math.max(...data.messages.map(m => m.id));
-                            if (maxId > lastMessageId) {
-                                lastMessageId = maxId;
-                            }
-                        }
-                    } catch (err) {
-                        console.error('Error updating message ID:', err);
-                    }
-                }, 1000);
-            }
-        } catch (error) {
-            console.error('Error sending message:', error);
-            alert('Failed to send message. Please try again.');
-        } finally {
-            isSending = false;
-            sendButton.disabled = false;
-            textarea.focus();
-        }
-    });
-    
-    // Fetch new messages every 2 seconds
-    setInterval(async () => {
-        // Skip polling if we just sent a message
-        if (skipNextPoll) {
-            return;
-        }
-        
-        try {
-            const response = await fetch(`{{ route('messages.fetch', $user->id) }}?last_message_id=${lastMessageId}`);
-            const data = await response.json();
-            
-            if (data.messages && data.messages.length > 0) {
-                data.messages.forEach(msg => {
-                    // Create message bubble
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = `flex ${msg.is_mine ? 'justify-end' : 'justify-start'} mb-3`;
-                    messageDiv.style.animation = 'slideIn 0.3s ease-out';
-                    
-                    const bubbleDiv = document.createElement('div');
-                    bubbleDiv.className = `max-w-[75%] px-4 py-2 rounded-2xl shadow-sm ${
-                        msg.is_mine 
-                            ? 'bg-green-600 text-white rounded-br-sm' 
-                            : 'bg-white border border-gray-200 rounded-bl-sm'
-                    }`;
-                    
-                    bubbleDiv.innerHTML = `
-                        <div class="break-words text-sm">${msg.content.replace(/\n/g, '<br>')}</div>
-                        <div class="text-xs opacity-70 mt-1">${msg.created_at}</div>
-                    `;
-                    
-                    messageDiv.appendChild(bubbleDiv);
-                    container.appendChild(messageDiv);
-                    
-                    lastMessageId = msg.id;
-                });
-                
-                // Scroll to bottom if user is not scrolling
-                scrollToBottom();
-                
-                // Play notification sound (optional)
-                if (!data.messages[0].is_mine) {
-                    // You can add a notification sound here
-                    console.log('New message received!');
-                }
-            }
-        } catch (error) {
-            console.error('Error fetching messages:', error);
-        }
-    }, 2000); // Check every 2 seconds
 });
 </script>
 

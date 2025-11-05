@@ -289,7 +289,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [MessageController::class, 'index'])->name('index');
         Route::get('/thread/{user}', [MessageController::class, 'thread'])->name('thread');
         Route::post('/send', [MessageController::class, 'send'])->name('send');
-        Route::get('/fetch/{user}', [MessageController::class, 'fetchMessages'])->name('fetch');
     });
 
     // =========================
