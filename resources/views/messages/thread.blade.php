@@ -131,24 +131,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 let hasNewMessages = false;
                 
                 data.messages.forEach(msg => {
-                    // Update lastMessageId for ALL messages to track progress
-                    lastMessageId = msg.id;
-                    
                     // Only add messages from the OTHER person (not mine)
                     if (!msg.is_mine) {
-                        const messageDiv = document.createElement('div');
-                        messageDiv.className = 'flex justify-start mb-3';
+                        // Check if message already exists in the DOM
+                        const existingMessage = container.querySelector(`[data-message-id="${msg.id}"]`);
+                        if (!existingMessage) {
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = 'flex justify-start mb-3';
+                            messageDiv.setAttribute('data-message-id', msg.id);
 
-                        const bubbleDiv = document.createElement('div');
-                        bubbleDiv.className = 'max-w-[75%] px-4 py-2 rounded-2xl shadow-sm bg-white border border-gray-200 rounded-bl-sm';
-                        bubbleDiv.innerHTML = `
-                            <div class="break-words text-sm">${msg.content.replace(/\n/g, '<br>')}</div>
-                            <div class="text-xs opacity-70 mt-1">${msg.created_at}</div>
-                        `;
+                            const bubbleDiv = document.createElement('div');
+                            bubbleDiv.className = 'max-w-[75%] px-4 py-2 rounded-2xl shadow-sm bg-white border border-gray-200 rounded-bl-sm';
+                            bubbleDiv.innerHTML = `
+                                <div class="break-words text-sm">${msg.content.replace(/\n/g, '<br>')}</div>
+                                <div class="text-xs opacity-70 mt-1">${msg.created_at}</div>
+                            `;
 
-                        messageDiv.appendChild(bubbleDiv);
-                        container.appendChild(messageDiv);
-                        hasNewMessages = true;
+                            messageDiv.appendChild(bubbleDiv);
+                            container.appendChild(messageDiv);
+                            hasNewMessages = true;
+                        }
+                    }
+                    
+                    // Update lastMessageId for ALL messages to track progress
+                    if (msg.id > lastMessageId) {
+                        lastMessageId = msg.id;
                     }
                 });
 
