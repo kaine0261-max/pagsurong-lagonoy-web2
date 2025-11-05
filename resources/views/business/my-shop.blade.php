@@ -559,9 +559,9 @@ use Illuminate\Support\Facades\Storage;
             return;
         }
         
-        // Validate file size (5MB max)
-        if (file.size > 5 * 1024 * 1024) {
-            showToast('File size must be less than 5MB', 'error');
+        // Validate file size (10MB max)
+        if (file.size > 10 * 1024 * 1024) {
+            showToast('File size must be less than 10MB', 'error');
             return;
         }
         

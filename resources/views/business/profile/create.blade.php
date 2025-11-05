@@ -222,7 +222,7 @@
                                         <p class="pl-1">or drag and drop</p>
                                     </div>
                                     <p class="text-xs text-gray-500">
-                                        PDF, JPG, PNG, DOC, DOCX up to 5MB each (multiple files allowed)
+                                        PDF, JPG, PNG, DOC, DOCX up to 10MB each (multiple files allowed)
                                     </p>
                                 </div>
                             </div>
@@ -250,7 +250,7 @@
                                         <p class="pl-1">or drag and drop</p>
                                     </div>
                                     <p class="text-xs text-gray-500">
-                                        PDF, JPG, or PNG up to 5MB each
+                                        PDF, JPG, or PNG up to 10MB each
                                     </p>
                                 </div>
                             </div>

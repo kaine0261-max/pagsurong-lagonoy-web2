@@ -507,7 +507,7 @@ use Illuminate\Support\Facades\Storage;
                         <span id="fileNames" class="ml-4 text-sm text-gray-500">No files selected</span>
                     </div>
                     <div id="galleryPreviews" class="mt-4 grid grid-cols-3 gap-2"></div>
-                    <p class="mt-2 text-xs text-gray-500">Upload up to 10 images at once (JPG, PNG, max 5MB each)</p>
+                    <p class="mt-2 text-xs text-gray-500">Upload up to 10 images at once (JPG, PNG, max 10MB each)</p>
                 </div>
                 
                 <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">

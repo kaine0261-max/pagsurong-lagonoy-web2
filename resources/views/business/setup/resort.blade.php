@@ -149,7 +149,7 @@
                                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
                                    multiple
                                    required>
-                            <p class="mt-1 text-xs text-gray-500">Upload business permit documents (PDF, JPG, PNG, DOC, DOCX - max 5MB each, multiple files allowed)</p>
+                            <p class="mt-1 text-xs text-gray-500">Upload business permit documents (PDF, JPG, PNG, DOC, DOCX - max 10MB each, multiple files allowed)</p>
                             @error('business_permit')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror

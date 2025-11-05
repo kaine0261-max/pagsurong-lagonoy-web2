@@ -63,7 +63,7 @@
                             <!-- Upload Instructions -->
                             <div class="mt-4 text-center">
                                 <p class="text-sm text-gray-600 mb-2">Click to upload or drag and drop</p>
-                                <p class="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+                                <p class="text-xs text-gray-500">PNG, JPG up to 10MB</p>
                             </div>
 
                             <!-- Progress Bar -->
@@ -168,7 +168,7 @@ function handleFileSelect(event) {
 
 // Validate and preview file
 function validateAndPreviewFile(file) {
-    const maxSize = 5 * 1024 * 1024; // 5MB (increased for mobile photos)
+    const maxSize = 10 * 1024 * 1024; // 10MB (increased for mobile photos)
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
     // Clear previous errors
@@ -192,7 +192,7 @@ function validateAndPreviewFile(file) {
 
     // Validate file size
     if (file.size > maxSize) {
-        showError('File size must be less than 5MB');
+        showError('File size must be less than 10MB');
         console.log('File too large:', (file.size / 1024 / 1024).toFixed(2) + 'MB');
         return;
     }

@@ -76,7 +76,7 @@ class BusinessController extends Controller
             'address' => 'required|string|max:255',
             'website' => 'nullable|url|max:255',
             'business_permit' => 'required|array',
-            'business_permit.*' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120'
+            'business_permit.*' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240'
         ]);
 
         $user = auth()->user();
@@ -394,8 +394,8 @@ class BusinessController extends Controller
             'website' => 'nullable|url|max:255',
             'facebook_page' => 'nullable|url|max:255',
             'business_permit' => 'required|array',
-            'business_permit.*' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
-            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
+            'business_permit.*' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
+            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
         ]);
 
         return DB::transaction(function () use ($validated, $request) {
@@ -522,8 +522,8 @@ class BusinessController extends Controller
             'website' => 'nullable|url|max:255',
             'facebook_page' => 'nullable|url|max:255',
             'business_permit' => 'nullable|array',
-            'business_permit.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
-            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120',
+            'business_permit.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
+            'other_licenses.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
         ]);
 
         return DB::transaction(function () use ($validated, $request, $business) {
