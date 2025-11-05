@@ -676,7 +676,7 @@ class BusinessController extends Controller
     public function updateCover(Request $request)
     {
         $request->validate([
-            'cover_image' => 'required|image|mimes:jpeg,png,jpg',
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg|max:10240',
         ]);
 
         $businessProfile = auth()->user()->businessProfile;
@@ -706,7 +706,7 @@ class BusinessController extends Controller
     {
         try {
             $request->validate([
-                'profile_avatar' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'profile_avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
             ]);
 
             $business = auth()->user()->businessProfile;
@@ -752,7 +752,7 @@ class BusinessController extends Controller
     public function storeGallery(Request $request)
     {
         $request->validate([
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         $business = auth()->user()->businessProfile;
@@ -815,7 +815,7 @@ class BusinessController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         $business = auth()->user()->businessProfile;
@@ -850,7 +850,7 @@ class BusinessController extends Controller
     public function updateProfilePicture(Request $request)
     {
         $request->validate([
-            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif',
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         $user = auth()->user();
@@ -897,7 +897,7 @@ class BusinessController extends Controller
             'description' => 'nullable|string',
             'stock_limit' => 'required|integer|min:0',
             'current_stock' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         $user = auth()->user();

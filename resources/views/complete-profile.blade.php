@@ -84,6 +84,8 @@
                     <div class="avatar-box flex flex-col items-center mb-6">
                         
                         <input type="file" name="avatar" accept="image/jpeg,image/jpg,image/png" onchange="previewFile(this)" class="text-sm" />
+                        <p class="text-xs text-gray-500 mt-2">PNG, JPG up to 10MB</p>
+                        <p id="error-message" class="text-xs text-red-600 mt-1 hidden"></p>
                     </div>
 
                     <div class="py-2">
@@ -161,9 +163,28 @@
         
         function previewFile(input) {
             const file = input.files[0];
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            const errorMsg = document.getElementById('error-message');
+            
+            if (errorMsg) errorMsg.classList.add('hidden');
+            
             if (file) {
+                // Validate file size
+                if (file.size > maxSize) {
+                    alert('Image exceeds 10MB. Please select an image smaller than 10MB.');
+                    if (errorMsg) {
+                        errorMsg.textContent = 'File size must be less than 10MB';
+                        errorMsg.classList.remove('hidden');
+                    }
+                    input.value = '';
+                    return;
+                }
+                
                 const reader = new FileReader();
-                reader.onload = e => document.getElementById('preview').src = e.target.result;
+                reader.onload = e => {
+                    const preview = document.getElementById('preview');
+                    if (preview) preview.src = e.target.result;
+                };
                 reader.readAsDataURL(file);
             }
         }

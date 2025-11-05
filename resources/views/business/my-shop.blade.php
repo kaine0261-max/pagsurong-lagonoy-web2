@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Storage;
                 @csrf
                 <label class="bg-white bg-opacity-90 text-gray-700 px-4 py-2 rounded-lg hover:bg-opacity-100 transition-all duration-200 flex items-center text-sm font-medium cursor-pointer">
                     <i class="fas fa-camera mr-2"></i> Edit Cover Image
-                    <input type="file" name="cover_image" accept="image/jpeg,image/jpg,image/png" capture="environment" class="hidden" onchange="this.form.submit()">
+                    <input type="file" name="cover_image" accept="image/jpeg,image/jpg,image/png" class="hidden" onchange="validateAndSubmitCoverImage(this)">
                 </label>
             </form>
         </div>
@@ -59,7 +59,7 @@ use Illuminate\Support\Facades\Storage;
                                 <i class="fas fa-camera text-gray-600 text-sm"></i>
                             </div>
                         </div>
-                        <input type="file" id="profile-photo" class="hidden" accept="image/jpeg,image/jpg,image/png" capture="environment" onchange="uploadBusinessProfilePhoto(this)">
+                        <input type="file" id="profile-photo" class="hidden" accept="image/jpeg,image/jpg,image/png" onchange="uploadBusinessProfilePhoto(this)">
 
                         <!-- Business Name -->
                         <h1 class="text-3xl font-bold text-gray-800 mt-4 mb-3">
@@ -409,7 +409,7 @@ use Illuminate\Support\Facades\Storage;
                                 <div class="flex text-sm text-gray-600 justify-center">
                                     <label for="image" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
                                         <span>Upload file</span>
-                                        <input id="image" name="image" type="file" class="sr-only" accept="image/jpeg,image/jpg,image/png" capture="environment" onchange="previewProductImage(this)">
+                                        <input id="image" name="image" type="file" class="sr-only" accept="image/jpeg,image/jpg,image/png" onchange="previewProductImage(this)">
                                     </label>
                                     <p class="pl-1">or drag and drop</p>
                                 </div>
@@ -710,7 +710,6 @@ use Illuminate\Support\Facades\Storage;
                        name="images[]" 
                        multiple 
                        accept="image/jpeg,image/jpg,image/png"
-                       capture="environment"
                        onchange="previewGalleryImages(this)"
                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                        required>
@@ -849,6 +848,91 @@ function deleteProduct(productId, productName) {
             console.error('Error:', error);
             showNotification('Error deleting product', 'error');
         });
+    }
+}
+
+function validateAndSubmitCoverImage(input) {
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    
+    if (input.files && input.files[0]) {
+        if (input.files[0].size > maxSize) {
+            alert('Image exceeds 10MB. Please select an image smaller than 10MB.');
+            input.value = '';
+            return false;
+        }
+        input.form.submit();
+    }
+}
+
+function previewProductImage(input) {
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        
+        if (file.size > maxSize) {
+            alert('Image exceeds 10MB. Please select an image smaller than 10MB.');
+            input.value = '';
+            return false;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('product-image-preview').src = e.target.result;
+            document.getElementById('upload-prompt').classList.add('hidden');
+            document.getElementById('image-preview-container').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function previewGalleryImages(input) {
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    const previewContainer = document.getElementById('galleryPreviews');
+    const fileNames = document.getElementById('fileNames');
+    
+    previewContainer.innerHTML = '';
+    
+    if (input.files && input.files.length > 0) {
+        let validFiles = [];
+        let hasOversizedFile = false;
+        
+        // Validate file sizes
+        Array.from(input.files).forEach((file) => {
+            if (file.size > maxSize) {
+                hasOversizedFile = true;
+            } else {
+                validFiles.push(file);
+            }
+        });
+        
+        // Show alert if any file exceeds 10MB
+        if (hasOversizedFile) {
+            alert('One or more images exceed 10MB. Please select images smaller than 10MB.');
+            input.value = '';
+            fileNames.textContent = 'No files selected';
+            return;
+        }
+        
+        fileNames.textContent = `${validFiles.length} file(s) selected`;
+        
+        validFiles.forEach((file, index) => {
+            if (index < 9) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'relative';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-20 object-cover rounded-md">
+                        <div class="absolute inset-0 bg-black bg-opacity-20 rounded-md"></div>
+                    `;
+                    previewContainer.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    } else {
+        fileNames.textContent = 'No files selected';
     }
 }
 

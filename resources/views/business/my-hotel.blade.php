@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Storage;
             @csrf
             <label class="bg-white bg-opacity-90 text-gray-700 px-4 py-2 rounded-lg hover:bg-opacity-100 transition-all duration-200 flex items-center text-sm font-medium cursor-pointer shadow-lg">
                 <i class="fas fa-camera mr-2"></i> Edit Cover Image
-                <input type="file" name="cover_image" accept="image/jpeg,image/jpg,image/png" capture="environment" class="hidden" onchange="this.form.submit()">
+                <input type="file" name="cover_image" accept="image/jpeg,image/jpg,image/png" class="hidden" onchange="validateAndSubmitCoverImage(this)">
             </label>
         </form>
     </div>
@@ -73,7 +73,7 @@ use Illuminate\Support\Facades\Storage;
                                 <i class="fas fa-camera text-green-600 text-sm"></i>
                             </div>
                         </div>
-                        <input type="file" id="profile-photo" class="hidden" accept="image/jpeg,image/jpg,image/png" capture="environment" onchange="uploadProfilePhoto(this)">
+                        <input type="file" id="profile-photo" class="hidden" accept="image/jpeg,image/jpg,image/png" onchange="uploadProfilePhoto(this)">
 
                         <!-- Hotel Name -->
                         <h1 class="text-3xl font-bold text-gray-800 mt-4 mb-3">
@@ -374,7 +374,7 @@ use Illuminate\Support\Facades\Storage;
                         
                         <div>
                             <label for="promotion_image" class="block text-sm font-medium text-gray-700">Promotion Image</label>
-                            <input type="file" name="image" id="promotion_image" accept="image/jpeg,image/jpg,image/png" capture="environment" required
+                            <input type="file" name="image" id="promotion_image" accept="image/jpeg,image/jpg,image/png" onchange="validatePromotionImage(this)" required
                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
                             <p class="mt-1 text-sm text-gray-500">Upload an attractive image for your promotion</p>
                         </div>
@@ -966,6 +966,65 @@ use Illuminate\Support\Facades\Storage;
                 alert('Error deleting image');
             });
         }
+    }
+
+    function validateAndSubmitCoverImage(input) {
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        
+        if (input.files && input.files[0]) {
+            if (input.files[0].size > maxSize) {
+                alert('Image exceeds 10MB. Please select an image smaller than 10MB.');
+                input.value = '';
+                return false;
+            }
+            input.form.submit();
+        }
+    }
+    
+    function uploadProfilePhoto(input) {
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        
+        if (input.files && input.files[0]) {
+            if (input.files[0].size > maxSize) {
+                alert('Image exceeds 10MB. Please select an image smaller than 10MB.');
+                input.value = '';
+                return false;
+            }
+            
+            const formData = new FormData();
+            formData.append('profile_avatar', input.files[0]);
+            formData.append('_token', '{{ csrf_token() }}');
+            
+            fetch('{{ route("business.updateProfileAvatar") }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Error uploading profile photo: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error uploading profile photo');
+            });
+        }
+    }
+    
+    function validatePromotionImage(input) {
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        
+        if (input.files && input.files[0]) {
+            if (input.files[0].size > maxSize) {
+                alert('Image exceeds 10MB. Please select an image smaller than 10MB.');
+                input.value = '';
+                return false;
+            }
+        }
+        return true;
     }
 
     // Gallery preview function
