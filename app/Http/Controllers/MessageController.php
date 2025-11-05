@@ -115,4 +115,43 @@ class MessageController extends Controller
 
         return back()->with('success', 'Message sent!');
     }
+
+    /**
+     * Fetch new messages for a thread (AJAX endpoint)
+     */
+    public function fetchMessages(User $user, Request $request)
+    {
+        $me = Auth::user();
+        $lastMessageId = $request->input('last_message_id', 0);
+
+        $messages = Message::where(function ($q) use ($me, $user) {
+                $q->where('sender_id', $me->id)->where('receiver_id', $user->id);
+            })
+            ->orWhere(function ($q) use ($me, $user) {
+                $q->where('sender_id', $user->id)->where('receiver_id', $me->id);
+            })
+            ->where('id', '>', $lastMessageId)
+            ->with(['sender', 'receiver'])
+            ->orderBy('created_at')
+            ->get();
+
+        // Mark new messages as read
+        Message::where('sender_id', $user->id)
+            ->where('receiver_id', $me->id)
+            ->where('id', '>', $lastMessageId)
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+
+        return response()->json([
+            'messages' => $messages->map(function ($message) use ($me) {
+                return [
+                    'id' => $message->id,
+                    'content' => $message->content,
+                    'created_at' => $message->created_at->format('M d, Y h:i A'),
+                    'is_mine' => $message->sender_id === $me->id,
+                    'sender_name' => $message->sender->name,
+                ];
+            })
+        ]);
+    }
 }

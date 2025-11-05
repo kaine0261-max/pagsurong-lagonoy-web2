@@ -106,11 +106,31 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('messages-container');
     const textarea = document.getElementById('message-input');
+    let lastMessageId = {{ $messages->last()->id ?? 0 }};
+    let isUserScrolling = false;
+    let scrollTimeout;
     
     // Scroll to bottom on load
-    if (container) {
-        container.scrollTop = container.scrollHeight;
+    function scrollToBottom() {
+        if (container && !isUserScrolling) {
+            container.scrollTop = container.scrollHeight;
+        }
     }
+    
+    scrollToBottom();
+    
+    // Detect user scrolling
+    container.addEventListener('scroll', () => {
+        const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 50;
+        isUserScrolling = !isAtBottom;
+        
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            if (isAtBottom) {
+                isUserScrolling = false;
+            }
+        }, 1000);
+    });
     
     // Auto-resize textarea
     if (textarea) {
@@ -119,6 +139,51 @@ document.addEventListener('DOMContentLoaded', () => {
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
     }
+    
+    // Fetch new messages every 2 seconds
+    setInterval(async () => {
+        try {
+            const response = await fetch(`{{ route('messages.fetch', $user->id) }}?last_message_id=${lastMessageId}`);
+            const data = await response.json();
+            
+            if (data.messages && data.messages.length > 0) {
+                data.messages.forEach(msg => {
+                    // Create message bubble
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `flex ${msg.is_mine ? 'justify-end' : 'justify-start'} mb-3`;
+                    messageDiv.style.animation = 'slideIn 0.3s ease-out';
+                    
+                    const bubbleDiv = document.createElement('div');
+                    bubbleDiv.className = `max-w-[75%] px-4 py-2 rounded-2xl shadow-sm ${
+                        msg.is_mine 
+                            ? 'bg-green-600 text-white rounded-br-sm' 
+                            : 'bg-white border border-gray-200 rounded-bl-sm'
+                    }`;
+                    
+                    bubbleDiv.innerHTML = `
+                        <div class="break-words text-sm">${msg.content.replace(/\n/g, '<br>')}</div>
+                        <div class="text-xs opacity-70 mt-1">${msg.created_at}</div>
+                    `;
+                    
+                    messageDiv.appendChild(bubbleDiv);
+                    container.appendChild(messageDiv);
+                    
+                    lastMessageId = msg.id;
+                });
+                
+                // Scroll to bottom if user is not scrolling
+                scrollToBottom();
+                
+                // Play notification sound (optional)
+                if (!data.messages[0].is_mine) {
+                    // You can add a notification sound here
+                    console.log('New message received!');
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
+    }, 2000); // Check every 2 seconds
 });
 </script>
 
