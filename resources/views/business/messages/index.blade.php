@@ -45,14 +45,16 @@
                             <a href="{{ route('messages.thread', $otherUser) }}" class="block">
                                 <div class="flex items-center space-x-3">
                                     <!-- Profile Picture -->
-                                    <div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
+                                    <div class="flex-shrink-0">
                                         @if($otherUser->profile && $otherUser->profile->profile_picture)
-                                            <img src="{{ asset('storage/' . $otherUser->profile->profile_picture) }}"
-                                                 alt="{{ $otherUser->name }}"
-                                                 class="h-full w-full object-cover">
+                                            <div class="h-12 w-12 rounded-full overflow-hidden">
+                                                <img src="{{ asset('storage/' . $otherUser->profile->profile_picture) }}"
+                                                     alt="{{ $otherUser->name }}"
+                                                     class="h-full w-full object-cover">
+                                            </div>
                                         @else
-                                            <div class="h-full w-full bg-blue-500 flex items-center justify-center">
-                                                <span class="text-white font-medium text-sm">
+                                            <div class="h-12 w-12 rounded-full bg-green-600 flex items-center justify-center">
+                                                <span class="text-white font-medium">
                                                     {{ strtoupper(substr($otherUser->name, 0, 1)) }}
                                                 </span>
                                             </div>
@@ -73,10 +75,10 @@
                                             {{ $lastMessage?->content ? strip_tags($lastMessage->content) : 'No messages yet' }}
                                         </p>
 
-                                        <!-- Show business name if available -->
-                                        @if($otherUser->business)
-                                            <p class="text-xs text-blue-600 font-medium">
-                                                {{ $otherUser->business->name }}
+                                        <!-- Show customer role if available -->
+                                        @if($otherUser->role === 'customer')
+                                            <p class="text-xs text-green-600 font-medium mt-1">
+                                                Customer
                                             </p>
                                         @endif
                                     </div>
@@ -96,9 +98,10 @@
             </div>
             <h3 class="text-lg font-medium text-gray-900 mb-2">No messages yet</h3>
             <p class="text-gray-500 mb-4">Start a conversation when you place an order with a business!</p>
-            <a href="{{ route('customer.products') }}" 
-               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                Browse Products
+            <a href="{{ route('business.dashboard') }}" 
+               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors">
+                <i class="fas fa-store mr-2"></i>
+                Go to Dashboard
             </a>
         </div>
     @endif
@@ -109,17 +112,32 @@
     @media (max-width: 768px) {
         /* Style the messages header for mobile */
         .messages-page .messages-header {
-            background: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 40;
+            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
             margin-bottom: 0 !important;
             border-radius: 0 !important;
             padding-top: 1.5rem !important;
             padding-bottom: 1.5rem !important;
         }
         
+        .messages-page .messages-header h1,
+        .messages-page .messages-header p {
+            color: white;
+        }
+        
+        .messages-page .messages-header i {
+            color: #d1fae5;
+        }
+        
         /* Adjust page layout for mobile */
         .messages-page {
             padding: 0 !important;
             margin: 0 !important;
+            padding-top: 140px !important;
             padding-bottom: 80px !important;
             max-width: 100% !important;
         }
