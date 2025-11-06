@@ -173,6 +173,30 @@ use Illuminate\Support\Facades\Storage;
                                     <span class="text-sm">Delivery Available</span>
                                 </div>
                             @endif
+                            
+                            <!-- Social Media Links -->
+                            @if($business && ($business->facebook_page || $business->instagram_url || $business->twitter_url))
+                                <div class="flex items-center justify-center gap-3 mt-4 pt-4 border-t border-gray-200">
+                                    @if($business->facebook_page)
+                                        <a href="{{ $business->facebook_page }}" target="_blank" rel="noopener noreferrer" 
+                                           class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white hover:bg-blue-700 transition-colors">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </a>
+                                    @endif
+                                    @if($business->instagram_url)
+                                        <a href="{{ $business->instagram_url }}" target="_blank" rel="noopener noreferrer" 
+                                           class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 flex items-center justify-center text-white hover:opacity-90 transition-opacity">
+                                            <i class="fab fa-instagram"></i>
+                                        </a>
+                                    @endif
+                                    @if($business->twitter_url)
+                                        <a href="{{ $business->twitter_url }}" target="_blank" rel="noopener noreferrer" 
+                                           class="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white hover:bg-gray-800 transition-colors">
+                                            <i class="fab fa-x-twitter"></i>
+                                        </a>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Publish/Unpublish Buttons -->

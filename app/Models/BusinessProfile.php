@@ -40,6 +40,8 @@ class BusinessProfile extends Model
         'website',
         'is_published',
         'facebook_page',
+        'instagram_url',
+        'twitter_url',
         'published_at',
         'approved_at',
         'approved_by',

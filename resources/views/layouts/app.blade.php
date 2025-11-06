@@ -539,7 +539,14 @@
                 <!-- Profile Dropdown -->
                 <div class="relative group">
                     <button class="flex items-center focus:outline-none focus:ring-2 focus:ring-blue-300 rounded-full">
-                        @if($user->profile && $user->profile->profile_picture)
+                        @php
+                            $showBusinessAvatar = $user->role === 'business_owner' && $user->businessProfile && $user->businessProfile->profile_avatar;
+                        @endphp
+                        @if($showBusinessAvatar)
+                            <img src="{{ Storage::url($user->businessProfile->profile_avatar) }}" 
+                                 alt="Profile" 
+                                 class="w-10 h-10 rounded-full object-cover border-2 border-green-500">
+                        @elseif($user->profile && $user->profile->profile_picture)
                             <img src="{{ Storage::url($user->profile->profile_picture) }}" 
                                  alt="Profile" 
                                  class="w-10 h-10 rounded-full object-cover border-2 border-green-500">

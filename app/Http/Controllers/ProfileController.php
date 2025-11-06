@@ -250,6 +250,14 @@ class ProfileController extends Controller
 
         $profile->update($validated);
         
+        // For business owners, also update social media links in business profile
+        if ($user->role === 'business_owner' && $user->businessProfile) {
+            $user->businessProfile->facebook_page = $validated['facebook'] ?? null;
+            $user->businessProfile->instagram_url = $validated['instagram'] ?? null;
+            $user->businessProfile->twitter_url = $validated['twitter'] ?? null;
+            $user->businessProfile->save();
+        }
+        
         // Also update user's name if full_name changed
         if ($user->name !== $validated['full_name']) {
             $user->name = $validated['full_name'];
