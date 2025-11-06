@@ -750,7 +750,15 @@ use Illuminate\Support\Facades\Storage;
             deleteButton.disabled = true;
             deleteButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Deleting...';
             
-            fetch(`/business/gallery/${deleteImageId}`, {
+            // Determine the delete endpoint based on type
+            let endpoint = `/business/gallery/${deleteImageId}`;
+            if (window.tempDeleteType === 'room') {
+                endpoint = `/business/rooms/${deleteImageId}`;
+            } else if (window.tempDeleteType === 'cottage') {
+                endpoint = `/business/cottages/${deleteImageId}`;
+            }
+            
+            fetch(endpoint, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -762,16 +770,17 @@ use Illuminate\Support\Facades\Storage;
             .then(data => {
                 if (data.success) {
                     closeDeleteModal();
+                    window.tempDeleteType = null;
                     location.reload();
                 } else {
-                    alert('Error: ' + (data.message || 'Failed to delete image'));
+                    alert('Error: ' + (data.message || 'Failed to delete'));
                     deleteButton.disabled = false;
                     deleteButton.innerHTML = originalText;
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error deleting image');
+                alert('Error deleting item');
                 deleteButton.disabled = false;
                 deleteButton.innerHTML = originalText;
             });
@@ -1017,38 +1026,14 @@ use Illuminate\Support\Facades\Storage;
     }
     
     function deleteRoom(roomId) {
-        if (confirm('Are you sure you want to delete this room? This action cannot be undone.')) {
-            fetch(`/business/rooms/${roomId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => {
-                // Handle both successful responses and redirects
-                if (response.ok || response.status === 302) {
-                    alert('Room deleted successfully!');
-                    location.reload();
-                } else {
-                    return response.json().then(err => {
-                        throw new Error(err.message || 'Failed to delete room');
-                    });
-                }
-            })
-            .then(data => {
-                // If we get here, it was a successful redirect
-                if (data && data.success !== false) {
-                    alert('Room deleted successfully!');
-                    location.reload();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to delete room. Please try again.');
-            });
-        }
+        deleteImageId = roomId;
+        document.getElementById('deleteModalTitle').textContent = 'Delete Room?';
+        document.getElementById('deleteModalMessage').textContent = 'Are you sure you want to delete this room? This action cannot be undone.';
+        document.getElementById('deleteModal').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+        
+        // Set delete type for confirmDelete function
+        window.tempDeleteType = 'room';
     }
     
     function editCottage(cottageId) {
@@ -1114,29 +1099,14 @@ use Illuminate\Support\Facades\Storage;
     }
     
     function deleteCottage(cottageId) {
-        if (confirm('Are you sure you want to delete this cottage? This action cannot be undone.')) {
-            fetch(`/business/cottages/${cottageId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Cottage deleted successfully');
-                    location.reload();
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error deleting cottage');
-            });
-        }
+        deleteImageId = cottageId;
+        document.getElementById('deleteModalTitle').textContent = 'Delete Cottage?';
+        document.getElementById('deleteModalMessage').textContent = 'Are you sure you want to delete this cottage? This action cannot be undone.';
+        document.getElementById('deleteModal').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+        
+        // Override confirmDelete temporarily for cottage deletion
+        window.tempDeleteType = 'cottage';
     }
     
     function deleteImage(imageId) {

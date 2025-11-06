@@ -180,25 +180,6 @@ use Illuminate\Support\Facades\Storage;
                                     <i class="fas fa-phone w-5 text-gray-400 mr-3"></i>
                                     <span class="text-sm">{{ $business->contact_number }}</span>
                                 </div>
-                                <!-- Star Rating -->
-                                <div class="flex items-center text-yellow-400 mb-2 ml-8">
-                                    @php
-                                        $rating = $business->average_rating ?? 0;
-                                        $fullStars = floor($rating);
-                                        $hasHalfStar = $rating - $fullStars >= 0.5;
-                                        $emptyStars = 5 - $fullStars - ($hasHalfStar ? 1 : 0);
-                                    @endphp
-                                    @for($i = 0; $i < $fullStars; $i++)
-                                        <i class="fas fa-star"></i>
-                                    @endfor
-                                    @if($hasHalfStar)
-                                        <i class="fas fa-star-half-alt"></i>
-                                    @endif
-                                    @for($i = 0; $i < $emptyStars; $i++)
-                                        <i class="far fa-star"></i>
-                                    @endfor
-                                    <span class="text-gray-600 text-sm ml-2">({{ number_format($rating, 1) }})</span>
-                                </div>
                             @endif
                         </div>
 
@@ -249,31 +230,6 @@ use Illuminate\Support\Facades\Storage;
                             <div>
                                 <p class="text-sm text-gray-500">Profile Views</p>
                                 <p class="font-semibold">0</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center">
-                            <div class="p-2 bg-purple-100 rounded-lg mr-3">
-                                <i class="fas fa-star text-purple-600"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Average Rating</p>
-                                <div class="flex items-center">
-                                    @php
-                                        $avgRating = $business->average_rating ?? 0;
-                                        $fullStars = floor($avgRating);
-                                        $hasHalfStar = $avgRating - $fullStars >= 0.5;
-                                    @endphp
-                                    @for($i = 0; $i < $fullStars; $i++)
-                                        <i class="fas fa-star text-yellow-400 text-sm"></i>
-                                    @endfor
-                                    @if($hasHalfStar)
-                                        <i class="fas fa-star-half-alt text-yellow-400 text-sm"></i>
-                                    @endif
-                                    @for($i = 0; $i < (5 - $fullStars - ($hasHalfStar ? 1 : 0)); $i++)
-                                        <i class="far fa-star text-yellow-400 text-sm"></i>
-                                    @endfor
-                                    <span class="ml-1 text-sm text-gray-600">({{ number_format($avgRating, 1) }})</span>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -636,6 +592,80 @@ use Illuminate\Support\Facades\Storage;
 
 @push('scripts')
 <script>
+    function showSuccessModal(title, message) {
+        document.getElementById('successModalTitle').textContent = title;
+        document.getElementById('successModalMessage').textContent = message;
+        document.getElementById('successModal').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+    
+    function closeSuccessModal() {
+        document.getElementById('successModal').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+        window.location.reload();
+    }
+    
+    let deleteItemId = null;
+    let deleteItemType = null;
+    
+    function showDeleteModal(itemId, type, title, message) {
+        deleteItemId = itemId;
+        deleteItemType = type;
+        document.getElementById('deleteModalTitle').textContent = title;
+        document.getElementById('deleteModalMessage').textContent = message;
+        document.getElementById('deleteModal').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+    
+    function closeDeleteModal() {
+        deleteItemId = null;
+        deleteItemType = null;
+        document.getElementById('deleteModal').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+    
+    function confirmDelete() {
+        if (deleteItemId && deleteItemType) {
+            const deleteButton = document.querySelector('#deleteModal button[onclick="confirmDelete()"]');
+            const originalText = deleteButton.innerHTML;
+            deleteButton.disabled = true;
+            deleteButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Deleting...';
+            
+            let endpoint = '';
+            if (deleteItemType === 'room') {
+                endpoint = `/business/hotel-rooms/${deleteItemId}`;
+            } else if (deleteItemType === 'gallery') {
+                endpoint = `/business/gallery/${deleteItemId}`;
+            }
+            
+            fetch(endpoint, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeDeleteModal();
+                    location.reload();
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to delete'));
+                    deleteButton.disabled = false;
+                    deleteButton.innerHTML = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting item');
+                deleteButton.disabled = false;
+                deleteButton.innerHTML = originalText;
+            });
+        }
+    }
+    
     function openModal(modalId) {
         document.getElementById(modalId).classList.remove('hidden');
         document.body.classList.add('overflow-hidden');
@@ -684,11 +714,9 @@ use Illuminate\Support\Facades\Storage;
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Show success message
-                alert('Room saved successfully!');
-                // Close modal and refresh the page
+                // Show success modal
                 closeModal('addRoomModal');
-                window.location.reload();
+                showSuccessModal('Room Saved!', 'Your room has been saved successfully.');
             } else {
                 // Show error message
                 alert('Error: ' + (data.message || 'Failed to save room'));
@@ -849,7 +877,11 @@ use Illuminate\Support\Facades\Storage;
         const roomRow = event.target.closest('tr');
         const roomName = roomRow.querySelector('td:first-child .text-sm.font-medium').textContent;
         
-        if (confirm(`Are you sure you want to delete ${roomName}? This action cannot be undone.`)) {
+        showDeleteModal(roomId, 'room', 'Delete Room?', `Are you sure you want to delete ${roomName}? This action cannot be undone.`);
+    }
+    
+    function deleteHotelRoomOld(roomId) {
+        if (confirm(`Are you sure you want to delete this room? This action cannot be undone.`)) {
             // Show loading state
             const deleteButton = event.target;
             const originalText = deleteButton.textContent;
@@ -1177,4 +1209,42 @@ use Illuminate\Support\Facades\Storage;
     }
     
 </script>
+
+<!-- Success Modal -->
+<div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-[70] flex items-center justify-center">
+    <div class="bg-white rounded-2xl max-w-md w-full mx-4 p-6">
+        <div class="text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                <i class="fas fa-check text-green-600 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2" id="successModalTitle">Success!</h3>
+            <p class="text-sm text-gray-500 mb-6" id="successModalMessage">Operation completed successfully.</p>
+            <button type="button" onclick="closeSuccessModal()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-[70] flex items-center justify-center">
+    <div class="bg-white rounded-2xl max-w-md w-full mx-4 p-6">
+        <div class="text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2" id="deleteModalTitle">Delete Room?</h3>
+            <p class="text-sm text-gray-500 mb-6" id="deleteModalMessage">Are you sure you want to delete this room? This action cannot be undone.</p>
+            <div class="flex gap-3">
+                <button type="button" onclick="closeDeleteModal()" class="flex-1 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    Cancel
+                </button>
+                <button type="button" onclick="confirmDelete()" class="flex-1 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endpush
