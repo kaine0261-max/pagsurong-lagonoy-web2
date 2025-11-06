@@ -94,7 +94,8 @@
 </div>
 </div>
 
-<!-- Delete Account Confirmation Modal -->
+<!-- Delete Account Confirmation Modal (Only for Customers) -->
+@if(auth()->user()->role === 'customer')
 <div id="deleteAccountModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-lg max-w-md w-full p-6 shadow-xl">
         <div class="flex items-center justify-between mb-4">
@@ -126,6 +127,7 @@
         </div>
     </div>
 </div>
+@endif
 @endsection
 
 @section('styles')
@@ -139,6 +141,7 @@
 @endsection
 
 @section('scripts')
+@if(auth()->user()->role === 'customer')
 <script>
 function openDeleteModal() {
     document.getElementById('deleteAccountModal').classList.remove('hidden');
@@ -184,4 +187,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+@endif
 @endsection
