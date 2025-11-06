@@ -1246,8 +1246,40 @@
         }
 
         function deleteMyAccount() {
-            document.getElementById('delete-account-form').submit();
+            // Create and submit form dynamically
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route("account.delete") }}';
+            
+            // Add CSRF token
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = '{{ csrf_token() }}';
+            form.appendChild(csrfInput);
+            
+            // Add DELETE method
+            const methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            methodInput.value = 'DELETE';
+            form.appendChild(methodInput);
+            
+            document.body.appendChild(form);
+            form.submit();
         }
+
+        // Close modal when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('deleteAccountModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeDeleteAccountModal();
+                    }
+                });
+            }
+        });
     </script>
 
     <!-- Delete Account Confirmation Modal -->
@@ -1302,12 +1334,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Hidden Delete Account Form -->
-    <form id="delete-account-form" action="{{ route('account.delete') }}" method="POST" class="hidden">
-        @csrf
-        @method('DELETE')
-    </form>
 
     <!-- Rating System -->
     <script src="{{ asset('js/ratings.js') }}"></script>
