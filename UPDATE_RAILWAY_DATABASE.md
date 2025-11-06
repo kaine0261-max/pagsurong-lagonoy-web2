@@ -1,8 +1,24 @@
 # Update Railway Database - Social Media Columns
 
-## Quick Command (Recommended)
+## ⚡ EASIEST METHOD - Custom Artisan Command
 
-After deploying your latest code to Railway, run this command in Railway's terminal:
+After deploying your latest code to Railway, run this ONE simple command:
+
+```bash
+php artisan db:add-social-media-columns
+```
+
+That's it! This custom command will:
+- ✅ Check if columns already exist
+- ✅ Add facebook_page, instagram_url, twitter_url columns
+- ✅ Show you success/error messages
+- ✅ Handle errors automatically
+
+---
+
+## Alternative: Standard Migration Command
+
+If you prefer using the migration file:
 
 ```bash
 php artisan migrate --path=database/migrations/2025_11_07_003620_add_social_media_to_business_profiles_table.php --force
