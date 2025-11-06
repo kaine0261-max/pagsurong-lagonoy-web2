@@ -251,9 +251,6 @@ use Illuminate\Support\Facades\Storage;
                                 <i class="fas fa-box text-blue-600 text-xl"></i>
                             </div>
                         </div>
-                        <a href="{{ route('business.products') }}" class="mt-4 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800">
-                            View Products <i class="fas fa-arrow-right ml-1"></i>
-                        </a>
                     </div>
 
                     <!-- Orders Card -->
@@ -267,9 +264,6 @@ use Illuminate\Support\Facades\Storage;
                                 <i class="fas fa-shopping-bag text-green-600 text-xl"></i>
                             </div>
                         </div>
-                        <a href="{{ route('business.orders') }}" class="mt-4 inline-flex items-center text-sm font-medium text-green-600 hover:text-green-800">
-                            View Orders <i class="fas fa-arrow-right ml-1"></i>
-                        </a>
                     </div>
                 </div>
 
