@@ -185,11 +185,23 @@
 
                 <!-- Profile Picture -->
                 <div>
+                    @php
+                        $user = auth()->user();
+                        $isBusinessOwner = $user->role === 'business_owner';
+                        $businessAvatar = $isBusinessOwner && $user->businessProfile ? $user->businessProfile->profile_avatar : null;
+                    @endphp
                     <label for="profile_picture" class="block text-sm font-medium text-gray-700 mb-2">
                         Profile Picture
+                        @if($isBusinessOwner)
+                            <span class="text-xs text-gray-500">(This will update your business profile picture)</span>
+                        @endif
                     </label>
                     <div class="flex items-center space-x-4">
-                        @if($profile->profile_picture)
+                        @if($isBusinessOwner && $businessAvatar)
+                            <img src="{{ Storage::url($businessAvatar) }}" 
+                                 alt="Current Profile Picture" 
+                                 class="w-20 h-20 rounded-full object-cover">
+                        @elseif($profile->profile_picture)
                             <img src="{{ asset('storage/' . $profile->profile_picture) }}" 
                                  alt="Current Profile Picture" 
                                  class="w-20 h-20 rounded-full object-cover">

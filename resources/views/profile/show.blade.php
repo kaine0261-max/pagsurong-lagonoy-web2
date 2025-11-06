@@ -21,7 +21,14 @@
             <div class="space-y-6">
                 <!-- Profile Picture -->
                 <div class="text-center">
-                    @if($profile && $profile->profile_picture)
+                    @php
+                        $showBusinessAvatar = $user->role === 'business_owner' && $user->businessProfile && $user->businessProfile->profile_avatar;
+                    @endphp
+                    @if($showBusinessAvatar)
+                        <img src="{{ Storage::url($user->businessProfile->profile_avatar) }}" 
+                             alt="Profile Picture" 
+                             class="w-32 h-32 rounded-full object-cover mx-auto border-4 border-green-500">
+                    @elseif($profile && $profile->profile_picture)
                         <img src="{{ asset('storage/' . $profile->profile_picture) }}" 
                              alt="Profile Picture" 
                              class="w-32 h-32 rounded-full object-cover mx-auto border-4 border-green-500">

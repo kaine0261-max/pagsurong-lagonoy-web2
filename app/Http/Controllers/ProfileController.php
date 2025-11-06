@@ -223,13 +223,29 @@ class ProfileController extends Controller
 
         // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
-            // Delete old profile picture if exists
-            if ($profile->profile_picture) {
-                Storage::disk('public')->delete($profile->profile_picture);
+            // For business owners, update business profile avatar instead
+            if ($user->role === 'business_owner' && $user->businessProfile) {
+                // Delete old business avatar if exists
+                if ($user->businessProfile->profile_avatar) {
+                    Storage::disk('public')->delete($user->businessProfile->profile_avatar);
+                }
+                
+                $path = $request->file('profile_picture')->store('business-avatars', 'public');
+                $user->businessProfile->profile_avatar = $path;
+                $user->businessProfile->save();
+                
+                // Remove profile_picture from validated data since we're not updating it
+                unset($validated['profile_picture']);
+            } else {
+                // For customers and admins, update personal profile picture
+                // Delete old profile picture if exists
+                if ($profile->profile_picture) {
+                    Storage::disk('public')->delete($profile->profile_picture);
+                }
+                
+                $path = $request->file('profile_picture')->store('profile-pictures', 'public');
+                $validated['profile_picture'] = $path;
             }
-            
-            $path = $request->file('profile_picture')->store('profile-pictures', 'public');
-            $validated['profile_picture'] = $path;
         }
 
         $profile->update($validated);
