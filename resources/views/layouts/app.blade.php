@@ -245,7 +245,11 @@
                         @endif
                         
                         <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
-                            @if($user->profile && $user->profile->profile_picture)
+                            @if($bizProfile && $bizProfile->profile_avatar)
+                                <img src="{{ Storage::url($bizProfile->profile_avatar) }}"
+                                     alt="Profile"
+                                     class="w-8 h-8 rounded-full object-cover border border-green-400 mb-1">
+                            @elseif($user->profile && $user->profile->profile_picture)
                                 <img src="{{ Storage::url($user->profile->profile_picture) }}"
                                      alt="Profile"
                                      class="w-8 h-8 rounded-full object-cover border border-green-400 mb-1">
@@ -282,7 +286,11 @@
                         @endif
                         
                         <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
-                            @if($user->profile && $user->profile->profile_picture)
+                            @if($bizProfile && $bizProfile->profile_avatar)
+                                <img src="{{ Storage::url($bizProfile->profile_avatar) }}"
+                                     alt="Profile"
+                                     class="w-8 h-8 rounded-full object-cover border border-green-400 mb-1">
+                            @elseif($user->profile && $user->profile->profile_picture)
                                 <img src="{{ Storage::url($user->profile->profile_picture) }}"
                                      alt="Profile"
                                      class="w-8 h-8 rounded-full object-cover border border-green-400 mb-1">
@@ -976,18 +984,26 @@
                             </button>
                         </div>
                         <div class="flex items-center space-x-3">
-                            @if(auth()->user()->profile && auth()->user()->profile->profile_picture)
-                                <img src="{{ Storage::url(auth()->user()->profile->profile_picture) }}" 
+                            @php
+                                $currentUser = auth()->user();
+                                $showBusinessAvatar = $currentUser->role === 'business_owner' && $currentUser->businessProfile && $currentUser->businessProfile->profile_avatar;
+                            @endphp
+                            @if($showBusinessAvatar)
+                                <img src="{{ Storage::url($currentUser->businessProfile->profile_avatar) }}" 
+                                     alt="Profile" 
+                                     class="w-16 h-16 rounded-full object-cover border-2 border-white">
+                            @elseif($currentUser->profile && $currentUser->profile->profile_picture)
+                                <img src="{{ Storage::url($currentUser->profile->profile_picture) }}" 
                                      alt="Profile" 
                                      class="w-16 h-16 rounded-full object-cover border-2 border-white">
                             @else
                                 <div class="w-16 h-16 rounded-full bg-white bg-opacity-20 flex items-center justify-center text-white text-2xl font-semibold border-2 border-white">
-                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                    {{ strtoupper(substr($currentUser->name, 0, 1)) }}
                                 </div>
                             @endif
                             <div>
-                                <h3 class="font-semibold text-lg">{{ auth()->user()->name }}</h3>
-                                <p class="text-green-100 text-sm">{{ auth()->user()->email }}</p>
+                                <h3 class="font-semibold text-lg">{{ $currentUser->name }}</h3>
+                                <p class="text-green-100 text-sm">{{ $currentUser->email }}</p>
                             </div>
                         </div>
                     </div>

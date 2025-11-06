@@ -26,6 +26,7 @@ class BusinessProfile extends Model
         'business_name',
         'description',
         'cover_image',
+        'profile_avatar',
         'business_permit_path',
         'licenses',
         'status',
