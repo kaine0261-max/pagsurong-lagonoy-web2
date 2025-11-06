@@ -275,19 +275,7 @@
                                 <i class="{{ $setupIcon }} text-xl mb-1"></i>
                                 <span class="text-[10px] leading-tight text-center">My<br>{{ $setupLabel }}</span>
                             </a>
-                            
-                            @if($bizProfile->status === 'pending')
-                                <div class="flex flex-col items-center px-2 py-3 text-xs text-yellow-600">
-                                    <i class="fas fa-clock text-xl mb-1"></i>
-                                    <span class="text-[10px] leading-tight text-center">Pending<br>Approval</span>
-                                </div>
-                            @endif
                         @endif
-                        
-                        <a href="{{ route('dashboard') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors {{ request()->routeIs('dashboard') ? 'text-green-500' : '' }}">
-                            <i class="fas fa-home text-xl mb-1"></i>
-                            <span class="text-[10px] leading-tight">Home</span>
-                        </a>
                         
                         <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
                             @if($user->profile && $user->profile->profile_picture)
