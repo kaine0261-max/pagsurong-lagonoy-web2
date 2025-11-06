@@ -1235,7 +1235,7 @@
         });
 
         // Delete Account Confirmation
-        function confirmDeleteAccount() {
+        function openDeleteAccountModal() {
             document.getElementById('deleteAccountModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
