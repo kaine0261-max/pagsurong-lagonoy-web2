@@ -162,30 +162,9 @@ use Illuminate\Support\Facades\Storage;
                                 </div>
                             @endif
                             @if($business && $business->contact_number)
-                                <div class="flex items-center text-gray-600 mb-1">
+                                <div class="flex items-center text-gray-600">
                                     <i class="fas fa-phone w-5 text-gray-400 mr-3"></i>
                                     <span class="text-sm">{{ $business->contact_number }}</span>
-                                </div>
-                                <!-- Star Rating -->
-                                <div class="flex items-center text-yellow-400 mb-2 ml-8">
-                                    @php
-                                        $rating = $business->average_rating ?? 0;
-                                        $fullStars = floor($rating);
-                                        $hasHalfStar = $rating - $fullStars >= 0.5;
-                                        $emptyStars = 5 - $fullStars - ($hasHalfStar ? 1 : 0);
-                                    @endphp
-                                    @for($i = 0; $i < $fullStars; $i++)
-                                        <i class="fas fa-star"></i>
-                                    @endfor
-                                    @if($hasHalfStar)
-                                        <i class="fas fa-star-half-alt"></i>
-                                    @endif
-                                    @for($i = 0; $i < $emptyStars; $i++)
-                                        <i class="far fa-star"></i>
-                                    @endfor
-                                    <span class="text-gray-600 text-xs ml-2">
-                                        ({{ number_format($rating, 1) }} from {{ $business->total_ratings ?? 0 }} reviews)
-                                    </span>
                                 </div>
                             @endif
                             @if($business && $business->delivery_available)
@@ -700,9 +679,21 @@ use Illuminate\Support\Facades\Storage;
     }
     
     // Delete gallery image function
+    let galleryImageToDelete = null;
+    
     function deleteGalleryImage(imageId) {
-        if (confirm('Are you sure you want to delete this image?')) {
-            fetch(`/business/gallery/${imageId}`, {
+        galleryImageToDelete = imageId;
+        document.getElementById('deleteGalleryModal').classList.remove('hidden');
+    }
+    
+    function closeDeleteGalleryModal() {
+        document.getElementById('deleteGalleryModal').classList.add('hidden');
+        galleryImageToDelete = null;
+    }
+    
+    function confirmDeleteGalleryImage() {
+        if (galleryImageToDelete) {
+            fetch(`/business/gallery/${galleryImageToDelete}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -712,6 +703,7 @@ use Illuminate\Support\Facades\Storage;
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    closeDeleteGalleryModal();
                     location.reload();
                 } else {
                     alert('Error deleting image: ' + data.message);
@@ -875,6 +867,40 @@ use Illuminate\Support\Facades\Storage;
                 Cancel
             </button>
             <button type="button" onclick="confirmDeleteProduct()" 
+                    class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                <i class="fas fa-trash mr-2"></i>Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Gallery Image Confirmation Modal -->
+<div id="deleteGalleryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
+                Confirm Delete
+            </h3>
+            <button onclick="closeDeleteGalleryModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="mb-6">
+            <p class="text-gray-600 mb-2">Are you sure you want to delete this gallery image?</p>
+            <p class="text-sm text-red-600 mt-3">
+                <i class="fas fa-info-circle mr-1"></i>
+                This action cannot be undone.
+            </p>
+        </div>
+        
+        <div class="flex space-x-3">
+            <button type="button" onclick="closeDeleteGalleryModal()" 
+                    class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                Cancel
+            </button>
+            <button type="button" onclick="confirmDeleteGalleryImage()" 
                     class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
                 <i class="fas fa-trash mr-2"></i>Delete
             </button>
