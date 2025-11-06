@@ -180,12 +180,14 @@
                         $bizProfile = $user->businessProfile;
                         $isApproved = $bizProfile && ($bizProfile->status === 'approved');
                         $isPublished = $bizProfile && ($bizProfile->is_published ?? false);
-                        // Check if on messages page - use multiple methods to be sure
-                        $isOnMessagesPage = request()->routeIs('messages.*') 
+                        // Check if on messages page - only for shops (not hotels/resorts)
+                        $isOnMessagesPage = (!$bizProfile || !in_array($bizProfile->business_type, ['hotel', 'resort'])) && (
+                            request()->routeIs('messages.*') 
                             || request()->routeIs('business.messages')
                             || request()->is('business/messages')
                             || request()->is('business/messages/*')
-                            || str_contains(request()->path(), 'messages');
+                            || str_contains(request()->path(), 'messages')
+                        );
                         // Fix: Get pending orders count from the business relationship, not businessProfile
                         $pendingOrdersCount = 0;
                         if ($user->business) {
@@ -227,7 +229,8 @@
                         </a>
                         @endif
                         
-                        <!-- Messages - Show for all business types -->
+                        <!-- Messages - Show for shops only (not hotels/resorts) -->
+                        @if(!$bizProfile || !in_array($bizProfile->business_type, ['hotel', 'resort']))
                         <a href="{{ route('business.messages') }}" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 transition-colors relative {{ request()->routeIs('business.messages') || request()->is('business/messages*') ? 'text-green-500' : '' }}">
                             <div class="relative">
                                 <i class="fas fa-envelope text-xl mb-1"></i>
@@ -239,6 +242,7 @@
                             </div>
                             <span class="text-[10px] leading-tight">Messages</span>
                         </a>
+                        @endif
                         
                         <button onclick="toggleMobileProfileSidebar()" class="flex flex-col items-center px-2 py-3 text-xs text-gray-600 hover:text-green-500 focus:outline-none">
                             @if($user->profile && $user->profile->profile_picture)
@@ -395,6 +399,7 @@
                         </a>
                         @endif
                         
+                        @if(!$bizProfile || !in_array($bizProfile->business_type, ['hotel', 'resort']))
                         <a href="{{ route('business.messages') }}" 
                            class="text-white hover:text-green-100 transition-all duration-200 relative group {{ request()->routeIs('business.messages') || request()->is('business/messages*') ? 'font-semibold' : '' }}">
                             <i class="fas fa-envelope mr-1"></i> Messages
@@ -405,6 +410,7 @@
                             @endif
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-400 group-hover:w-full transition-all duration-300 {{ request()->routeIs('business.messages') || request()->is('business/messages*') ? 'w-full' : '' }}"></span>
                         </a>
+                        @endif
                         
                     @else
                         <!-- Business Owner Nav - When Business Needs Setup/Approval -->

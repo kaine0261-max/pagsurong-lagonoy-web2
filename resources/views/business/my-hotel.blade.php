@@ -219,22 +219,6 @@ use Illuminate\Support\Facades\Storage;
                     </div>
                 </div>
 
-                <!-- Quick Stats -->
-                <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Hotel Statistics</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center">
-                            <div class="p-2 bg-green-100 rounded-lg mr-3">
-                                <i class="fas fa-eye text-green-600"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Profile Views</p>
-                                <p class="font-semibold">0</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
 
             <!-- Right Side - Dashboard Content -->
