@@ -34,8 +34,8 @@
     <!-- 2. Scrollable Messages - Middle -->
     <div class="message-content" id="messages-container">
         @forelse($messages as $msg)
-            @if($msg->order)
-                <!-- Order Card Message -->
+            @if($msg->order && str_starts_with($msg->content, '🛒'))
+                <!-- Order Card Message (New Order) -->
                 <div class="flex {{ $msg->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }} mb-4">
                     <div class="max-w-[85%] bg-green-600 text-white rounded-lg shadow-md p-4">
                         <div class="flex items-center mb-2">
@@ -65,7 +65,7 @@
                     </div>
                 </div>
             @else
-                <!-- Regular Text Message -->
+                <!-- Regular Text Message (including status updates) -->
                 <div class="flex {{ $msg->sender_id == auth()->id() ? 'justify-end' : 'justify-start' }} mb-3">
                     <div class="max-w-[75%] px-4 py-2 rounded-2xl shadow-sm
                         {{ $msg->sender_id == auth()->id() ? 'bg-green-600 text-white rounded-br-sm' : 'bg-white border border-gray-200 rounded-bl-sm' }}">

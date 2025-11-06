@@ -185,9 +185,9 @@
 </div>
 
 <!-- Checkout Modal -->
-<div id="checkoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-lg max-w-md w-full p-6">
+<div id="checkoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-[9999]">
+    <div class="flex items-center justify-center min-h-screen p-4 pb-24 md:pb-4">
+        <div class="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-lg font-semibold text-gray-800">Complete Your Order</h3>
                 <button onclick="closeCheckoutModal()" class="text-gray-400 hover:text-gray-600">

@@ -30,42 +30,55 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            // Redirect based on user role
+            // Determine redirect URL based on user role
+            $redirectUrl = null;
+            
             if ($user->role === 'admin') {
-                // Redirect admins directly to admin dashboard
-                return redirect()->route('admin.dashboard');
-            }
-
-            // For business owners, check if they have a business profile
-            if ($user->role === 'business_owner') {
-                // If business profile exists, route by type
+                $redirectUrl = route('admin.dashboard');
+            } elseif ($user->role === 'business_owner') {
                 if ($user->businessProfile) {
                     $type = $user->businessProfile->business_type;
                     switch ($type) {
                         case 'hotel':
-                            return redirect()->route('business.my-hotel');
+                            $redirectUrl = route('business.my-hotel');
+                            break;
                         case 'resort':
-                            return redirect()->route('business.my-resort');
+                            $redirectUrl = route('business.my-resort');
+                            break;
                         default:
-                            return redirect()->route('business.my-shop');
+                            $redirectUrl = route('business.my-shop');
                     }
                 } else {
-                    // No business profile yet, redirect to business setup
-                    return redirect()->route('business.setup')
-                        ->with('info', 'Please complete your business setup.');
+                    $redirectUrl = route('business.setup');
                 }
-            }
-
-            // For customers, check if they have a profile
-            if ($user->role === 'customer') {
+            } elseif ($user->role === 'customer') {
                 if (!$user->profile) {
-                    return redirect()->route('profile.setup');
+                    $redirectUrl = route('profile.setup');
+                } else {
+                    $redirectUrl = route('customer.products');
                 }
-                return redirect()->route('customer.products');
+            } else {
+                $redirectUrl = route('customer.products');
             }
 
-            // Default redirect for customers
-            return redirect()->route('customer.products');
+            // Return JSON for AJAX requests
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Login successful',
+                    'redirect' => $redirectUrl
+                ]);
+            }
+
+            return redirect($redirectUrl);
+        }
+
+        // Return JSON error for AJAX requests
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid email or password. Please check your credentials and try again.'
+            ], 401);
         }
 
         return back()->withErrors([

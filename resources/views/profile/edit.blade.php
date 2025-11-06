@@ -106,6 +106,22 @@
                     @enderror
                 </div>
 
+                <!-- Address -->
+                <div>
+                    <label for="address" class="block text-sm font-medium text-gray-700 mb-2">
+                        Address
+                    </label>
+                    <input type="text" 
+                           id="address" 
+                           name="address" 
+                           value="{{ old('address', $profile->address) }}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Enter your address (optional)">
+                    @error('address')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Bio -->
                 <div>
                     <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">

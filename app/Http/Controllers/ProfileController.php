@@ -213,7 +213,7 @@ class ProfileController extends Controller
             'age' => 'required|integer|min:1|max:120',
             'sex' => 'required|in:Male,Female,Other',
             'phone_number' => 'required|string|max:20',
-            'address' => 'required|string|max:255',
+            'address' => 'nullable|string|max:255',
             'bio' => 'nullable|string|max:500',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'facebook' => 'nullable|url|max:255',
@@ -233,6 +233,12 @@ class ProfileController extends Controller
         }
 
         $profile->update($validated);
+        
+        // Also update user's name if full_name changed
+        if ($user->name !== $validated['full_name']) {
+            $user->name = $validated['full_name'];
+            $user->save();
+        }
 
         return redirect()->route('profile.show')
             ->with('success', 'Profile updated successfully!');

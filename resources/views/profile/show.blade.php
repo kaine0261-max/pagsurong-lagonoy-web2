@@ -81,7 +81,7 @@
                             <i class="fas fa-edit mr-2"></i>
                             Edit Profile
                         </a>
-                        <button onclick="confirmDeleteAccount()" 
+                        <button onclick="openDeleteModal()" 
                                 class="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200">
                             <i class="fas fa-trash-alt mr-2"></i>
                             Delete My Account
@@ -92,6 +92,39 @@
         </div>
     </div>
 </div>
+</div>
+
+<!-- Delete Account Confirmation Modal -->
+<div id="deleteAccountModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-md w-full p-6 shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-gray-800">Delete Account</h3>
+            <button onclick="closeDeleteModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <div class="mb-6">
+            <div class="flex items-center justify-center mb-4">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-3xl"></i>
+                </div>
+            </div>
+            <p class="text-gray-700 text-center mb-2">Are you sure you want to delete your account?</p>
+            <p class="text-gray-600 text-sm text-center">This action cannot be undone and all your data will be permanently deleted.</p>
+        </div>
+
+        <div class="flex space-x-3">
+            <button onclick="closeDeleteModal()" 
+                    class="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium">
+                Cancel
+            </button>
+            <button onclick="confirmDeleteAccount()" 
+                    class="flex-1 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium">
+                Delete Account
+            </button>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -107,30 +140,48 @@
 
 @section('scripts')
 <script>
-function confirmDeleteAccount() {
-    if (confirm('Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently deleted.')) {
-        // Create and submit form
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '{{ route("account.delete") }}';
-        
-        // Add CSRF token
-        const csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '_token';
-        csrfInput.value = '{{ csrf_token() }}';
-        form.appendChild(csrfInput);
-        
-        // Add DELETE method
-        const methodInput = document.createElement('input');
-        methodInput.type = 'hidden';
-        methodInput.name = '_method';
-        methodInput.value = 'DELETE';
-        form.appendChild(methodInput);
-        
-        document.body.appendChild(form);
-        form.submit();
-    }
+function openDeleteModal() {
+    document.getElementById('deleteAccountModal').classList.remove('hidden');
 }
+
+function closeDeleteModal() {
+    document.getElementById('deleteAccountModal').classList.add('hidden');
+}
+
+function confirmDeleteAccount() {
+    // Create and submit form
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '{{ route("account.delete") }}';
+    
+    // Add CSRF token
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = '_token';
+    csrfInput.value = '{{ csrf_token() }}';
+    form.appendChild(csrfInput);
+    
+    // Add DELETE method
+    const methodInput = document.createElement('input');
+    methodInput.type = 'hidden';
+    methodInput.name = '_method';
+    methodInput.value = 'DELETE';
+    form.appendChild(methodInput);
+    
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('deleteAccountModal');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeDeleteModal();
+            }
+        });
+    }
+});
 </script>
 @endsection

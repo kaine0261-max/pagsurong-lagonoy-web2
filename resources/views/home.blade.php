@@ -253,7 +253,13 @@
                     <p class="text-gray-600">Sign in to your account</p>
                 </div>
 
-                <form method="POST" action="{{ route('login.post') }}">
+                <!-- Error Message Display -->
+                <div id="loginErrorMessage" class="hidden mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    <span id="loginErrorText"></span>
+                </div>
+
+                <form method="POST" action="{{ route('login.post') }}" id="loginForm">
                     @csrf
                     <div class="space-y-4">
                         <div>
@@ -263,7 +269,8 @@
                                    name="email" 
                                    required 
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                                   placeholder="Enter your email">
+                                   placeholder="Enter your email"
+                                   value="{{ old('email') }}">
                         </div>
 
                         <div>
@@ -597,6 +604,48 @@
                 document.body.style.overflow = 'auto';
             }
         }
+
+        // Handle login form submission with AJAX
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(loginForm);
+                    const errorDiv = document.getElementById('loginErrorMessage');
+                    const errorText = document.getElementById('loginErrorText');
+                    
+                    // Hide previous errors
+                    errorDiv.classList.add('hidden');
+                    
+                    try {
+                        const response = await fetch(loginForm.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
+                            }
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok && data.success) {
+                            // Redirect on success
+                            window.location.href = data.redirect || '/';
+                        } else {
+                            // Show error message
+                            errorText.textContent = data.message || 'Invalid email or password. Please try again.';
+                            errorDiv.classList.remove('hidden');
+                        }
+                    } catch (error) {
+                        errorText.textContent = 'An error occurred. Please try again.';
+                        errorDiv.classList.remove('hidden');
+                    }
+                });
+            }
+        });
 
         // Public action handlers that require authentication
         function handleAddToCart(productId, productName) {
