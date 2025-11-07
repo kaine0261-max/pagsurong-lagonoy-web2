@@ -33,11 +33,21 @@
                         <a href="{{ route('messages.thread', $otherUser) }}" class="block">
                             <div class="flex items-center space-x-3">
                                 <div class="flex-shrink-0">
-                                    <div class="h-12 w-12 rounded-full bg-green-600 flex items-center justify-center">
-                                        <span class="text-white font-medium">
-                                            {{ strtoupper(substr($otherUser->name, 0, 1)) }}
-                                        </span>
-                                    </div>
+                                    @if($otherUser->businessProfile && $otherUser->businessProfile->profile_avatar)
+                                        <img src="{{ Storage::url($otherUser->businessProfile->profile_avatar) }}" 
+                                             alt="{{ $otherUser->name }}" 
+                                             class="h-12 w-12 rounded-full object-cover">
+                                    @elseif($otherUser->profile && $otherUser->profile->profile_picture)
+                                        <img src="{{ Storage::url($otherUser->profile->profile_picture) }}" 
+                                             alt="{{ $otherUser->name }}" 
+                                             class="h-12 w-12 rounded-full object-cover">
+                                    @else
+                                        <div class="h-12 w-12 rounded-full bg-green-600 flex items-center justify-center">
+                                            <span class="text-white font-medium">
+                                                {{ strtoupper(substr($otherUser->name, 0, 1)) }}
+                                            </span>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center justify-between">
