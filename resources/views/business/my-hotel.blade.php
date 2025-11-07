@@ -184,32 +184,22 @@ use Illuminate\Support\Facades\Storage;
                             @endif
                             
                             <!-- Social Media Links -->
-                            @if($businessProfile && ($businessProfile->facebook_page || $businessProfile->instagram_url || $businessProfile->twitter_url))
-                                <div class="mt-4 pt-4 border-t border-gray-200">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">Connect with us:</p>
-                                    <div class="space-y-2">
-                                        @if($businessProfile->facebook_page)
-                                            <a href="{{ $businessProfile->facebook_page }}" target="_blank" rel="noopener noreferrer" 
-                                               class="flex items-center text-sm text-blue-600 hover:text-blue-700 hover:underline">
-                                                <i class="fab fa-facebook-f w-5 mr-2"></i>
-                                                <span>Facebook</span>
-                                            </a>
-                                        @endif
-                                        @if($businessProfile->instagram_url)
-                                            <a href="{{ $businessProfile->instagram_url }}" target="_blank" rel="noopener noreferrer" 
-                                               class="flex items-center text-sm text-pink-600 hover:text-pink-700 hover:underline">
-                                                <i class="fab fa-instagram w-5 mr-2"></i>
-                                                <span>Instagram</span>
-                                            </a>
-                                        @endif
-                                        @if($businessProfile->twitter_url)
-                                            <a href="{{ $businessProfile->twitter_url }}" target="_blank" rel="noopener noreferrer" 
-                                               class="flex items-center text-sm text-gray-800 hover:text-gray-900 hover:underline">
-                                                <i class="fab fa-x-twitter w-5 mr-2"></i>
-                                                <span>Twitter/X</span>
-                                            </a>
-                                        @endif
-                                    </div>
+                            @if($businessProfile && $businessProfile->facebook_page)
+                                <div class="flex items-center text-gray-600 mb-1">
+                                    <i class="fab fa-facebook mr-2 text-green-600"></i>
+                                    <a href="{{ $businessProfile->facebook_page }}" target="_blank" class="text-green-600 hover:underline text-sm">Facebook Page</a>
+                                </div>
+                            @endif
+                            @if($businessProfile && $businessProfile->instagram_url)
+                                <div class="flex items-center text-gray-600 mb-1">
+                                    <i class="fab fa-instagram mr-2 text-green-600"></i>
+                                    <a href="{{ $businessProfile->instagram_url }}" target="_blank" class="text-green-600 hover:underline text-sm">Instagram</a>
+                                </div>
+                            @endif
+                            @if($businessProfile && $businessProfile->twitter_url)
+                                <div class="flex items-center text-gray-600 mb-1">
+                                    <i class="fab fa-x-twitter mr-2 text-green-600"></i>
+                                    <a href="{{ $businessProfile->twitter_url }}" target="_blank" class="text-green-600 hover:underline text-sm">Twitter/X</a>
                                 </div>
                             @endif
                         </div>
