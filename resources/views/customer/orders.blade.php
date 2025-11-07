@@ -19,69 +19,67 @@
             <div class="space-y-3 sm:space-y-4">
                 @foreach($orders as $order)
                     <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-                        <div class="p-4 sm:p-6">
-                            <!-- Order Header -->
-                            <div class="flex items-start gap-3 mb-4">
+                        <div class="p-4">
+                            <!-- Order Header with Status -->
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-base font-bold text-gray-900">
+                                    Order #{{ $order->id }}
+                                </h3>
+                                <span class="inline-flex px-2.5 py-1 text-xs font-semibold rounded-full whitespace-nowrap
+                                    @if($order->status === 'pending') bg-yellow-100 text-yellow-800
+                                    @elseif($order->status === 'ready_for_pickup') bg-blue-100 text-blue-800
+                                    @elseif($order->status === 'completed') bg-green-100 text-green-800
+                                    @elseif($order->status === 'cancelled') bg-red-100 text-red-800
+                                    @endif">
+                                    {{ ucfirst(str_replace('_', ' ', $order->status)) }}
+                                </span>
+                            </div>
+                            
+                            <!-- Product Info -->
+                            <div class="flex items-start gap-3 mb-3">
                                 <!-- Product Image -->
                                 <div class="flex-shrink-0">
                                     @if($order->items->first() && $order->items->first()->product->image)
-                                        <img class="h-20 w-20 sm:h-16 sm:w-16 rounded-lg object-cover" 
+                                        <img class="h-16 w-16 rounded-lg object-cover" 
                                              src="{{ asset('storage/' . $order->items->first()->product->image) }}" 
                                              alt="{{ $order->items->first()->product->name }}">
                                     @else
-                                        <div class="h-20 w-20 sm:h-16 sm:w-16 rounded-lg bg-gray-100 flex items-center justify-center">
-                                            <i class="fas fa-shopping-bag text-gray-400 text-2xl sm:text-xl"></i>
+                                        <div class="h-16 w-16 rounded-lg bg-gray-100 flex items-center justify-center">
+                                            <i class="fas fa-shopping-bag text-gray-400 text-xl"></i>
                                         </div>
                                     @endif
                                 </div>
                                 
-                                <!-- Order Info -->
+                                <!-- Product Details -->
                                 <div class="flex-1 min-w-0">
-                                    <h3 class="text-lg sm:text-base font-bold text-gray-900 mb-1">
-                                        Order #{{ $order->id }}
-                                    </h3>
-                                    <p class="text-base sm:text-sm text-gray-700 mb-1">
+                                    <p class="text-sm font-medium text-gray-900 mb-1">
                                         {{ $order->items->first() ? $order->items->first()->product->name : 'Product' }}
                                         @if($order->items->count() > 1)
                                             <span class="text-gray-500">×{{ $order->items->first()->quantity }}</span>
                                         @endif
                                     </p>
-                                    <p class="text-sm text-gray-600 flex items-center">
-                                        <i class="fas fa-store mr-1.5"></i>{{ $order->business->name }}
+                                    <p class="text-xs text-gray-600 mb-2">
+                                        <i class="fas fa-store mr-1"></i>{{ $order->business->name }}
                                     </p>
-                                </div>
-                                
-                                <!-- Status Badge (Top Right on Mobile) -->
-                                <div class="flex-shrink-0">
-                                    <span class="inline-flex px-3 py-1.5 text-xs font-semibold rounded-full whitespace-nowrap
-                                        @if($order->status === 'pending') bg-yellow-100 text-yellow-800
-                                        @elseif($order->status === 'ready_for_pickup') bg-blue-100 text-blue-800
-                                        @elseif($order->status === 'completed') bg-green-100 text-green-800
-                                        @elseif($order->status === 'cancelled') bg-red-100 text-red-800
-                                        @endif">
-                                        {{ ucfirst(str_replace('_', ' ', $order->status)) }}
-                                    </span>
+                                    <div class="flex items-center gap-3 text-xs">
+                                        <span class="text-gray-700">
+                                            Quantity: <span class="font-semibold text-gray-900">{{ $order->items->sum('quantity') }}</span>
+                                        </span>
+                                        <span class="text-gray-700">
+                                            <span class="font-semibold text-green-600">₱{{ number_format($order->items->sum(function($item) { return $item->price * $item->quantity; }), 2) }}</span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <!-- Order Details -->
-                            <div class="space-y-2 mb-4">
-                                <div class="flex items-center justify-between text-sm sm:text-base">
-                                    <span class="text-gray-700 font-medium flex items-center">
-                                        <i class="fas fa-box mr-2 text-gray-400"></i>
-                                        Quantity: <span class="text-gray-900 ml-1">{{ $order->items->sum('quantity') }}</span>
-                                    </span>
-                                    <span class="text-gray-700 font-medium">
-                                        Total: <span class="text-green-600 font-bold">₱{{ number_format($order->items->sum(function($item) { return $item->price * $item->quantity; }), 2) }}</span>
-                                    </span>
-                                </div>
-                                
-                                @if($order->pickup_time)
-                                    <p class="text-sm sm:text-base text-green-600 font-medium flex items-center">
-                                        <i class="fas fa-clock mr-2"></i>Pickup: {{ $order->pickup_time }}
+                            <!-- Pickup Time -->
+                            @if($order->pickup_time)
+                                <div class="mb-3 py-2 px-3 bg-green-50 rounded-lg">
+                                    <p class="text-xs text-green-700 font-medium flex items-center">
+                                        <i class="fas fa-clock mr-1.5"></i>Pickup: {{ $order->pickup_time }}
                                     </p>
-                                @endif
-                            </div>
+                                </div>
+                            @endif
                             
                             <!-- Footer -->
                             <div class="flex items-center justify-between pt-3 border-t border-gray-100">
@@ -90,8 +88,8 @@
                                 </p>
                                 
                                 <a href="{{ route('messages.thread', $order->business->owner_id) }}" 
-                                   class="inline-flex items-center text-sm font-medium text-green-600 hover:text-green-700 transition-colors">
-                                    <i class="fas fa-comment-dots mr-1.5"></i>Message Business
+                                   class="inline-flex items-center text-xs font-medium text-green-600 hover:text-green-700 transition-colors">
+                                    <i class="fas fa-comment-dots mr-1"></i>Message Business
                                 </a>
                             </div>
                         </div>
