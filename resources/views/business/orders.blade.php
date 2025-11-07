@@ -24,7 +24,6 @@
                             <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Items</th>
                             <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Total</th>
                             <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
@@ -53,11 +52,6 @@
                                             <option {{ $order->status === 'cancelled' ? 'selected' : '' }} value="cancelled">Cancelled</option>
                                         </select>
                                     </form>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-900">
-                                    <a href="{{ route('customer.orders.show', $order) }}" class="text-blue-600 hover:text-blue-800 transition-colors duration-200">
-                                        <i class="fas fa-eye mr-1"></i> View Details
-                                    </a>
                                 </td>
                             </tr>
                         @endforeach
