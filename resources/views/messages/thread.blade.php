@@ -9,9 +9,13 @@
             <i class="fas fa-arrow-left text-xl"></i>
         </a>
         <div class="flex items-center flex-1">
-            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white">
-                @if($user->profile && $user->profile->profile_picture)
-                    <img src="{{ asset('storage/' . $user->profile->profile_picture) }}"
+            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white cursor-pointer" onclick="showProfileModal()">
+                @if($user->businessProfile && $user->businessProfile->profile_avatar)
+                    <img src="{{ Storage::url($user->businessProfile->profile_avatar) }}"
+                         alt="{{ $user->name }}"
+                         class="h-full w-full object-cover">
+                @elseif($user->profile && $user->profile->profile_picture)
+                    <img src="{{ Storage::url($user->profile->profile_picture) }}"
                          alt="{{ $user->name }}"
                          class="h-full w-full object-cover">
                 @else
@@ -322,4 +326,142 @@ document.addEventListener('DOMContentLoaded', () => {
         animation: slideIn 0.3s ease-out;
     }
 </style>
+
+<!-- Profile Modal -->
+<div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4" onclick="closeProfileModal(event)">
+    <div class="bg-white rounded-lg shadow-xl max-w-sm w-full" onclick="event.stopPropagation()">
+        <!-- Profile Card Header -->
+        <div class="bg-gradient-to-br from-green-600 to-green-700 p-6 rounded-t-lg">
+            <div class="flex justify-end mb-2">
+                <button onclick="closeProfileModal()" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg mb-3">
+                    @if($user->businessProfile && $user->businessProfile->profile_avatar)
+                        <img src="{{ Storage::url($user->businessProfile->profile_avatar) }}"
+                             alt="{{ $user->name }}"
+                             class="h-full w-full object-cover">
+                    @elseif($user->profile && $user->profile->profile_picture)
+                        <img src="{{ Storage::url($user->profile->profile_picture) }}"
+                             alt="{{ $user->name }}"
+                             class="h-full w-full object-cover">
+                    @else
+                        <div class="h-full w-full bg-green-400 flex items-center justify-center">
+                            <span class="text-white font-bold text-4xl">
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                            </span>
+                        </div>
+                    @endif
+                </div>
+                <h3 class="text-xl font-bold text-white">{{ $user->name }}</h3>
+                <p class="text-sm text-green-100 mt-1">
+                    {{ ucfirst(str_replace('_', ' ', $user->role ?? 'User')) }}
+                </p>
+            </div>
+        </div>
+        
+        <!-- Profile Card Body -->
+        <div class="p-6 space-y-4">
+            @if($user->businessProfile)
+                <!-- Business Information -->
+                <div class="space-y-3">
+                    <div class="flex items-start">
+                        <i class="fas fa-store text-green-600 mt-1 mr-3 w-5"></i>
+                        <div class="flex-1">
+                            <p class="text-xs text-gray-500">Business Name</p>
+                            <p class="text-sm font-medium text-gray-900">{{ $user->businessProfile->business_name }}</p>
+                        </div>
+                    </div>
+                    
+                    @if($user->businessProfile->address)
+                        <div class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-green-600 mt-1 mr-3 w-5"></i>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Address</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $user->businessProfile->address }}</p>
+                            </div>
+                        </div>
+                    @endif
+                    
+                    @if($user->businessProfile->contact_number)
+                        <div class="flex items-start">
+                            <i class="fas fa-phone text-green-600 mt-1 mr-3 w-5"></i>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Contact Number</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $user->businessProfile->contact_number }}</p>
+                            </div>
+                        </div>
+                    @endif
+                    
+                    @if($user->businessProfile->email)
+                        <div class="flex items-start">
+                            <i class="fas fa-envelope text-green-600 mt-1 mr-3 w-5"></i>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Email</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $user->businessProfile->email }}</p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            @elseif($user->profile)
+                <!-- Customer Information -->
+                <div class="space-y-3">
+                    <div class="flex items-start">
+                        <i class="fas fa-user text-green-600 mt-1 mr-3 w-5"></i>
+                        <div class="flex-1">
+                            <p class="text-xs text-gray-500">Full Name</p>
+                            <p class="text-sm font-medium text-gray-900">{{ $user->profile->full_name ?? $user->name }}</p>
+                        </div>
+                    </div>
+                    
+                    @if($user->profile->phone_number)
+                        <div class="flex items-start">
+                            <i class="fas fa-phone text-green-600 mt-1 mr-3 w-5"></i>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Phone Number</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $user->profile->phone_number }}</p>
+                            </div>
+                        </div>
+                    @endif
+                    
+                    @if($user->profile->address)
+                        <div class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-green-600 mt-1 mr-3 w-5"></i>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Address</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $user->profile->address }}</p>
+                            </div>
+                        </div>
+                    @endif
+                    
+                    @if($user->email)
+                        <div class="flex items-start">
+                            <i class="fas fa-envelope text-green-600 mt-1 mr-3 w-5"></i>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Email</p>
+                                <p class="text-sm font-medium text-gray-900">{{ $user->email }}</p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            @endif
+        </div>
+    </div>
+</div>
+
+<script>
+function showProfileModal() {
+    document.getElementById('profileModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeProfileModal(event) {
+    if (!event || event.target.id === 'profileModal') {
+        document.getElementById('profileModal').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+}
+</script>
 @endsection

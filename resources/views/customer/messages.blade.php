@@ -30,7 +30,7 @@
                         $lastMessage = \App\Models\Message::where('id', $thread->last_id)->first();
                     @endphp
                     <li class="px-6 py-4 hover:bg-gray-50 transition-colors">
-                        <a href="{{ route('messages.thread', $otherUser) }}" class="block">
+                        <a href="{{ route('messages.thread', $otherUser->id) }}" class="block">
                             <div class="flex items-center space-x-3">
                                 <div class="flex-shrink-0">
                                     @if($otherUser->businessProfile && $otherUser->businessProfile->profile_avatar)

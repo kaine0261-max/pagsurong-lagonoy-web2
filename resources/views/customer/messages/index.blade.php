@@ -43,8 +43,12 @@
                                     <div class="flex items-center space-x-3">
                                         <!-- Profile Picture -->
                                         <div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
-                                            @if($otherUser->profile && $otherUser->profile->profile_picture)
-                                                <img src="{{ asset('storage/' . $otherUser->profile->profile_picture) }}"
+                                            @if($otherUser->businessProfile && $otherUser->businessProfile->profile_avatar)
+                                                <img src="{{ Storage::url($otherUser->businessProfile->profile_avatar) }}"
+                                                     alt="{{ $otherUser->name }}"
+                                                     class="h-full w-full object-cover">
+                                            @elseif($otherUser->profile && $otherUser->profile->profile_picture)
+                                                <img src="{{ Storage::url($otherUser->profile->profile_picture) }}"
                                                      alt="{{ $otherUser->name }}"
                                                      class="h-full w-full object-cover">
                                             @else
@@ -71,9 +75,9 @@
                                             </p>
 
                                             <!-- Show business name if available -->
-                                            @if($otherUser->business)
+                                            @if($otherUser->businessProfile)
                                                 <p class="text-xs text-green-600 font-medium">
-                                                    {{ $otherUser->business->name }}
+                                                    {{ $otherUser->businessProfile->business_name }}
                                                 </p>
                                             @endif
                                         </div>

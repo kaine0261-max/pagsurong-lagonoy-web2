@@ -20,7 +20,7 @@ class MessageController extends Controller
                 $query->where('sender_id', $user->id)
                       ->orWhere('receiver_id', $user->id);
             })
-            ->with(['sender', 'receiver'])
+            ->with(['sender.profile', 'sender.businessProfile', 'receiver.profile', 'receiver.businessProfile'])
             ->latest()
             ->get()
             ->unique(function ($message) {
@@ -43,7 +43,7 @@ class MessageController extends Controller
                 $query->where('sender_id', $user->id)
                       ->orWhere('receiver_id', $user->id);
             })
-            ->with(['sender', 'receiver'])
+            ->with(['sender.profile', 'sender.businessProfile', 'receiver.profile', 'receiver.businessProfile'])
             ->latest()
             ->get()
             ->unique(function ($message) {
