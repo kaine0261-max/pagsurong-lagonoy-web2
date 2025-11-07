@@ -21,6 +21,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\SearchController;
 
 // =========================
 // PUBLIC ROUTES
@@ -44,6 +45,9 @@ Route::get('/resorts', [ResortController::class, 'index'])->name('public.resorts
 Route::get('/resorts/{id}', [ResortController::class, 'show'])->name('public.resorts.show');
 Route::get('/attractions', [AttractionController::class, 'index'])->name('public.attractions');
 Route::get('/attractions/{id}', [AttractionController::class, 'show'])->name('public.attractions.show');
+
+// Search route (accessible to all)
+Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 // Comment count routes (accessible to all)
 Route::get('/businesses/{business}/comment-count', [RatingController::class, 'getBusinessCommentCount'])->name('businesses.comment-count');

@@ -93,8 +93,34 @@
         </nav>
     </header>
 
+    <!-- Search Bar (Below Navigation) -->
+    <div class="fixed top-16 md:top-20 left-0 lg:left-16 right-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+        <div class="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 py-2">
+            <div class="flex items-center justify-center gap-2">
+                <!-- Search Input -->
+                <div class="relative w-full max-w-xl">
+                    <input type="text" 
+                           id="searchInput" 
+                           placeholder="Search..." 
+                           class="w-full pl-9 pr-9 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                           autocomplete="off">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
+                    <button id="clearSearch" class="hidden absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+                
+                <!-- Search Button -->
+                <button id="searchButton" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-full transition-colors text-sm font-medium whitespace-nowrap">
+                    <i class="fas fa-search text-xs sm:mr-1.5"></i>
+                    <span class="hidden sm:inline">Search</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main content wrapper with fixed navigation and three-column layout -->
-    <div class="pt-20 md:pt-24 pb-20 md:pb-0 min-h-screen">
+    <div class="pt-[6.5rem] md:pt-[7.5rem] pb-20 md:pb-0 min-h-screen">
         <div class="flex min-h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)]">
             <!-- Left Sidebar - Switchable Panel (Desktop Only) -->
             @auth
@@ -705,6 +731,279 @@
             </div>
         </div>
     </div>
+
+    <!-- Search Results Modal -->
+    <div id="searchModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 overflow-y-auto">
+        <div class="flex items-start justify-center min-h-screen p-4 pt-20">
+            <div class="bg-white rounded-lg w-full md:max-w-2xl lg:max-w-3xl relative my-8 max-h-[80vh] overflow-hidden flex flex-col">
+                <!-- Modal Header -->
+                <div class="p-4 md:p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10">
+                    <div class="flex-1">
+                        <h3 class="text-lg md:text-xl font-bold text-gray-900">Search Results</h3>
+                        <p id="searchResultsCount" class="text-sm text-gray-600 mt-1"></p>
+                    </div>
+                    <button onclick="closeSearchModal()" class="text-gray-400 hover:text-gray-600 ml-4">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+
+                <!-- Loading State -->
+                <div id="searchLoading" class="hidden p-8 text-center">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+                    <p class="mt-4 text-gray-600">Searching...</p>
+                </div>
+
+                <!-- Results Container -->
+                <div id="searchResultsContainer" class="flex-1 overflow-y-auto p-4 md:p-6">
+                    <!-- Results will be inserted here -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="searchEmpty" class="hidden p-8 text-center">
+                    <div class="w-20 h-20 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-search text-gray-400 text-3xl"></i>
+                    </div>
+                    <p class="text-gray-600 text-lg mb-2">No results found</p>
+                    <p class="text-gray-500 text-sm">Try adjusting your search terms or category filter</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search JavaScript -->
+    <script>
+        let searchTimeout = null;
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            const category = 'all';
+
+            if (query.length < 2) {
+                alert('Please enter at least 2 characters to search');
+                return;
+            }
+
+            // Show modal and loading state
+            document.getElementById('searchModal').classList.remove('hidden');
+            document.getElementById('searchLoading').classList.remove('hidden');
+            document.getElementById('searchResultsContainer').classList.add('hidden');
+            document.getElementById('searchEmpty').classList.add('hidden');
+            document.body.style.overflow = 'hidden';
+
+            // Construct URL
+            const searchUrl = `/search?q=${encodeURIComponent(query)}&category=${category}`;
+            console.log('Searching:', searchUrl);
+
+            // Perform search
+            fetch(searchUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`HTTP ${response.status}: ${text.substring(0, 100)}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Search results:', data);
+                    document.getElementById('searchLoading').classList.add('hidden');
+                    
+                    if (!data.success) {
+                        throw new Error(data.message || 'Search failed');
+                    }
+                    
+                    if (data.total === 0) {
+                        document.getElementById('searchEmpty').classList.remove('hidden');
+                        document.getElementById('searchResultsCount').textContent = 'No results found';
+                    } else {
+                        document.getElementById('searchResultsContainer').classList.remove('hidden');
+                        displaySearchResults(data);
+                        document.getElementById('searchResultsCount').textContent = 
+                            `Found ${data.total} result${data.total !== 1 ? 's' : ''} for "${data.query}"`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Search error:', error);
+                    document.getElementById('searchLoading').classList.add('hidden');
+                    document.getElementById('searchResultsContainer').classList.remove('hidden');
+                    const container = document.getElementById('searchResultsContainer');
+                    container.innerHTML = `
+                        <div class="text-center py-8">
+                            <div class="w-20 h-20 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
+                            </div>
+                            <p class="text-gray-900 text-lg mb-2">Search Error</p>
+                            <p class="text-gray-600 text-sm mb-4">Unable to perform search. Please try again.</p>
+                            <p class="text-gray-500 text-xs break-all px-4">${error.message}</p>
+                        </div>
+                    `;
+                    document.getElementById('searchResultsCount').textContent = 'Search error occurred';
+                });
+        }
+
+        function displaySearchResults(data) {
+            const container = document.getElementById('searchResultsContainer');
+            container.innerHTML = '';
+
+            // Display Products
+            if (data.results.products && data.results.products.length > 0) {
+                container.innerHTML += createResultSection('Products', data.results.products, 'product');
+            }
+
+            // Display Shops
+            if (data.results.shops && data.results.shops.length > 0) {
+                container.innerHTML += createResultSection('Shops', data.results.shops, 'shop');
+            }
+
+            // Display Hotels
+            if (data.results.hotels && data.results.hotels.length > 0) {
+                container.innerHTML += createResultSection('Hotels', data.results.hotels, 'hotel');
+            }
+
+            // Display Resorts
+            if (data.results.resorts && data.results.resorts.length > 0) {
+                container.innerHTML += createResultSection('Resorts', data.results.resorts, 'resort');
+            }
+
+            // Display Attractions
+            if (data.results.attractions && data.results.attractions.length > 0) {
+                container.innerHTML += createResultSection('Attractions', data.results.attractions, 'attraction');
+            }
+        }
+
+        function createResultSection(title, items, type) {
+            let html = `
+                <div class="mb-6">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                        <i class="fas fa-${getIconForType(type)} text-green-600 mr-2"></i>
+                        ${title}
+                        <span class="ml-2 text-sm font-normal text-gray-500">(${items.length})</span>
+                    </h4>
+                    <div class="grid grid-cols-1 gap-4">
+            `;
+
+            items.forEach(item => {
+                html += createResultCard(item, type);
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            return html;
+        }
+
+        function createResultCard(item, type) {
+            const imageUrl = item.image || '{{ asset("placeholder.png") }}';
+            const priceHtml = item.price ? `<p class="text-green-600 font-semibold text-lg">₱${parseFloat(item.price).toFixed(2)}</p>` : '';
+            const businessNameHtml = item.business_name ? `<p class="text-xs text-gray-500 mt-1"><i class="fas fa-store mr-1"></i>${item.business_name}</p>` : '';
+            const addressHtml = item.address ? `<p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i>${item.address}</p>` : '';
+            const locationHtml = item.location ? `<p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i>${item.location}</p>` : '';
+            const starRatingHtml = item.star_rating ? `<p class="text-xs text-yellow-500 mt-1"><i class="fas fa-star mr-1"></i>${item.star_rating} Star</p>` : '';
+            const entranceFeeHtml = item.entrance_fee ? `<p class="text-xs text-green-600 mt-1"><i class="fas fa-ticket-alt mr-1"></i>₱${parseFloat(item.entrance_fee).toFixed(2)}</p>` : '';
+
+            return `
+                <a href="${item.url}" class="block bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-shadow overflow-hidden">
+                    <div class="flex">
+                        <div class="w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
+                            <img src="${imageUrl}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.src='{{ asset("placeholder.png") }}'">
+                        </div>
+                        <div class="flex-1 p-3 md:p-4 min-w-0">
+                            <h5 class="font-semibold text-gray-900 text-sm md:text-base truncate">${item.name}</h5>
+                            <p class="text-xs md:text-sm text-gray-600 mt-1 line-clamp-2">${item.description || ''}</p>
+                            ${priceHtml}
+                            ${businessNameHtml}
+                            ${addressHtml}
+                            ${locationHtml}
+                            ${starRatingHtml}
+                            ${entranceFeeHtml}
+                        </div>
+                    </div>
+                </a>
+            `;
+        }
+
+        function getIconForType(type) {
+            const icons = {
+                'product': 'shopping-bag',
+                'shop': 'store',
+                'hotel': 'hotel',
+                'resort': 'umbrella-beach',
+                'attraction': 'map-marked-alt'
+            };
+            return icons[type] || 'circle';
+        }
+
+        function closeSearchModal() {
+            document.getElementById('searchModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Search Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const clearButton = document.getElementById('clearSearch');
+            const searchModal = document.getElementById('searchModal');
+
+            if (searchButton) {
+                // Search on button click
+                searchButton.addEventListener('click', performSearch);
+            }
+
+            if (searchInput) {
+                // Search on Enter key
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+
+                // Show/hide clear button
+                searchInput.addEventListener('input', function() {
+                    if (this.value.length > 0) {
+                        clearButton.classList.remove('hidden');
+                    } else {
+                        clearButton.classList.add('hidden');
+                    }
+                });
+            }
+
+            if (clearButton) {
+                // Clear search
+                clearButton.addEventListener('click', function() {
+                    searchInput.value = '';
+                    clearButton.classList.add('hidden');
+                    searchInput.focus();
+                });
+            }
+
+            // Close modal on outside click
+            if (searchModal) {
+                searchModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeSearchModal();
+                    }
+                });
+            }
+
+            // Close modal on Escape key (add to existing keydown listener)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSearchModal();
+                }
+            });
+        });
+    </script>
     
     @yield('scripts')
 </body>

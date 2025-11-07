@@ -88,7 +88,7 @@
                 </h2>
                 
                 @if($shop->products && $shop->products->count() > 0)
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                         @foreach($shop->products as $product)
                             <div class="border border-gray-200 rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow">
                                 @if($product->image)
