@@ -190,13 +190,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="ml-4 flex-shrink-0 flex space-x-2">
-                                        <form action="{{ route('admin.business-approvals.toggle-publish', $business) }}" method="POST" class="inline-block">
-                                            @csrf
-                                            <button type="submit" class="text-sm font-medium {{ $business->is_published ? 'text-yellow-600 hover:text-yellow-500' : 'text-blue-600 hover:text-blue-500' }}">
-                                                {{ $business->is_published ? 'Unpublish' : 'Publish' }}
-                                            </button>
-                                        </form>
+                                    <div class="ml-4 flex-shrink-0">
                                         <a href="{{ route('admin.business-approvals.show', $business) }}" class="text-sm font-medium text-gray-600 hover:text-gray-500">
                                             View
                                         </a>

@@ -587,25 +587,22 @@ function toggleTouristSpotsPanel() {
     const content = document.getElementById('touristSpotsContent');
     const icon = document.getElementById('touristSpotsToggleIcon');
     const title = document.getElementById('touristSpotsTitle');
-    const toggleBtn = document.getElementById('touristSpotsToggleBtn');
     
-    if (panel && content && icon && title && toggleBtn) {
-        const isMinimized = content.style.display === 'none';
+    if (panel && content && icon && title) {
+        const isMinimized = panel.classList.contains('lg:w-12');
         
         if (isMinimized) {
             // Maximize
-            content.style.display = 'block';
-            title.style.display = 'inline';
-            toggleBtn.style.display = 'block';
+            content.classList.remove('hidden');
+            title.classList.remove('hidden');
             panel.classList.remove('lg:w-12');
             panel.classList.add('lg:w-80');
             icon.classList.remove('fa-chevron-right');
             icon.classList.add('fa-chevron-left');
         } else {
-            // Minimize - Show only icon
-            content.style.display = 'none';
-            title.style.display = 'none';
-            toggleBtn.style.display = 'none';
+            // Minimize
+            content.classList.add('hidden');
+            title.classList.add('hidden');
             panel.classList.remove('lg:w-80');
             panel.classList.add('lg:w-12');
             icon.classList.remove('fa-chevron-left');

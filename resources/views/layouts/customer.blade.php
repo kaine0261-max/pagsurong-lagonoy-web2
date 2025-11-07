@@ -39,10 +39,10 @@
     <!-- Header -->
     <header class="py-2 md:py-4 px-2 sm:px-3 md:px-10 flex flex-col md:flex-row justify-between items-center shadow-sm fixed top-0 left-0 right-0 z-50 text-white" style="background-color: #064e3b;">
         <!-- Left Side - Main Branding (Hidden on Mobile) -->
-        <div class="hidden md:flex items-center">
+        <a href="javascript:history.back()" class="hidden md:flex items-center hover:opacity-80 transition-opacity cursor-pointer">
             <img src="{{ asset('pagsurongfaviconlogo.png') }}" alt="Pagsurong Lagonoy Logo" class="w-12 h-auto mr-3">
             <div class="font-playfair text-2xl font-bold text-white">Pagsurong Lagonoy</div>
-        </div>
+        </a>
         
         <!-- Center - Navigation (Customer Routes) -->
         <nav class="flex flex-wrap justify-center items-center mb-0 gap-1 sm:gap-2">
