@@ -122,7 +122,22 @@
                     @enderror
                 </div>
 
-                <!-- Bio -->
+                <!-- Bio / Business Description -->
+                @if(auth()->user()->role === 'business_owner')
+                <div>
+                    <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">
+                        Business Description
+                    </label>
+                    <textarea id="bio" 
+                              name="bio" 
+                              rows="4"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              placeholder="Describe your business (optional)">{{ old('bio', auth()->user()->businessProfile ? auth()->user()->businessProfile->description : $profile->bio) }}</textarea>
+                    @error('bio')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+                @else
                 <div>
                     <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">
                         Bio
@@ -136,6 +151,7 @@
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+                @endif
 
                 <!-- Social Media Links -->
                 @if(auth()->user()->role === 'business_owner')

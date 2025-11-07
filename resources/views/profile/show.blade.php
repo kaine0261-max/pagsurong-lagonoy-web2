@@ -67,8 +67,14 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Bio</label>
-                        <p class="text-gray-900">{{ $profile->bio ?: 'No bio provided' }}</p>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ auth()->user()->role === 'business_owner' ? 'Business Description' : 'Bio' }}
+                        </label>
+                        @if(auth()->user()->role === 'business_owner')
+                            <p class="text-gray-900">{{ auth()->user()->businessProfile && auth()->user()->businessProfile->description ? auth()->user()->businessProfile->description : 'No business description provided' }}</p>
+                        @else
+                            <p class="text-gray-900">{{ $profile->bio ?: 'No bio provided' }}</p>
+                        @endif
                     </div>
                 @else
                     <div class="text-center py-8">

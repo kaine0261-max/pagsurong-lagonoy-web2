@@ -130,7 +130,8 @@ use Illuminate\Support\Facades\Storage;
                                     <i class="fas fa-store text-gray-400 text-3xl"></i>
                                 @endif
                             </div>
-                            <div class="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-md">
+                            <div class="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-md cursor-pointer"
+                                 onclick="document.getElementById('profile-photo').click()">
                                 <i class="fas fa-camera text-gray-600 text-sm"></i>
                             </div>
                         </div>

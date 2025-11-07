@@ -214,7 +214,7 @@ class ProfileController extends Controller
             'sex' => 'required|in:Male,Female,Other',
             'phone_number' => 'required|string|max:20',
             'address' => 'nullable|string|max:255',
-            'bio' => 'nullable|string|max:500',
+            'bio' => 'nullable|string|max:1000', // Increased for business descriptions
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'facebook' => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',
@@ -248,15 +248,20 @@ class ProfileController extends Controller
             }
         }
 
-        $profile->update($validated);
-        
-        // For business owners, also update social media links in business profile
+        // For business owners, update bio in BusinessProfile as description
         if ($user->role === 'business_owner' && $user->businessProfile) {
+            // Save bio to BusinessProfile description instead
+            $user->businessProfile->description = $validated['bio'] ?? null;
             $user->businessProfile->facebook_page = $validated['facebook'] ?? null;
             $user->businessProfile->instagram_url = $validated['instagram'] ?? null;
             $user->businessProfile->twitter_url = $validated['twitter'] ?? null;
             $user->businessProfile->save();
+            
+            // Remove bio from profile update for business owners
+            unset($validated['bio']);
         }
+        
+        $profile->update($validated);
         
         // Also update user's name if full_name changed
         if ($user->name !== $validated['full_name']) {

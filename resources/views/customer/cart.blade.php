@@ -1,5 +1,20 @@
 @extends('layouts.customer')
 
+@section('styles')
+<style>
+    /* Remove default number input spinners */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="min-h-screen bg-gray-100 pt-20 py-4 sm:py-6 md:py-8">
     <div class="max-w-6xl mx-auto px-3 sm:px-4">
@@ -66,26 +81,32 @@
                                     </div>
 
                                     <!-- Quantity Controls -->
-                                    <div class="flex items-center space-x-1 sm:space-x-2 md:space-x-3">
-                                        <form action="{{ route('customer.cart.update', $item) }}" method="POST" class="inline">
+                                    <div class="flex items-center space-x-1 sm:space-x-2">
+                                        <form action="{{ route('customer.cart.update', $item) }}" method="POST" class="inline quantity-form" data-cart-id="{{ $item->id }}">
                                             @csrf
                                             @method('PUT')
-                                            <input type="hidden" name="quantity" value="{{ max(1, $item->quantity - 1) }}">
-                                            <button type="submit" class="w-7 h-7 sm:w-8 sm:h-8 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center" 
-                                                    {{ $item->quantity <= 1 ? 'disabled' : '' }}>
-                                                <i class="fas fa-minus text-xs"></i>
-                                            </button>
-                                        </form>
-                                        
-                                        <span class="font-semibold text-sm sm:text-base md:text-lg min-w-[1.5rem] sm:min-w-[2rem] text-center">{{ $item->quantity }}</span>
-                                        
-                                        <form action="{{ route('customer.cart.update', $item) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('PUT')
-                                            <input type="hidden" name="quantity" value="{{ $item->quantity + 1 }}">
-                                            <button type="submit" class="w-7 h-7 sm:w-8 sm:h-8 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center">
-                                                <i class="fas fa-plus text-xs"></i>
-                                            </button>
+                                            <div class="flex items-center space-x-1 sm:space-x-2">
+                                                <button type="button" 
+                                                        onclick="decrementQuantity({{ $item->id }})" 
+                                                        class="w-7 h-7 sm:w-8 sm:h-8 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center">
+                                                    <i class="fas fa-minus text-xs"></i>
+                                                </button>
+                                                
+                                                <input type="number" 
+                                                       name="quantity" 
+                                                       id="quantity-{{ $item->id }}"
+                                                       value="{{ $item->quantity }}" 
+                                                       min="1" 
+                                                       max="{{ $item->product->current_stock ?? 999 }}"
+                                                       class="w-12 sm:w-14 h-7 sm:h-8 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-semibold"
+                                                       onchange="this.form.submit()">
+                                                
+                                                <button type="button" 
+                                                        onclick="incrementQuantity({{ $item->id }})" 
+                                                        class="w-7 h-7 sm:w-8 sm:h-8 bg-gray-200 text-gray-600 rounded-md hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center">
+                                                    <i class="fas fa-plus text-xs"></i>
+                                                </button>
+                                            </div>
                                         </form>
                                     </div>
 
@@ -247,6 +268,26 @@
 <script>
 let deleteFormToSubmit = null;
 let clearBusinessId = null;
+
+// Quantity control functions
+function decrementQuantity(cartId) {
+    const input = document.getElementById(`quantity-${cartId}`);
+    const currentValue = parseInt(input.value);
+    if (currentValue > 1) {
+        input.value = currentValue - 1;
+        input.form.submit();
+    }
+}
+
+function incrementQuantity(cartId) {
+    const input = document.getElementById(`quantity-${cartId}`);
+    const currentValue = parseInt(input.value);
+    const maxValue = parseInt(input.max);
+    if (currentValue < maxValue) {
+        input.value = currentValue + 1;
+        input.form.submit();
+    }
+}
 
 function openDeleteModal(form) {
     deleteFormToSubmit = form;
