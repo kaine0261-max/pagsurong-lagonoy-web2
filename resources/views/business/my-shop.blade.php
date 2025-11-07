@@ -177,25 +177,31 @@ use Illuminate\Support\Facades\Storage;
                             
                             <!-- Social Media Links -->
                             @if($business && ($business->facebook_page || $business->instagram_url || $business->twitter_url))
-                                <div class="flex items-center justify-center gap-3 mt-4 pt-4 border-t border-gray-200">
-                                    @if($business->facebook_page)
-                                        <a href="{{ $business->facebook_page }}" target="_blank" rel="noopener noreferrer" 
-                                           class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white hover:bg-blue-700 transition-colors">
-                                            <i class="fab fa-facebook-f"></i>
-                                        </a>
-                                    @endif
-                                    @if($business->instagram_url)
-                                        <a href="{{ $business->instagram_url }}" target="_blank" rel="noopener noreferrer" 
-                                           class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 flex items-center justify-center text-white hover:opacity-90 transition-opacity">
-                                            <i class="fab fa-instagram"></i>
-                                        </a>
-                                    @endif
-                                    @if($business->twitter_url)
-                                        <a href="{{ $business->twitter_url }}" target="_blank" rel="noopener noreferrer" 
-                                           class="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white hover:bg-gray-800 transition-colors">
-                                            <i class="fab fa-x-twitter"></i>
-                                        </a>
-                                    @endif
+                                <div class="mt-4 pt-4 border-t border-gray-200">
+                                    <p class="text-sm font-medium text-gray-700 mb-2">Connect with us:</p>
+                                    <div class="space-y-2">
+                                        @if($business->facebook_page)
+                                            <a href="{{ $business->facebook_page }}" target="_blank" rel="noopener noreferrer" 
+                                               class="flex items-center text-sm text-blue-600 hover:text-blue-700 hover:underline">
+                                                <i class="fab fa-facebook-f w-5 mr-2"></i>
+                                                <span>Facebook</span>
+                                            </a>
+                                        @endif
+                                        @if($business->instagram_url)
+                                            <a href="{{ $business->instagram_url }}" target="_blank" rel="noopener noreferrer" 
+                                               class="flex items-center text-sm text-pink-600 hover:text-pink-700 hover:underline">
+                                                <i class="fab fa-instagram w-5 mr-2"></i>
+                                                <span>Instagram</span>
+                                            </a>
+                                        @endif
+                                        @if($business->twitter_url)
+                                            <a href="{{ $business->twitter_url }}" target="_blank" rel="noopener noreferrer" 
+                                               class="flex items-center text-sm text-gray-800 hover:text-gray-900 hover:underline">
+                                                <i class="fab fa-x-twitter w-5 mr-2"></i>
+                                                <span>Twitter/X</span>
+                                            </a>
+                                        @endif
+                                    </div>
                                 </div>
                             @endif
                         </div>
