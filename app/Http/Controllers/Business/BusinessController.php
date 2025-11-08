@@ -167,14 +167,14 @@ class BusinessController extends Controller
     {
         $user = auth()->user();
         $businessProfile = $user->businessProfile;
-        $business = $user->business;
+        $bizEntity = $user->business;
         
         if (!$businessProfile) {
             return redirect()->route('business.setup');
         }
         
         // Get hotel rooms for the hotel
-        $rooms = $business ? $business->hotelRooms()->latest()->get() : collect();
+        $rooms = $bizEntity ? $bizEntity->hotelRooms()->latest()->get() : collect();
         
         // Get galleries for the hotel (exclude room images)
         $galleries = $businessProfile->galleries()
@@ -184,20 +184,21 @@ class BusinessController extends Controller
             ->get();
         
         // Calculate stats
-        $totalRooms = $business ? $business->hotelRooms()->count() : 0;
-        $availableRooms = $business ? $business->hotelRooms()->where('is_available', true)->count() : 0;
+        $totalRooms = $bizEntity ? $bizEntity->hotelRooms()->count() : 0;
+        $availableRooms = $bizEntity ? $bizEntity->hotelRooms()->where('is_available', true)->count() : 0;
         $galleryCount = $galleries->count();
         
         // Calculate average rating
         $averageRating = 0;
         $totalReviews = 0;
-        if ($business) {
-            $business->average_rating = 0;
+        if ($bizEntity) {
+            $businessProfile->average_rating = 0;
         }
         
         return view('business.my-hotel', [
-            'business' => $business,
+            'business' => $businessProfile,  // Pass businessProfile as 'business' for status/is_published checks
             'businessProfile' => $businessProfile,
+            'bizEntity' => $bizEntity,  // Pass Business entity for rooms relationship
             'rooms' => $rooms,
             'galleries' => $galleries,
             'totalRooms' => $totalRooms,

@@ -316,11 +316,11 @@
                     <i class="fas fa-store mr-2"></i> Business Owners ({{ $counts['businessOwners'] }})
                 </h4>
                 <div class="space-y-2">
-                    @foreach(App\Models\User::where('role', 'business_owner')->with('profile')->get() as $user)
+                    @foreach(App\Models\User::where('role', 'business_owner')->with('businessProfile')->get() as $user)
                         <div class="flex items-center justify-between p-2 bg-green-50 rounded">
                             <div class="flex items-center">
-                                @if($user->profile && $user->profile->profile_picture)
-                                    <img src="{{ Storage::url($user->profile->profile_picture) }}" class="w-8 h-8 rounded-full mr-2" alt="{{ $user->name }}">
+                                @if($user->businessProfile && $user->businessProfile->profile_avatar)
+                                    <img src="{{ Storage::url($user->businessProfile->profile_avatar) }}" class="w-8 h-8 rounded-full mr-2" alt="{{ $user->name }}">
                                 @else
                                     <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-sm mr-2">
                                         {{ strtoupper(substr($user->name, 0, 1)) }}
@@ -505,7 +505,7 @@
                         @foreach($spots as $spot)
                             <div class="flex items-center p-2 bg-indigo-50 rounded">
                                 @if($spot->main_image)
-                                    <img src="{{ Storage::url($spot->main_image) }}" class="w-12 h-12 object-cover rounded mr-2" alt="{{ $spot->name }}">
+                                    <img src="{{ asset('storage/' . $spot->main_image) }}" class="w-12 h-12 object-cover rounded mr-2" alt="{{ $spot->name }}">
                                 @else
                                     <div class="w-12 h-12 bg-indigo-200 rounded mr-2 flex items-center justify-center">
                                         <i class="fas fa-mountain text-indigo-500"></i>

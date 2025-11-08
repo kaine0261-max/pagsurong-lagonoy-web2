@@ -258,18 +258,6 @@ use Illuminate\Support\Facades\Storage;
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-2xl shadow-lg p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-sm font-medium text-gray-500">Available Rooms</p>
-                                <p class="text-2xl font-semibold text-gray-900">{{ $availableRooms }}</p>
-                                <p class="text-xs text-gray-500">Available rooms</p>
-                            </div>
-                            <div class="p-3 rounded-full bg-green-100 text-green-600">
-                                <i class="fas fa-bed text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Rooms Management -->
