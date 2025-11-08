@@ -143,41 +143,77 @@ class OrderController extends Controller
             \Log::info('Business owner: ' . ($business && $business->owner ? $business->owner->id : 'null'));
             
             if ($business && $business->owner) {
-                $messageContent = "🛒 New Order #" . $order->id . "\n\n";
-                $messageContent .= "Customer: {$user->name}\n";
+                // Message to business owner
+                $ownerMessageContent = "🛒 New Order #" . $order->order_number . "\n\n";
+                $ownerMessageContent .= "Customer: {$user->name}\n";
                 
                 // Format pickup time from order
                 if ($order->pickup_time) {
                     try {
                         $pickupDateTime = new \DateTime($order->pickup_time);
-                        $messageContent .= "Pickup: " . $pickupDateTime->format('M d, Y \a\t g:i A') . "\n";
+                        $ownerMessageContent .= "Pickup: " . $pickupDateTime->format('M d, Y \a\t g:i A') . "\n";
                     } catch (\Exception $e) {
-                        $messageContent .= "Pickup Time: " . $order->pickup_time . "\n";
+                        $ownerMessageContent .= "Pickup Time: " . $order->pickup_time . "\n";
                     }
                 } else {
-                    $messageContent .= "Pickup: ASAP\n";
+                    $ownerMessageContent .= "Pickup: ASAP\n";
                 }
                 
                 if ($order->notes) {
-                    $messageContent .= "Notes: " . $order->notes . "\n";
+                    $ownerMessageContent .= "Notes: " . $order->notes . "\n";
                 }
-                $messageContent .= "\nOrder Details:\n";
+                $ownerMessageContent .= "\nOrder Details:\n";
 
                 foreach ($cartItems as $item) {
-                    $messageContent .= "• {$item->product->name}";
-                    $messageContent .= " × {$item->quantity} = ₱" . number_format($item->product->price * $item->quantity, 2) . "\n";
+                    $ownerMessageContent .= "• {$item->product->name}";
+                    $ownerMessageContent .= " × {$item->quantity} = ₱" . number_format($item->product->price * $item->quantity, 2) . "\n";
                 }
 
-                $messageContent .= "\nTotal: ₱" . number_format($total, 2);
+                $ownerMessageContent .= "\nTotal: ₱" . number_format($total, 2);
 
                 try {
+                    // Send message to business owner
                     Message::create([
                         'sender_id' => $user->id,
                         'receiver_id' => $business->owner->id,
-                        'content' => $messageContent,
+                        'content' => $ownerMessageContent,
                         'order_id' => $order->id,
                     ]);
-                    \Log::info('Message created successfully');
+                    
+                    // Send confirmation message to customer
+                    $customerMessageContent = "✅ Order Confirmed! Order #" . $order->order_number . "\n\n";
+                    $customerMessageContent .= "Business: {$business->name}\n";
+                    
+                    if ($order->pickup_time) {
+                        try {
+                            $pickupDateTime = new \DateTime($order->pickup_time);
+                            $customerMessageContent .= "Pickup: " . $pickupDateTime->format('M d, Y \a\t g:i A') . "\n";
+                        } catch (\Exception $e) {
+                            $customerMessageContent .= "Pickup Time: " . $order->pickup_time . "\n";
+                        }
+                    } else {
+                        $customerMessageContent .= "Pickup: ASAP\n";
+                    }
+                    
+                    $customerMessageContent .= "\nYour order has been received and is being processed.\n";
+                    $customerMessageContent .= "You will be notified when it's ready for pickup.\n\n";
+                    $customerMessageContent .= "Order Details:\n";
+                    
+                    foreach ($cartItems as $item) {
+                        $customerMessageContent .= "• {$item->product->name}";
+                        $customerMessageContent .= " × {$item->quantity} = ₱" . number_format($item->product->price * $item->quantity, 2) . "\n";
+                    }
+                    
+                    $customerMessageContent .= "\nTotal: ₱" . number_format($total, 2);
+                    
+                    Message::create([
+                        'sender_id' => $business->owner->id,
+                        'receiver_id' => $user->id,
+                        'content' => $customerMessageContent,
+                        'order_id' => $order->id,
+                    ]);
+                    
+                    \Log::info('Messages created successfully for order #' . $order->order_number);
                 } catch (\Exception $e) {
                     \Log::error('Failed to create message: ' . $e->getMessage());
                     // Don't fail the order if message creation fails
@@ -194,9 +230,9 @@ class OrderController extends Controller
                 ->delete();
             
             DB::commit();
-
+            
             return redirect()->route('customer.orders')
-                ->with('success', "Order placed successfully! Order #" . $order->id);
+                ->with('success', '🎉 Order placed successfully! Order #' . $order->order_number);
 
         } catch (\Exception $e) {
             DB::rollBack();

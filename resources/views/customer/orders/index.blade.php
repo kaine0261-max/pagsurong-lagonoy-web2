@@ -19,6 +19,43 @@
 
     <!-- Orders List -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Success/Error Notifications -->
+        @if(session('success'))
+            <div class="mb-6 bg-green-50 border-l-4 border-green-400 p-4 rounded-lg shadow-sm">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-green-700 whitespace-pre-line">{{ session('success') }}</p>
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-green-400 hover:text-green-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
+        
+        @if(session('error'))
+            <div class="mb-6 bg-red-50 border-l-4 border-red-400 p-4 rounded-lg shadow-sm">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-circle text-red-400 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700">{{ session('error') }}</p>
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-red-400 hover:text-red-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
+        
         @if($orders->count() > 0)
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
             <ul class="divide-y divide-gray-200">
@@ -81,8 +118,9 @@
                                     {{ $order->created_at->format('M d, Y g:i A') }}
                                 </p>
                                 <a href="{{ route('messages.thread', $order->business->owner_id) }}" 
-                                   class="inline-flex items-center text-sm text-green-600 hover:text-green-700 font-medium transition-colors">
-                                    <i class="fas fa-comment-dots mr-1"></i>Message Business
+                                   class="inline-flex items-center justify-center text-green-600 hover:text-green-700 font-medium transition-colors">
+                                    <i class="fas fa-comment-dots text-2xl sm:text-base sm:mr-1"></i>
+                                    <span class="hidden sm:inline text-sm">Message Business</span>
                                 </a>
                             </div>
                         </div>

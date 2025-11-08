@@ -114,8 +114,6 @@
                         @guest
                             <button onclick="openRegisterModal()" class="inline-block px-6 lg:px-8 py-3 rounded-full bg-green-600 text-white font-medium text-base lg:text-lg hover:bg-green-700 transform hover:-translate-y-1 transition-all duration-300 shadow-lg">Register</button>
                             <button onclick="openLoginModal()" class="inline-block px-6 lg:px-8 py-3 rounded-full border-2 border-white text-white bg-transparent font-medium text-base lg:text-lg hover:bg-white hover:text-green-700 transform hover:-translate-y-1 transition-all duration-300">Login</button>
-                        @else
-                            <a href="{{ route('dashboard') }}" class="inline-block px-6 lg:px-8 py-3 rounded-full bg-green-600 text-white font-medium text-base lg:text-lg hover:bg-green-700 transform hover:-translate-y-1 transition-all duration-300 shadow-lg">Go to Dashboard</a>
                         @endguest
                     </div>
                 </div>
@@ -691,6 +689,49 @@
         // Set auth status for JavaScript
         @auth
             const authUser = true;
+            
+            // Auto-redirect authenticated users to their last visited page or dashboard
+            document.addEventListener('DOMContentLoaded', function() {
+                @php
+                    $user = auth()->user();
+                    $lastVisitedPage = session('last_visited_page');
+                    
+                    if ($lastVisitedPage) {
+                        $redirectUrl = $lastVisitedPage;
+                    } elseif ($user->role === 'admin') {
+                        $redirectUrl = route('admin.dashboard');
+                    } elseif ($user->role === 'business_owner') {
+                        if ($user->businessProfile) {
+                            $type = $user->businessProfile->business_type;
+                            switch ($type) {
+                                case 'hotel':
+                                    $redirectUrl = route('business.my-hotel');
+                                    break;
+                                case 'resort':
+                                    $redirectUrl = route('business.my-resort');
+                                    break;
+                                default:
+                                    $redirectUrl = route('business.my-shop');
+                            }
+                        } else {
+                            $redirectUrl = route('business.setup');
+                        }
+                    } elseif ($user->role === 'customer') {
+                        if (!$user->profile) {
+                            $redirectUrl = route('profile.setup');
+                        } else {
+                            $redirectUrl = route('customer.products');
+                        }
+                    } else {
+                        $redirectUrl = route('customer.products');
+                    }
+                @endphp
+                
+                // Only redirect if we're on the home page (no hash)
+                if (!window.location.hash) {
+                    window.location.href = '{{ $redirectUrl }}';
+                }
+            });
         @else
             const authUser = false;
         @endauth

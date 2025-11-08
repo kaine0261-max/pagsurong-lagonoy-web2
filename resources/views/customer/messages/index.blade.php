@@ -35,14 +35,23 @@
                             // Get the last message (assuming $thread has a last_id or use latest())
                             $lastMessage = \App\Models\Message::where('id', $thread->last_id ?? $thread->id)
                                 ->first();
+                            
+                            // Count unread messages from this user
+                            $unreadCount = \App\Models\Message::where('sender_id', $otherUser->id)
+                                ->where('receiver_id', auth()->id())
+                                ->whereNull('read_at')
+                                ->count();
+                            
+                            // Check if last message is unread
+                            $isUnread = $lastMessage && $lastMessage->receiver_id == auth()->id() && is_null($lastMessage->read_at);
                         @endphp
 
                         @if($otherUser)
-                            <li class="px-6 py-4 hover:bg-gray-50 transition">
+                            <li class="px-6 py-4 hover:bg-gray-50 transition {{ $isUnread ? 'bg-blue-50' : '' }}">
                                 <a href="{{ route('messages.thread', $otherUser) }}" class="block">
                                     <div class="flex items-center space-x-3">
                                         <!-- Profile Picture -->
-                                        <div class="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
+                                        <div class="flex-shrink-0 h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden relative">
                                             @if($otherUser->businessProfile && $otherUser->businessProfile->profile_avatar)
                                                 <img src="{{ Storage::url($otherUser->businessProfile->profile_avatar) }}"
                                                      alt="{{ $otherUser->name }}"
@@ -58,25 +67,40 @@
                                                     </span>
                                                 </div>
                                             @endif
+                                            
+                                            <!-- Unread indicator dot on avatar -->
+                                            @if($unreadCount > 0)
+                                                <span class="absolute top-0 right-0 block h-3 w-3 rounded-full bg-red-500 ring-2 ring-white"></span>
+                                            @endif
                                         </div>
 
                                         <!-- User Info & Message Preview -->
                                         <div class="flex-1 min-w-0">
                                             <div class="flex items-center justify-between">
-                                                <p class="text-sm font-medium text-gray-900 truncate">
+                                                <p class="text-sm font-medium truncate {{ $isUnread ? 'text-gray-900 font-bold' : 'text-gray-900' }}">
                                                     {{ $otherUser->name }}
                                                 </p>
-                                                <p class="text-xs text-gray-500">
-                                                    {{ $lastMessage?->created_at->diffForHumans() ?? '' }}
-                                                </p>
+                                                <div class="flex items-center space-x-2">
+                                                    <p class="text-xs text-gray-500">
+                                                        {{ $lastMessage?->created_at->diffForHumans() ?? '' }}
+                                                    </p>
+                                                    @if($unreadCount > 0)
+                                                        <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
+                                                            {{ $unreadCount }}
+                                                        </span>
+                                                    @endif
+                                                </div>
                                             </div>
-                                            <p class="text-sm text-gray-500 truncate">
-                                                {{ $lastMessage?->content ? strip_tags($lastMessage->content) : 'No messages yet' }}
+                                            <p class="text-sm truncate {{ $isUnread ? 'text-gray-900 font-semibold' : 'text-gray-500' }}">
+                                                @if($isUnread)
+                                                    <i class="fas fa-circle text-blue-500 text-xs mr-1"></i>
+                                                @endif
+                                                {{ $lastMessage?->content ? Str::limit(strip_tags($lastMessage->content), 60) : 'No messages yet' }}
                                             </p>
 
                                             <!-- Show business name if available -->
                                             @if($otherUser->businessProfile)
-                                                <p class="text-xs text-green-600 font-medium">
+                                                <p class="text-xs text-green-600 font-medium mt-1">
                                                     {{ $otherUser->businessProfile->business_name }}
                                                 </p>
                                             @endif

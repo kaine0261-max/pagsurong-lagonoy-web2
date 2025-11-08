@@ -82,7 +82,9 @@ class CartController extends Controller
         if ($request->expectsJson()) {
             return response()->json(['success' => true, 'message' => 'Product added to cart!', 'cartCount' => $cartCount]);
         }
-        return redirect()->back()->with('success', 'Product added to cart!');
+        
+        // Redirect to cart with informative message
+        return redirect()->route('customer.cart')->with('success', '✅ Product added to cart! Review your items and click "Checkout" when ready.');
     }
 
     /**

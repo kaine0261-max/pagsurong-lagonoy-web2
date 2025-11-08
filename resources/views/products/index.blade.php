@@ -748,8 +748,8 @@ function addToCart(productId) {
                     }
                 }
             }
-            // Optionally reload to show updated cart
-            setTimeout(() => location.reload(), 1500);
+            // Redirect to cart page
+            setTimeout(() => window.location.href = '{{ route('customer.cart') }}', 1500);
         } else {
             showNotification(data.message || 'Error adding product to cart.', 'error');
         }

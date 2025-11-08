@@ -29,6 +29,9 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            
+            // Clear last visited page on fresh login
+            session()->forget('last_visited_page');
 
             // Determine redirect URL based on user role
             $redirectUrl = null;
